@@ -1,234 +1,243 @@
 export function queryProductByCompanyQuery(companyID: string): string {
   return `
-    prefix dpp-core: <https://ntd432.github.io/dpp/models/dpp-core.ttl#>
-    prefix schema: <https://schema.org/>
-    prefix dpp-product-info: <https://ntd432.github.io/dpp/models/dpp-product-info.ttl#>
+        prefix dpp-core: <https://ntd432.github.io/dpp/models/dpp-core.ttl#>
+        prefix schema: <https://schema.org/>
+        prefix dpp-product-info: <https://ntd432.github.io/dpp/models/dpp-product-info.ttl#>
 
-    select ?name ?gtin ?serial ?country ?documentation ?productionDate
-    where {
-    ?product a dpp-core:Product ;
+        select ?name ?gtin ?serial ?country ?documentation ?productionDate
+        where {
+        ?dpp a dpp-core:DPP ;
+        dpp-core:product ?product.
+        ?product a dpp-core:Product ;
         dpp-core:dataGroup ?dataGroup .
 
-    ?dataGroup dpp-core:dataPoint ?dp .
-    ?dp a dpp-product-info:ProductIdentificationInformation .
+        ?dataGroup dpp-core:dataPoint ?dp .
+        ?dp a dpp-product-info:ProductIdentificationInformation .
 
-    ?dataGroup dpp-core:dataPoint ?manufacturerDP .
-    ?manufacturerDP dpp-product-info:manufacturer ?m .
-    ?m a schema:Organization ;
+        ?dataGroup dpp-core:dataPoint ?manufacturerDP .
+        ?manufacturerDP dpp-product-info:manufacturer ?m .
+        ?m a schema:Organization ;
         schema:identifier "${companyID}" .
-    
-    optional {
+        
+        optional {
         ?dp  dpp-product-info:name ?name;
-    }
-    optional{
-        ?dp  dpp-product-info:gtin ?gtin;
-    }
-    optional  {
-        ?dp dpp-product-info:serial ?serial.
-    }
-    optional {
+        }
+        optional{
+        ?dpp dpp-core:gtin ?gtin;
+        }
+        optional  {
+        ?dpp dpp-core:serialNumber ?serial.
+        }
+        optional {
         ?dp  dpp-product-info:documentation ?documentation;
-    }
-    optional {
+        }
+        optional {
         ?dp dpp-product-info:productionDate ?productionDate;
-    }
-    optional {
+        }
+        optional {
         ?dp dpp-product-info:countryOfOrigin ?countryData.
         ?countryData schema:name ?country.
-    }
-    }
-    order by ?name
+        }
+        }
+        order by ?name ?dpLabel
   `;
 }
 
 export function queryProductByGTINQuery(gtin: string): string {
   return `
-    PREFIX dpp-core:          <https://ntd432.github.io/dpp/models/dpp-core.ttl#>
-    PREFIX dpp-product-info:  <https://ntd432.github.io/dpp/models/dpp-product-info.ttl#>
-    PREFIX dpp-compliance:    <https://ntd432.github.io/dpp/models/dpp-compliance.ttl#>
-    PREFIX dpp-supply-chain:  <https://ntd432.github.io/dpp/models/dpp-supply-chain.ttl#>
-    PREFIX dpp-sustainability:<https://ntd432.github.io/dpp/models/dpp-sustainability.ttl#>
-    PREFIX dpp-eol:           <https://ntd432.github.io/dpp/models/dpp-eol.ttl#>
-    PREFIX dpp-guidelines:    <https://ntd432.github.io/dpp/models/dpp-guidelines.ttl#>
-    PREFIX dpp-usage:         <https://ntd432.github.io/dpp/models/dpp-usage.ttl#>
-    PREFIX schema:            <https://schema.org/>
-    PREFIX rdfs:              <http://www.w3.org/2000/01/rdf-schema#>
+        PREFIX dpp-core:          <https://ntd432.github.io/dpp/models/dpp-core.ttl#>
+        PREFIX dpp-product-info:  <https://ntd432.github.io/dpp/models/dpp-product-info.ttl#>
+        PREFIX dpp-compliance:    <https://ntd432.github.io/dpp/models/dpp-compliance.ttl#>
+        PREFIX dpp-supply-chain:  <https://ntd432.github.io/dpp/models/dpp-supply-chain.ttl#>
+        PREFIX dpp-sustainability:<https://ntd432.github.io/dpp/models/dpp-sustainability.ttl#>
+        PREFIX dpp-eol:           <https://ntd432.github.io/dpp/models/dpp-eol.ttl#>
+        PREFIX dpp-guidelines:    <https://ntd432.github.io/dpp/models/dpp-guidelines.ttl#>
+        PREFIX dpp-usage:         <https://ntd432.github.io/dpp/models/dpp-usage.ttl#>
+        PREFIX schema:            <https://schema.org/>
+        PREFIX rdfs:              <http://www.w3.org/2000/01/rdf-schema#>
+        prefix dpp-electronics: <https://ntd432.github.io/dpp/models/extensions/dpp-electronics.ttl#>
 
-    SELECT
-    # DPP
-    ?dppLabel
-    # PII
-    ?gtin ?name ?serial ?country ?documentation ?productionDate
-    # Manufacturer
-    ?manufacturerName ?manufacturerUrl ?manufacturerIdentifier
-    # Material
-    ?materialComposition ?materialBills ?recycledReusedContent
-    # Spare parts, hazardous, substances of concern
-    ?sparePartsAvailability
-    ?hazSubName ?hazSubDesc
-    ?substancesOfConcern
-    # Spec, test, assembly, production method
-    ?productSpecification ?testReports
-    ?assemblyProcess ?productionMethod
-    # Commercial, quality, risk
-    ?image ?lifetimeExpectancy
-    ?qualityAssessment ?identifiedRisk
-    # Compliance
-    ?regulationName ?regulationId
-    ?labelName
-    ?productStatus ?productStatusDesc
-    ?certName ?certDesc
-    ?dmmName ?dmmDesc
-    # Supply chain
-    ?traceActionName ?traceActionType ?traceTime ?traceLocation
-    ?recyclingPartnerName
-    ?returnChannelName
-    ?componentSupplierName
-    # Sustainability
-    ?envFootprint ?resourceConsumption
-    ?decomposability
-    ?criticalRawMaterial ?lca
-    ?renewableContent
-    ?labourConditions
-    ?envDeclaration
-    # End-of-life
-    ?recyclingReusePotential ?disposalOptions ?expectedWaste
-    ?reusability ?repairability ?refurbishability
-    ?upgradeOptions ?numberOfLifecycles
-    ?wastePrevention ?separateCollection ?collectionInfo ?eolReport
-    # Guidelines
-    ?assemblyGuideUrl ?disassemblyGuideUrl
-    ?productManualUrl ?storageGuideUrl
-    ?safetyUrl ?maintenanceUrl ?wasteSortingUrl
-    ?accessibility ?utilizationCharacteristic
-    # Usage
-    ?maintActionName ?maintTime
-    ?usageActionName ?usageTime
-    ?incidentActionName ?incidentTime
-    WHERE {
+        SELECT
+        # DPP
+        ?dppLabel
+        # PII
+        ?gtin ?name ?serial ?country ?documentation ?productionDate
+        # Manufacturer
+        ?manufacturerName ?manufacturerUrl ?manufacturerIdentifier
+        # Material
+        ?materialComposition ?materialBills ?recycledReusedContent
+        # Spare parts, hazardous, substances of concern
+        ?sparePartsAvailability
+        ?hazSubName ?hazSubDesc
+        ?substancesOfConcern
+        # Spec, test, assembly, production method
+        ?productSpecification ?testReports
+        ?assemblyProcess ?productionMethod
+        # Commercial, quality, risk
+        ?image ?lifetimeExpectancy
+        ?qualityAssessment ?identifiedRisk
+        # Compliance
+        ?regulationName ?regulationId
+        ?labelName
+        ?productStatus ?productStatusDesc
+        ?certName ?certDesc
+        ?dmmName ?dmmDesc
+        # Supply chain
+        ?traceActionName ?traceActionType ?traceTime ?traceLocation
+        ?recyclingPartnerName
+        ?returnChannelName
+        ?componentSupplierName
+        # Sustainability
+        ?envFootprint ?resourceConsumption
+        ?decomposability
+        ?criticalRawMaterial ?lca
+        ?renewableContent
+        ?labourConditions
+        ?envDeclaration
+        # End-of-life
+        ?recyclingReusePotential ?disposalOptions ?expectedWaste
+        ?reusability ?repairability ?refurbishability
+        ?upgradeOptions ?numberOfLifecycles
+        ?wastePrevention ?separateCollection ?collectionInfo ?eolReport
+        # Guidelines
+        ?assemblyGuideUrl ?disassemblyGuideUrl
+        ?productManualUrl ?storageGuideUrl
+        ?safetyUrl ?maintenanceUrl ?wasteSortingUrl
+        ?accessibility ?utilizationCharacteristic
+        # Usage
+        ?maintActionName ?maintTime
+        ?usageActionName ?usageTime
+        ?incidentActionName ?incidentTime
+        WHERE {
+        # ── Identify product by GTIN ───────────────────────────────────────
+        ?dpp a dpp-core:DPP ;
+        dpp-core:product ?product.
+        ?dpp dpp-core:gtin "${gtin}".
+        
+        ?product a dpp-core:Product ;
+                dpp-core:dataGroup ?piGroup .
 
-    # ── Identify product by GTIN ───────────────────────────────────────
-    ?product a dpp-core:Product ;
-            dpp-core:dpp ?dpp ;
-            dpp-core:dataGroup ?piGroup .
+        ?piGroup dpp-core:dataPoint ?piiDP .
+        ?piiDP a dpp-product-info:ProductIdentificationInformation .
 
-    ?piGroup dpp-core:dataPoint ?piiDP .
-    ?piiDP a dpp-product-info:ProductIdentificationInformation ;
-            dpp-product-info:gtin "${gtin}" .
+        OPTIONAL { ?dpp rdfs:label ?dppLabel }
 
-    OPTIONAL { ?dpp rdfs:label ?dppLabel }
+        # ════════════════════════════════════════════════════════════════════
+        # 1. PRODUCT INFORMATION  (all from ?piGroup)
+        # ════════════════════════════════════════════════════════════════════
 
-    # ════════════════════════════════════════════════════════════════════
-    # 1. PRODUCT INFORMATION  (all from ?piGroup)
-    # ════════════════════════════════════════════════════════════════════
-
-    # ── PII ──
-    OPTIONAL { ?piiDP dpp-product-info:gtin            ?gtin }
-    OPTIONAL { ?piiDP dpp-product-info:name            ?name }
-    OPTIONAL { ?piiDP dpp-product-info:serial          ?serial }
-    OPTIONAL { ?piiDP dpp-product-info:documentation   ?documentation }
-    OPTIONAL { ?piiDP dpp-product-info:productionDate  ?productionDate }
-    OPTIONAL {
+        # ── PII ──
+        OPTIONAL { ?dpp dpp-core:gtin                      ?gtin }
+        OPTIONAL { ?piiDP dpp-product-info:name            ?name }
+        OPTIONAL { ?dpp dpp-core:serialNumber              ?serial }
+        OPTIONAL { ?piiDP dpp-product-info:documentation   ?documentation }
+        OPTIONAL { ?piiDP dpp-product-info:productionDate  ?productionDate }
+        OPTIONAL {
         ?piiDP dpp-product-info:countryOfOrigin ?countryData .
         ?countryData schema:name ?country .
-    }
+        }
 
-    # ── Manufacturer ──
-    OPTIONAL {
+        # ── Manufacturer ──
+        OPTIONAL {
         ?piGroup dpp-core:dataPoint ?mfDP .
         ?mfDP a dpp-product-info:Manufacturer ;
-            dpp-product-info:manufacturer ?mfData .
+                dpp-product-info:manufacturer ?mfData .
         ?mfData schema:name ?manufacturerName .
         OPTIONAL { ?mfData schema:url        ?manufacturerUrl }
         OPTIONAL { ?mfData schema:identifier ?manufacturerIdentifier }
-    }
+        }
 
-    # ── Material Information ──
-    OPTIONAL {
+        # ── Material Information ──
+        OPTIONAL {
         ?piGroup dpp-core:dataPoint ?matDP .
         ?matDP a dpp-product-info:MaterialInformation .
         OPTIONAL { ?matDP dpp-product-info:materialComposition   ?materialComposition }
         OPTIONAL { ?matDP dpp-product-info:materialBills         ?materialBills }
         OPTIONAL { ?matDP dpp-product-info:recycledReusedContent ?recycledReusedContent }
-    }
+        }
 
-    # ── Spare Parts ──
-    OPTIONAL {
+        # ── Spare Parts ──
+        OPTIONAL {
         ?piGroup dpp-core:dataPoint ?spDP .
         ?spDP a dpp-product-info:SparePartsAvailability ;
-            dpp-product-info:sparePartsAvailability ?sparePartsAvailability .
-    }
+                dpp-product-info:sparePartsAvailability ?sparePartsAvailability .
+        }
 
-    # ── Hazardous Substances ──
-    OPTIONAL {
+        # ── Hazardous Substances ──
+        OPTIONAL {
         ?piGroup dpp-core:dataPoint ?hazDP .
         ?hazDP a dpp-product-info:HazardousSubstances ;
-            dpp-product-info:hazardousSubstances ?hazSub .
+                dpp-product-info:hazardousSubstances ?hazSub .
         OPTIONAL { ?hazSub schema:name        ?hazSubName }
         OPTIONAL { ?hazSub schema:description ?hazSubDesc }
-    }
+        }
 
-    # ── Substances of Concern ──
-    OPTIONAL {
+        # ── Substances of Concern ──
+        OPTIONAL {
         ?piGroup dpp-core:dataPoint ?socDP .
         ?socDP a dpp-product-info:SubstancesOfConcern ;
-            dpp-product-info:substancesOfConcern ?substancesOfConcern .
-    }
+                dpp-product-info:substancesOfConcern ?substancesOfConcern .
+        }
 
-    # ── Product Specification ──
-    OPTIONAL {
+        # ── Product Specification ──
+        OPTIONAL {
         ?piGroup dpp-core:dataPoint ?specDP .
         ?specDP a dpp-product-info:ProductSpecification ;
                 dpp-product-info:productSpecification ?productSpecification .
-    }
+        }
 
-    # ── Test Reports ──
-    OPTIONAL {
+        # ── Test Reports ──
+        OPTIONAL {
         ?piGroup dpp-core:dataPoint ?testDP .
         ?testDP a dpp-product-info:TestReports ;
                 dpp-product-info:testReports ?testReports .
-    }
+        }
 
-    # ── Assembly Process ──
-    OPTIONAL {
-        ?piGroup dpp-core:dataPoint ?asmDP .
-        ?asmDP a dpp-product-info:AssemblyProcess ;
-            dpp-product-info:assemblyProcess ?assemblyProcess .
-    }
+        # ── Sector Non-required Information ──
+        # ── Assembly Process ──
+        OPTIONAL {
+        ?piGroup dpp-core:dataPoint ?sniDP .
+        ?sniDP a dpp-product-info:SectorNonRequiredInformation ;
+                dpp-product-info:sectorNonRequiredInformation ?sniData .
+        ?sniData dpp-electronics:assemblyProcess ?assemblyProcessData .
+        ?assemblyProcessData dpp-electronics:assemblyProcessDescription ?assemblyProcess.
+        }
 
-    # ── Production Method ──
-    OPTIONAL {
-        ?piGroup dpp-core:dataPoint ?pmDP .
-        ?pmDP a dpp-product-info:ProductionMethod ;
-            dpp-product-info:productionMethod ?productionMethod .
-    }
+        # ── Production Method ──
+        OPTIONAL {
+        ?piGroup dpp-core:dataPoint ?sniDP .
+        ?sniDP a dpp-product-info:SectorNonRequiredInformation ;
+                dpp-product-info:sectorNonRequiredInformation ?sniData .
+        ?sniData dpp-electronics:productionMethod ?productionMethodData .
+        ?productionMethodData dpp-electronics:productionMethodDescription ?productionMethod.
+        }
 
-    # ── Commercial Information ──
-    OPTIONAL {
+        # ── Commercial Information ──
+        OPTIONAL {
         ?piGroup dpp-core:dataPoint ?commDP .
         ?commDP a dpp-product-info:ProductCommercialInformation .
         OPTIONAL { ?commDP dpp-product-info:image              ?image }
         OPTIONAL { ?commDP dpp-product-info:lifetimeExpectancy ?lifetimeExpectancy }
-    }
+        }
 
-    # ── Quality Assessment ──
-    OPTIONAL {
+        # ── Quality Assessment ──
+        OPTIONAL {
         ?piGroup dpp-core:dataPoint ?qualDP .
         ?qualDP a dpp-product-info:QualityAssessment ;
                 dpp-product-info:qualityAssessment ?qualityAssessment .
-    }
+        }
 
-    # ── Identified Risk ──
-    OPTIONAL {
+        # ── Identified Risk ──
+        OPTIONAL {
         ?piGroup dpp-core:dataPoint ?riskDP .
         ?riskDP a dpp-product-info:IdentifiedRisk ;
                 dpp-product-info:identifiedRisk ?identifiedRisk .
-    }
+        }
 
-    # ════════════════════════════════════════════════════════════════════
-    # 2. COMPLIANCE
-    # ════════════════════════════════════════════════════════════════════
-    OPTIONAL {
+        # ════════════════════════════════════════════════════════════════════
+        # 2. COMPLIANCE
+        # ════════════════════════════════════════════════════════════════════
+        OPTIONAL {
         ?product dpp-core:dataGroup ?compGroup .
         ?compGroup a dpp-compliance:Compliance .
 
@@ -266,12 +275,12 @@ export function queryProductByGTINQuery(gtin: string): string {
         ?dmmData schema:name ?dmmName .
         OPTIONAL { ?dmmData schema:description ?dmmDesc }
         }
-    }
+        }
 
-    # ════════════════════════════════════════════════════════════════════
-    # 3. SUPPLY CHAIN
-    # ════════════════════════════════════════════════════════════════════
-    OPTIONAL {
+        # ════════════════════════════════════════════════════════════════════
+        # 3. SUPPLY CHAIN
+        # ════════════════════════════════════════════════════════════════════
+        OPTIONAL {
         ?product dpp-core:dataGroup ?scGroup .
         ?scGroup a dpp-supply-chain:SupplyChain .
 
@@ -283,8 +292,8 @@ export function queryProductByGTINQuery(gtin: string): string {
         OPTIONAL { ?trEvent dpp-core:actionType ?traceActionType }
         OPTIONAL { ?trEvent dpp-core:time       ?traceTime }
         OPTIONAL {
-            ?trEvent dpp-core:location ?traceLoc .
-            ?traceLoc schema:name ?traceLocation .
+                ?trEvent dpp-core:location ?traceLoc .
+                ?traceLoc schema:name ?traceLocation .
         }
         }
         OPTIONAL {
@@ -305,12 +314,12 @@ export function queryProductByGTINQuery(gtin: string): string {
                 dpp-supply-chain:participant ?csOrg .
         ?csOrg schema:name ?componentSupplierName .
         }
-    }
+        }
 
-    # ════════════════════════════════════════════════════════════════════
-    # 4. SUSTAINABILITY
-    # ════════════════════════════════════════════════════════════════════
-    OPTIONAL {
+        # ════════════════════════════════════════════════════════════════════
+        # 4. SUSTAINABILITY
+        # ════════════════════════════════════════════════════════════════════
+        OPTIONAL {
         ?product dpp-core:dataGroup ?susGroup .
         ?susGroup a dpp-sustainability:SustainabilityInformation .
 
@@ -318,12 +327,12 @@ export function queryProductByGTINQuery(gtin: string): string {
         ?susGroup dpp-core:dataPoint ?spDP2 .
         ?spDP2 a dpp-sustainability:SustainabilityPerformance .
         OPTIONAL {
-            ?spDP2 dpp-sustainability:environmentalFootprint ?efNode .
-            ?efNode rdfs:label ?envFootprint .
+                ?spDP2 dpp-sustainability:environmentalFootprint ?efNode .
+                ?efNode rdfs:label ?envFootprint .
         }
         OPTIONAL {
-            ?spDP2 dpp-sustainability:resourceConsumption ?rcNode .
-            ?rcNode rdfs:label ?resourceConsumption .
+                ?spDP2 dpp-sustainability:resourceConsumption ?rcNode .
+                ?rcNode rdfs:label ?resourceConsumption .
         }
         }
         OPTIONAL {
@@ -352,12 +361,12 @@ export function queryProductByGTINQuery(gtin: string): string {
         ?edDP a dpp-sustainability:EnvironmentDeclaration ;
                 dpp-sustainability:environmentDeclaration ?envDeclaration .
         }
-    }
+        }
 
-    # ════════════════════════════════════════════════════════════════════
-    # 5. END OF LIFE
-    # ════════════════════════════════════════════════════════════════════
-    OPTIONAL {
+        # ════════════════════════════════════════════════════════════════════
+        # 5. END OF LIFE
+        # ════════════════════════════════════════════════════════════════════
+        OPTIONAL {
         ?product dpp-core:dataGroup ?eolGroup .
         ?eolGroup a dpp-eol:EndOfLifeData .
 
@@ -409,12 +418,12 @@ export function queryProductByGTINQuery(gtin: string): string {
         OPTIONAL { ?eiDP dpp-eol:collectionInformation  ?collectionInfo }
         OPTIONAL { ?eiDP dpp-eol:endOfLifeReport       ?eolReport }
         }
-    }
+        }
 
-    # ════════════════════════════════════════════════════════════════════
-    # 6. GUIDELINES & MANUALS
-    # ════════════════════════════════════════════════════════════════════
-    OPTIONAL {
+        # ════════════════════════════════════════════════════════════════════
+        # 6. GUIDELINES & MANUALS
+        # ════════════════════════════════════════════════════════════════════
+        OPTIONAL {
         ?product dpp-core:dataGroup ?glGroup .
         ?glGroup a dpp-guidelines:GuidelinesAndManuals .
 
@@ -446,16 +455,16 @@ export function queryProductByGTINQuery(gtin: string): string {
         ?glGroup dpp-core:dataPoint ?ciDP .
         ?ciDP a dpp-guidelines:CommercialInstruction .
         OPTIONAL {
-            ?ciDP dpp-guidelines:safetyInstruction ?sfRes .
-            ?sfRes schema:url ?safetyUrl .
+                ?ciDP dpp-guidelines:safetyInstruction ?sfRes .
+                ?sfRes schema:url ?safetyUrl .
         }
         OPTIONAL {
-            ?ciDP dpp-guidelines:maintenanceInstruction ?miRes .
-            ?miRes schema:url ?maintenanceUrl .
+                ?ciDP dpp-guidelines:maintenanceInstruction ?miRes .
+                ?miRes schema:url ?maintenanceUrl .
         }
         OPTIONAL {
-            ?ciDP dpp-guidelines:wasteSortingInstruction ?wsRes .
-            ?wsRes schema:url ?wasteSortingUrl .
+                ?ciDP dpp-guidelines:wasteSortingInstruction ?wsRes .
+                ?wsRes schema:url ?wasteSortingUrl .
         }
         }
         OPTIONAL {
@@ -468,12 +477,12 @@ export function queryProductByGTINQuery(gtin: string): string {
         ?ucDP a dpp-guidelines:UtilizationCharacteristic ;
                 dpp-guidelines:utilizationCharacteristic ?utilizationCharacteristic .
         }
-    }
+        }
 
-    # ════════════════════════════════════════════════════════════════════
-    # 7. USAGE
-    # ════════════════════════════════════════════════════════════════════
-    OPTIONAL {
+        # ════════════════════════════════════════════════════════════════════
+        # 7. USAGE
+        # ════════════════════════════════════════════════════════════════════
+        OPTIONAL {
         ?product dpp-core:dataGroup ?usGroup .
         ?usGroup a dpp-usage:UsageInformation .
 
@@ -498,6 +507,6 @@ export function queryProductByGTINQuery(gtin: string): string {
         OPTIONAL { ?ieEvent dpp-core:actionName ?incidentActionName }
         OPTIONAL { ?ieEvent dpp-core:time       ?incidentTime }
         }
-    }
-    }`;
+        }
+        }`;
 }
