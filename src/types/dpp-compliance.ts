@@ -18,8 +18,8 @@ export interface Regulation extends DataPoint {
 }
 
 /** Eco-labels, energy labels, or other regulatory labels assigned to the product. */
-export interface Label extends DataPoint {
-  label?: string;
+export interface ComplianceLabel extends DataPoint {
+  complianceLabel?: string;
 }
 
 /** Assessment of the product status (e.g. new, refurbished, remanufactured). */
@@ -42,7 +42,7 @@ export interface DataManagementMethod extends DataPoint {
 /** Data group covering regulatory compliance, certifications, labels, and data management. */
 export interface Compliance extends DataGroup {
   regulation?: Regulation;
-  label?: Label;
+  complianceLabel?: ComplianceLabel;
   productStatusAssessment?: ProductStatusAssessment;
   certification?: Certification;
   dataManagementMethod?: DataManagementMethod;

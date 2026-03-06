@@ -25,7 +25,7 @@ type ProductReference = Product | DPP | string;
  */
 export interface ProductIdentificationInformation extends DataPoint {
   /** Product name */
-  name?: string;
+  productName?: string;
   /** Textual description */
   description?: string;
   /** URI to product documentation */

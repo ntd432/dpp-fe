@@ -79,7 +79,8 @@
         "@type": "xsd:duration"
       },
       "qualityAssessment": "dpp-product-info:qualityAssessment",
-      "identifiedRisk": "dpp-product-info:identifiedRisk"
+      "identifiedRisk": "dpp-product-info:identifiedRisk",
+      "productName": "dpp-product-info:name"
     }
   ]
 }

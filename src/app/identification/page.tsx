@@ -39,7 +39,7 @@ export default async function IdentificationPage() {
           {data.map((item, idx) => (
             <ProductCard
               key={idx}
-              title={item.name || `Product ${idx + 1}`}
+              title={item.productName || `Product ${idx + 1}`}
               data={{ ...item }}
               accentColor="blue"
             />

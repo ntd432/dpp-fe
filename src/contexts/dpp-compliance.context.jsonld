@@ -5,7 +5,7 @@
     {
       "Compliance": "dpp-compliance:Compliance",
       "Regulation": "dpp-compliance:Regulation",
-      "Label": "dpp-compliance:Label",
+      "ComplianceLabel": "dpp-compliance:Label",
       "ProductStatusAssessment": "dpp-compliance:ProductStatusAssessment",
       "CertificationNode": "dpp-compliance:Certification",
       "DataManagementMethod": "dpp-compliance:DataManagementMethod",
@@ -14,7 +14,7 @@
         "@id": "dpp-compliance:regulation",
         "@type": "@id"
       },
-      "label": "dpp-compliance:label",
+      "complianceLabel": "dpp-compliance:label",
       "productStatusAssessment": {
         "@id": "dpp-compliance:productStatusAssessment",
         "@type": "xsd:anyURI"
