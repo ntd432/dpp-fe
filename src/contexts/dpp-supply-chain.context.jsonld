@@ -1,0 +1,22 @@
+{
+  "@context": [
+    "./base.context.jsonld",
+    "./dpp-core.context.jsonld",
+    {
+      "SupplyChain": "dpp-supply-chain:SupplyChain",
+      "ProductTraceability": "dpp-supply-chain:ProductTraceability",
+      "RecyclingPartner": "dpp-supply-chain:RecyclingPartner",
+      "CustomerReturnChannel": "dpp-supply-chain:CustomerReturnChannel",
+      "ComponentSupplier": "dpp-supply-chain:ComponentSupplier",
+
+      "traceabilityEvent": {
+        "@id": "dpp-supply-chain:traceabilityEvent",
+        "@type": "@id"
+      },
+      "participant": {
+        "@id": "dpp-supply-chain:participant",
+        "@type": "@id"
+      }
+    }
+  ]
+}

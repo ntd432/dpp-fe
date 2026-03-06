@@ -1,17 +1,21 @@
 /**
  * TypeScript interfaces for the DPP Product Information ontology module.
- * @see models/dpp-product-info.ttl
+ * @see https://ntd432.github.io/dpp/models/dpp-product-info.ttl
  */
 
 import type {
+  DPP,
   Country,
   DataGroup,
   DataPoint,
   Extension,
+  ImageObject,
   Organization,
   Product,
   Substance,
 } from "./dpp-core";
+
+type ProductReference = Product | DPP | string;
 
 // ── Data Points ─────────────────────────────────────────────────────────────
 
@@ -20,10 +24,6 @@ import type {
  * number, country of origin, and production date.
  */
 export interface ProductIdentificationInformation extends DataPoint {
-  /** Global Trade Item Number */
-  gtin?: string;
-  /** Serial number or unique identifier */
-  serial?: string;
   /** Product name */
   name?: string;
   /** Textual description */
@@ -38,15 +38,15 @@ export interface ProductIdentificationInformation extends DataPoint {
 
 /** Information about the entity responsible for manufacturing the product. */
 export interface Manufacturer extends DataPoint {
-  manufacturer?: Organization;
+  manufacturerInfo?: Organization;
 }
 
 /** Composition, bill of materials, and recycled/reused content. */
 export interface MaterialInformation extends DataPoint {
-  materialComposition?: string;
+  materialComposition?: ProductReference;
   /** URI to the bill of materials */
   materialBills?: string;
-  recycledReusedContent?: string;
+  recycledReusedContent?: ProductReference;
 }
 
 /** Availability of spare parts for the product. */
@@ -74,11 +74,6 @@ export interface ProductSpecification extends DataPoint {
   productSpecification?: string;
 }
 
-/** Interoperability and compatibility information. */
-export interface CrossCompatibility extends DataPoint {
-  crossCompatibility?: string;
-}
-
 /** Voluntary sector-specific information (extension point). */
 export interface SectorNonRequiredInformation extends DataPoint {
   sectorNonRequiredInformation?: Extension;
@@ -86,7 +81,7 @@ export interface SectorNonRequiredInformation extends DataPoint {
 
 /** Links to passports of related objects / components. */
 export interface RelatedObjects extends DataPoint {
-  relatedObjects?: Product[];
+  relatedObjects?: ProductReference[];
 }
 
 /** URI to test reports. */
@@ -94,20 +89,9 @@ export interface TestReports extends DataPoint {
   testReports?: string;
 }
 
-/** Description of the assembly process. */
-export interface AssemblyProcess extends DataPoint {
-  assemblyProcess?: string;
-}
-
-/** Description of the production method. */
-export interface ProductionMethod extends DataPoint {
-  productionMethod?: string;
-}
-
 /** Commercial information such as images and lifetime expectancy. */
 export interface ProductCommercialInformation extends DataPoint {
-  /** URI to an image of the product */
-  image?: string;
+  image?: ImageObject;
   /** ISO 8601 duration (e.g. "P5Y") */
   lifetimeExpectancy?: string;
 }
@@ -134,12 +118,9 @@ export interface ProductInformation extends DataGroup {
   substancesOfConcern?: SubstancesOfConcern;
   sectorRequiredInformation?: SectorRequiredInformation;
   productSpecification?: ProductSpecification;
-  crossCompatibility?: CrossCompatibility;
   sectorNonRequiredInformation?: SectorNonRequiredInformation;
   relatedObjects?: RelatedObjects;
   testReports?: TestReports;
-  assemblyProcess?: AssemblyProcess;
-  productionMethod?: ProductionMethod;
   commercialInformation?: ProductCommercialInformation;
   qualityAssessment?: QualityAssessment;
   identifiedRisk?: IdentifiedRisk;

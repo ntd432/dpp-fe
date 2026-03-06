@@ -1,6 +1,6 @@
 /**
  * TypeScript interfaces for the DPP End-of-Life ontology module.
- * @see models/dpp-eol.ttl
+ * @see https://ntd432.github.io/dpp/models/dpp-eol.ttl
  */
 
 import type { DataGroup, DataPoint, Event } from "./dpp-core";
@@ -15,6 +15,11 @@ export interface RecyclingReusePotential extends DataPoint {
 /** Available options for disposing of the product at end-of-life. */
 export interface DisposalOptions extends DataPoint {
   disposalOptions?: string;
+}
+
+/** Information on unsold consumer products according to ESPR Article 24. */
+export interface UnsoldProductsInformation extends DataPoint {
+  unsoldProductsInformation?: string;
 }
 
 /** Estimated amount and type of waste generated at end-of-life. */
@@ -33,8 +38,8 @@ export interface Repairability extends DataPoint {
 }
 
 /** Potential for refurbishing or remanufacturing the product. */
-export interface Refurbishability extends DataPoint {
-  refurbishability?: string;
+export interface Refurbrishability extends DataPoint {
+  refurbrishability?: string;
 }
 
 /** Available upgrade options to extend the product lifespan. */
@@ -67,10 +72,11 @@ export interface EndOfLifeInformation extends DataPoint {
 export interface EndOfLifeData extends DataGroup {
   recyclingReusePotential?: RecyclingReusePotential;
   disposalOptions?: DisposalOptions;
+  unsoldProductsInformation?: UnsoldProductsInformation;
   expectedWaste?: ExpectedWaste;
   reusability?: Reusability;
   repairability?: Repairability;
-  refurbishability?: Refurbishability;
+  refurbrishability?: Refurbrishability;
   upgradeOptions?: UpgradeOptions;
   endOfLifeHistory?: EndOfLifeHistory;
   numberOfLifecycles?: NumberOfLifecycles;

@@ -1,6 +1,6 @@
 /**
  * TypeScript interfaces for the DPP Guidelines & Manuals ontology module.
- * @see models/dpp-guidelines.ttl
+ * @see https://ntd432.github.io/dpp/models/dpp-guidelines.ttl
  */
 
 import type { DataGroup, DataPoint, Guide } from "./dpp-core";

@@ -1,0 +1,129 @@
+{
+  "@context": [
+    "./base.context.jsonld",
+    "./dpp-core.context.jsonld",
+    {
+      "ElectronicExtension": "dpp-electronics:ElectronicExtension",
+      "CrossCompatibility": "dpp-electronics:CrossCompatibility",
+      "AssemblyProcess": "dpp-electronics:AssemblyProcess",
+      "ProductionMethod": "dpp-electronics:ProductionMethod",
+      "Volume": "dpp-electronics:Volume",
+      "Components": "dpp-electronics:Components",
+      "ExpectedEndCondition": "dpp-electronics:ExpectedEndCondition",
+      "RenewableEnergyProduction": "dpp-electronics:RenewableEnergyProduction",
+      "MaterialSeparability": "dpp-electronics:MaterialSeparability",
+      "ComponentModularity": "dpp-electronics:ComponentModularity",
+      "ProductDesign": "dpp-electronics:ProductDesign",
+      "AppliedStandardsAndNorms": "dpp-electronics:AppliedStandardsAndNorms",
+      "InstalledSoftware": "dpp-electronics:InstalledSoftware",
+
+      "crossCompatibility": {
+        "@id": "dpp-electronics:crossCompatibility",
+        "@type": "@id"
+      },
+      "assemblyProcess": {
+        "@id": "dpp-electronics:assemblyProcess",
+        "@type": "@id"
+      },
+      "productionMethod": {
+        "@id": "dpp-electronics:productionMethod",
+        "@type": "@id"
+      },
+      "volume": {
+        "@id": "dpp-electronics:volume",
+        "@type": "@id"
+      },
+      "components": {
+        "@id": "dpp-electronics:components",
+        "@type": "@id"
+      },
+      "expectedEndConditionInfo": {
+        "@id": "dpp-electronics:expectedEndConditionInfo",
+        "@type": "@id"
+      },
+      "renewableEnergyProductionInfo": {
+        "@id": "dpp-electronics:renewableEnergyProductionInfo",
+        "@type": "@id"
+      },
+      "materialSeparability": {
+        "@id": "dpp-electronics:materialSeparability",
+        "@type": "@id"
+      },
+      "componentModularity": {
+        "@id": "dpp-electronics:componentModularity",
+        "@type": "@id"
+      },
+      "productDesignInfo": {
+        "@id": "dpp-electronics:productDesignInfo",
+        "@type": "@id"
+      },
+      "appliedStandardsAndNorms": {
+        "@id": "dpp-electronics:appliedStandardsAndNorms",
+        "@type": "@id"
+      },
+      "installedSoftware": {
+        "@id": "dpp-electronics:installedSoftware",
+        "@type": "@id"
+      },
+      "crossCompatibilityDetails": "dpp-electronics:crossCompatibilityDetails",
+      "compatibleInterfaceStandard": "dpp-electronics:compatibleInterfaceStandard",
+      "compatibilityLevel": "dpp-electronics:compatibilityLevel",
+      "assemblyProcessDescription": "dpp-electronics:assemblyProcessDescription",
+      "assemblyAutomationLevel": "dpp-electronics:assemblyAutomationLevel",
+      "assemblyLocation": {
+        "@id": "dpp-electronics:assemblyLocation",
+        "@type": "@id"
+      },
+      "productionMethodDescription": "dpp-electronics:productionMethodDescription",
+      "manufacturingTechnology": "dpp-electronics:manufacturingTechnology",
+      "processCertification": "dpp-electronics:processCertification",
+      "volumeValue": {
+        "@id": "dpp-electronics:volumeValue",
+        "@type": "xsd:decimal"
+      },
+      "volumeUnit": "dpp-electronics:volumeUnit",
+      "componentDescription": "dpp-electronics:componentDescription",
+      "componentCount": {
+        "@id": "dpp-electronics:componentCount",
+        "@type": "xsd:integer"
+      },
+      "expectedEndCondition": "dpp-electronics:expectedEndCondition",
+      "renewableEnergyProductionValue": {
+        "@id": "dpp-electronics:renewableEnergyProductionValue",
+        "@type": "xsd:boolean"
+      },
+      "renewableEnergyType": "dpp-electronics:renewableEnergyType",
+      "renewableEnergyOutput": {
+        "@id": "dpp-electronics:renewableEnergyOutput",
+        "@type": "xsd:decimal"
+      },
+      "renewableEnergyOutputUnit": "dpp-electronics:renewableEnergyOutputUnit",
+      "separabilityScore": {
+        "@id": "dpp-electronics:separabilityScore",
+        "@type": "xsd:decimal"
+      },
+      "separabilityMethod": "dpp-electronics:separabilityMethod",
+      "modularityScore": {
+        "@id": "dpp-electronics:modularityScore",
+        "@type": "xsd:decimal"
+      },
+      "replaceableComponent": "dpp-electronics:replaceableComponent",
+      "productDesign": "dpp-electronics:productDesign",
+      "designForDisassembly": {
+        "@id": "dpp-electronics:designForDisassembly",
+        "@type": "xsd:boolean"
+      },
+      "appliedStandard": {
+        "@id": "dpp-electronics:appliedStandard",
+        "@type": "@id"
+      },
+      "standardReference": "dpp-electronics:standardReference",
+      "installedSoftwareName": "dpp-electronics:installedSoftwareName",
+      "installedSoftwareVersion": "dpp-electronics:installedSoftwareVersion",
+      "softwareSupportEndDate": {
+        "@id": "dpp-electronics:softwareSupportEndDate",
+        "@type": "xsd:date"
+      }
+    }
+  ]
+}

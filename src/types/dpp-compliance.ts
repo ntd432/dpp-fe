@@ -1,9 +1,13 @@
+/**
+ * TypeScript interfaces for the DPP Compliance ontology module.
+ * @see https://ntd432.github.io/dpp/models/dpp-compliance.ttl
+ */
+
 import type {
   CertificationInfo,
   DataGroup,
   DataPoint,
   Legislation,
-  NamedItem,
 } from "./dpp-core";
 
 // ── Data Points ─────────────────────────────────────────────────────────────
@@ -15,12 +19,12 @@ export interface Regulation extends DataPoint {
 
 /** Eco-labels, energy labels, or other regulatory labels assigned to the product. */
 export interface Label extends DataPoint {
-  label?: NamedItem;
+  label?: string;
 }
 
 /** Assessment of the product status (e.g. new, refurbished, remanufactured). */
 export interface ProductStatusAssessment extends DataPoint {
-  productStatusAssessment?: NamedItem;
+  productStatusAssessment?: string;
 }
 
 /** Certifications obtained by the product (e.g. CE marking, ISO standards). */
@@ -30,7 +34,7 @@ export interface Certification extends DataPoint {
 
 /** Method used to manage, store, and share the DPP data. */
 export interface DataManagementMethod extends DataPoint {
-  dataManagementMethod?: NamedItem;
+  dataManagementMethod?: Legislation;
 }
 
 // ── Data Group ──────────────────────────────────────────────────────────────

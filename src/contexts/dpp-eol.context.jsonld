@@ -1,0 +1,41 @@
+{
+  "@context": [
+    "./base.context.jsonld",
+    "./dpp-core.context.jsonld",
+    {
+      "EndOfLifeData": "dpp-eol:EndOfLifeData",
+      "RecyclingReusePotential": "dpp-eol:RecyclingReusePotential",
+      "DisposalOptions": "dpp-eol:DisposalOptions",
+      "UnsoldProductsInformation": "dpp-eol:UnsoldProductsInformation",
+      "ExpectedWaste": "dpp-eol:ExpectedWaste",
+      "Reusability": "dpp-eol:Reusability",
+      "Repairability": "dpp-eol:Repairability",
+      "Refurbrishability": "dpp-eol:Refurbrishability",
+      "UpgradeOptions": "dpp-eol:UpgradeOptions",
+      "EndOfLifeHistory": "dpp-eol:EndOfLifeHistory",
+      "NumberOfLifecycles": "dpp-eol:NumberOfLifecycles",
+      "EndOfLifeInformation": "dpp-eol:EndOfLifeInformation",
+
+      "recyclingReusePotential": "dpp-eol:recyclingReusePotential",
+      "disposalOptions": "dpp-eol:disposalOptions",
+      "unsoldProductsInformation": "dpp-eol:unsoldProductsInformation",
+      "expectedWaste": "dpp-eol:expectedWaste",
+      "reusability": "dpp-eol:reusability",
+      "repairability": "dpp-eol:repairability",
+      "refurbrishability": "dpp-eol:refurbrishability",
+      "upgradeOptions": "dpp-eol:upgradeOptions",
+      "endOfLifeHistory": {
+        "@id": "dpp-eol:endOfLifeHistory",
+        "@type": "@id"
+      },
+      "numberOfLifecycles": {
+        "@id": "dpp-eol:numberOfLifecycles",
+        "@type": "xsd:integer"
+      },
+      "wastePrevention": "dpp-eol:wastePrevention",
+      "separateCollection": "dpp-eol:separateCollection",
+      "collectionInformation": "dpp-eol:collectionInformation",
+      "endOfLifeReport": "dpp-eol:endOfLifeReport"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 /**
  * TypeScript interfaces for the DPP Usage ontology module.
- * @see models/dpp-usage.ttl
+ * @see https://ntd432.github.io/dpp/models/dpp-usage.ttl
  */
 
 import type { DataGroup, DataPoint, Event } from "./dpp-core";

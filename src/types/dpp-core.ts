@@ -1,6 +1,6 @@
 /**
  * TypeScript interfaces for the DPP Core ontology module.
- * @see models/dpp-core.ttl
+ * @see https://ntd432.github.io/dpp/models/dpp-core.ttl
  */
 
 // ── Schema.org helper types ─────────────────────────────────────────────────
@@ -54,6 +54,18 @@ export interface Guide {
   url?: string;
 }
 
+/** A schema:ImageObject */
+export interface ImageObject {
+  url?: string;
+  caption?: string;
+}
+
+/** A schema:DefinedTerm */
+export interface DefinedTerm {
+  name?: string;
+  identifier?: string;
+}
+
 /** Generic named item (used for labels, status assessments, DMMs, etc.) */
 export interface NamedItem {
   name?: string;
@@ -70,6 +82,13 @@ export interface DPP {
   /** IRI of this DPP resource */
   id?: string;
   label?: string;
+  dppRegistrationNumber?: string;
+  batchNumber?: string;
+  serialNumber?: string;
+  gtin?: string;
+  granularity?: "model" | "batch" | "item";
+  dataCarrierFormat?: "QR code" | "NFC" | "RFID" | "DataMatrix";
+  product?: Product;
 }
 
 /** A notable occurrence or action in the lifecycle of a product. */
@@ -83,7 +102,7 @@ export interface Event {
   /** Where the event took place */
   location?: Place;
   /** The responsible organization or person */
-  actor?: Organization;
+  actor?: Organization | Person;
 }
 
 /** A parent class for sector-specific extension information. */
@@ -97,7 +116,8 @@ export interface Extension {
  */
 export interface DataPoint {
   /** Access or classification layer (Regulatory, Sectoral, Commercial, Downstream Data) */
-  dataLayer?: string;
+  dataLayer?: "Regulatory" | "Sectoral" | "Commercial" | "Downstream Data";
+  extension?: Extension;
 }
 
 /**
@@ -114,8 +134,8 @@ export interface DataGroup {
 export interface Product {
   /** IRI of this product resource */
   id?: string;
-  /** The product's Digital Product Passport */
-  dpp?: DPP;
+  label?: string;
+  dataGroup?: DataGroup[];
   /** Thematic data groups attached to this product */
   productInfo?: import("./dpp-product-info").ProductInformation;
   compliance?: import("./dpp-compliance").Compliance;

@@ -1,0 +1,53 @@
+{
+  "@context": [
+    "./base.context.jsonld",
+    {
+      "@vocab": "https://ntd432.github.io/dpp/models/dpp-core.ttl#",
+
+      "DPP": "dpp-core:DPP",
+      "Product": "dpp-core:Product",
+      "DataGroup": "dpp-core:DataGroup",
+      "DataPoint": "dpp-core:DataPoint",
+      "Event": "dpp-core:Event",
+      "Extension": "dpp-core:Extension",
+
+      "dppRegistrationNumber": "dpp-core:dppRegistrationNumber",
+      "batchNumber": "dpp-core:batchNumber",
+      "serialNumber": "dpp-core:serialNumber",
+      "gtin": "dpp-core:gtin",
+      "granularity": "dpp-core:granularity",
+      "dataCarrierFormat": "dpp-core:dataCarrierFormat",
+      "product": {
+        "@id": "dpp-core:product",
+        "@type": "@id"
+      },
+      "dataGroup": {
+        "@id": "dpp-core:dataGroup",
+        "@type": "@id"
+      },
+      "dataPoint": {
+        "@id": "dpp-core:dataPoint",
+        "@type": "@id"
+      },
+      "location": {
+        "@id": "dpp-core:location",
+        "@type": "@id"
+      },
+      "actor": {
+        "@id": "dpp-core:actor",
+        "@type": "@id"
+      },
+      "extension": {
+        "@id": "dpp-core:extension",
+        "@type": "@id"
+      },
+      "dataLayer": "dpp-core:dataLayer",
+      "actionName": "dpp-core:actionName",
+      "actionType": "dpp-core:actionType",
+      "time": {
+        "@id": "dpp-core:time",
+        "@type": "xsd:dateTimeStamp"
+      }
+    }
+  ]
+}

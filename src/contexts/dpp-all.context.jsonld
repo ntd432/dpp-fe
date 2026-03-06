@@ -1,0 +1,14 @@
+{
+  "@context": [
+    "./base.context.jsonld",
+    "./dpp-core.context.jsonld",
+    "./dpp-product-info.context.jsonld",
+    "./dpp-compliance.context.jsonld",
+    "./dpp-supply-chain.context.jsonld",
+    "./dpp-sustainability.context.jsonld",
+    "./dpp-eol.context.jsonld",
+    "./dpp-guidelines.context.jsonld",
+    "./dpp-usage.context.jsonld",
+    "./dpp-electronics.context.jsonld"
+  ]
+}

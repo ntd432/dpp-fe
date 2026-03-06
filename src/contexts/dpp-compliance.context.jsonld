@@ -1,0 +1,32 @@
+{
+  "@context": [
+    "./base.context.jsonld",
+    "./dpp-core.context.jsonld",
+    {
+      "Compliance": "dpp-compliance:Compliance",
+      "Regulation": "dpp-compliance:Regulation",
+      "Label": "dpp-compliance:Label",
+      "ProductStatusAssessment": "dpp-compliance:ProductStatusAssessment",
+      "CertificationNode": "dpp-compliance:Certification",
+      "DataManagementMethod": "dpp-compliance:DataManagementMethod",
+
+      "regulation": {
+        "@id": "dpp-compliance:regulation",
+        "@type": "@id"
+      },
+      "label": "dpp-compliance:label",
+      "productStatusAssessment": {
+        "@id": "dpp-compliance:productStatusAssessment",
+        "@type": "xsd:anyURI"
+      },
+      "certification": {
+        "@id": "dpp-compliance:certification",
+        "@type": "@id"
+      },
+      "dataManagementMethod": {
+        "@id": "dpp-compliance:dataManagementMethod",
+        "@type": "@id"
+      }
+    }
+  ]
+}

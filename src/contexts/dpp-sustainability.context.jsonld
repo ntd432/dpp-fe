@@ -1,0 +1,63 @@
+{
+  "@context": [
+    "./base.context.jsonld",
+    "./dpp-core.context.jsonld",
+    {
+      "SustainabilityInformation": "dpp-sustainability:SustainabilityInformation",
+      "SustainabilityPerformance": "dpp-sustainability:SustainabilityPerformance",
+      "Decomposability": "dpp-sustainability:Decomposability",
+      "SectorSustainabilityIndicators": "dpp-sustainability:SectorSustainabilityIndicators",
+      "CriticalRawMaterial": "dpp-sustainability:CriticalRawMaterial",
+      "LifeCycleAssessment": "dpp-sustainability:LifeCycleAssessment",
+      "RenewableNonRenewableContent": "dpp-sustainability:RenewableNonRenewableContent",
+      "CommercialSustainableIndicators": "dpp-sustainability:CommercialSustainableIndicators",
+      "SocialIndicator": "dpp-sustainability:SocialIndicator",
+      "SustainabilityAttributes": "dpp-sustainability:SustainabilityAttributes",
+      "EnvironmentDeclaration": "dpp-sustainability:EnvironmentDeclaration",
+
+      "environmentalFootprint": {
+        "@id": "dpp-sustainability:environmentalFootprint",
+        "@type": "@id"
+      },
+      "resourceConsumption": {
+        "@id": "dpp-sustainability:resourceConsumption",
+        "@type": "@id"
+      },
+      "plasticsRelease": "dpp-sustainability:plasticsRelease",
+      "decomposability": "dpp-sustainability:decomposability",
+      "sectorSustainabilityIndicators": {
+        "@id": "dpp-sustainability:sectorSustainabilityIndicators",
+        "@type": "@id"
+      },
+      "criticalRawMaterial": {
+        "@id": "dpp-sustainability:criticalRawMaterial",
+        "@type": "@id"
+      },
+      "lifeCycleAssessment": {
+        "@id": "dpp-sustainability:lifeCycleAssessment",
+        "@type": "xsd:anyURI"
+      },
+      "renewableNonRenewableContent": {
+        "@id": "dpp-sustainability:renewableNonRenewableContent",
+        "@type": "@id"
+      },
+      "commercialSustainableIndicators": {
+        "@id": "dpp-sustainability:commercialSustainableIndicators",
+        "@type": "@id"
+      },
+      "labourConditions": "dpp-sustainability:labourConditions",
+      "resourceConsumptionWhenUsing": {
+        "@id": "dpp-sustainability:resourceConsumptionWhenUsing",
+        "@type": "@id"
+      },
+      "resourceConsumptionWhenRecovering": {
+        "@id": "dpp-sustainability:resourceConsumptionWhenRecovering",
+        "@type": "@id"
+      },
+      "environmentDeclaration": {
+        "@id": "dpp-sustainability:environmentDeclaration",
+        "@type": "xsd:anyURI"
+      }
+    }
+  ]
+}

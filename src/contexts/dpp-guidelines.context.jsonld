@@ -1,0 +1,47 @@
+{
+  "@context": [
+    "./base.context.jsonld",
+    "./dpp-core.context.jsonld",
+    {
+      "GuidelinesAndManuals": "dpp-guidelines:GuidelinesAndManuals",
+      "AssemblyGuideline": "dpp-guidelines:AssemblyGuideline",
+      "NonDestructiveDisassemblyGuideline": "dpp-guidelines:NonDestructiveDisassemblyGuideline",
+      "ProductManual": "dpp-guidelines:ProductManual",
+      "StorageAndTransportGuideline": "dpp-guidelines:StorageAndTransportGuideline",
+      "CommercialInstruction": "dpp-guidelines:CommercialInstruction",
+      "Accessibility": "dpp-guidelines:Accessibility",
+      "UtilizationCharacteristic": "dpp-guidelines:UtilizationCharacteristic",
+
+      "assemblyGuideline": {
+        "@id": "dpp-guidelines:assemblyGuideline",
+        "@type": "@id"
+      },
+      "nonDestructiveDisassemblyGuideline": {
+        "@id": "dpp-guidelines:nonDestructiveDisassemblyGuideline",
+        "@type": "@id"
+      },
+      "productManual": {
+        "@id": "dpp-guidelines:productManual",
+        "@type": "@id"
+      },
+      "storageAndTransportGuideline": {
+        "@id": "dpp-guidelines:storageAndTransportGuideline",
+        "@type": "@id"
+      },
+      "safetyInstruction": {
+        "@id": "dpp-guidelines:safetyInstruction",
+        "@type": "@id"
+      },
+      "wasteSortingInstruction": {
+        "@id": "dpp-guidelines:wasteSortingInstruction",
+        "@type": "@id"
+      },
+      "maintenanceInstruction": {
+        "@id": "dpp-guidelines:maintenanceInstruction",
+        "@type": "@id"
+      },
+      "accessibility": "dpp-guidelines:accessibility",
+      "utilizationCharacteristic": "dpp-guidelines:utilizationCharacteristic"
+    }
+  ]
+}

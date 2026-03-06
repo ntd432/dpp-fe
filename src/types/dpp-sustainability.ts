@@ -1,6 +1,6 @@
 /**
  * TypeScript interfaces for the DPP Sustainability ontology module.
- * @see models/dpp-sustainability.ttl
+ * @see https://ntd432.github.io/dpp/models/dpp-sustainability.ttl
  */
 
 import type { DataGroup, DataPoint, Extension } from "./dpp-core";
@@ -23,6 +23,7 @@ export interface ResourceConsumption {
 export interface SustainabilityPerformance extends DataPoint {
   environmentalFootprint?: EnvironmentalFootprint;
   resourceConsumption?: ResourceConsumption;
+  plasticsRelease?: string;
 }
 
 /** Ability of the product or materials to break down naturally. */
@@ -38,8 +39,6 @@ export interface SectorSustainabilityIndicators extends DataPoint {
 /** Critical raw materials contained in the product. */
 export interface CriticalRawMaterial extends DataPoint {
   criticalRawMaterial?: string;
-  /** URI to the life-cycle assessment report */
-  lifeCycleAssessment?: string;
 }
 
 /** Life-cycle assessment (standalone data point). */

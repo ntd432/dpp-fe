@@ -1,0 +1,45 @@
+{
+  "@context": {
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "sh": "http://www.w3.org/ns/shacl#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dct": "http://purl.org/dc/terms/",
+    "schema": "https://schema.org/",
+    "gs1": "https://ref.gs1.org/voc/",
+    "eu-dpp": "http://dpp.taltech.ee/EUDPP#",
+    "dpp-core": "https://ntd432.github.io/dpp/models/dpp-core.ttl#",
+    "dpp-product-info": "https://ntd432.github.io/dpp/models/dpp-product-info.ttl#",
+    "dpp-compliance": "https://ntd432.github.io/dpp/models/dpp-compliance.ttl#",
+    "dpp-supply-chain": "https://ntd432.github.io/dpp/models/dpp-supply-chain.ttl#",
+    "dpp-sustainability": "https://ntd432.github.io/dpp/models/dpp-sustainability.ttl#",
+    "dpp-eol": "https://ntd432.github.io/dpp/models/dpp-eol.ttl#",
+    "dpp-guidelines": "https://ntd432.github.io/dpp/models/dpp-guidelines.ttl#",
+    "dpp-usage": "https://ntd432.github.io/dpp/models/dpp-usage.ttl#",
+    "dpp-electronics": "https://ntd432.github.io/dpp/models/extensions/dpp-electronics.ttl#",
+
+    "id": "@id",
+    "type": "@type",
+
+    "Organization": "schema:Organization",
+    "Person": "schema:Person",
+    "Place": "schema:Place",
+    "Country": "schema:Country",
+    "Substance": "schema:Substance",
+    "Legislation": "schema:Legislation",
+    "Certification": "schema:Certification",
+    "Guide": "schema:Guide",
+    "ImageObject": "schema:ImageObject",
+    "DefinedTerm": "schema:DefinedTerm",
+
+    "name": "schema:name",
+    "description": "schema:description",
+    "url": {
+      "@id": "schema:url",
+      "@type": "xsd:anyURI"
+    },
+    "identifier": "schema:identifier",
+    "label": "rdfs:label"
+  }
+}

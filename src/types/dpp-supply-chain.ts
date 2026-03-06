@@ -1,38 +1,38 @@
 /**
  * TypeScript interfaces for the DPP Supply Chain ontology module.
- * @see models/dpp-supply-chain.ttl
+ * @see https://ntd432.github.io/dpp/models/dpp-supply-chain.ttl
  */
 
-import type { DataGroup, DataPoint, Event, Organization } from "./dpp-core";
+import type { DataGroup, DataPoint, Event, Organization, Person } from "./dpp-core";
 
 // ── Data Points ─────────────────────────────────────────────────────────────
 
 /** Traceability information for tracking the product through the supply chain. */
 export interface ProductTraceability extends DataPoint {
-  traceabilityEvents?: Event[];
+  traceabilityEvent?: Event[];
 }
 
 /** Recycling partner involved in the product's end-of-life processing. */
 export interface RecyclingPartner extends DataPoint {
-  participant?: Organization;
+  participant?: Organization | Person;
 }
 
 /** Customer return channel for the product. */
 export interface CustomerReturnChannel extends DataPoint {
-  participant?: Organization;
+  participant?: Organization | Person;
 }
 
 /** Component supplier in the product's supply chain. */
 export interface ComponentSupplier extends DataPoint {
-  participant?: Organization;
+  participant?: Organization | Person;
 }
 
 // ── Data Group ──────────────────────────────────────────────────────────────
 
 /** Supply chain data including traceability and partners. */
 export interface SupplyChain extends DataGroup {
-  traceability?: ProductTraceability;
+  productTraceability?: ProductTraceability;
   recyclingPartner?: RecyclingPartner;
-  returnChannel?: CustomerReturnChannel;
+  customerReturnChannel?: CustomerReturnChannel;
   componentSupplier?: ComponentSupplier;
 }

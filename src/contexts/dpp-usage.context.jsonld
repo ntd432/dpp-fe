@@ -1,0 +1,25 @@
+{
+  "@context": [
+    "./base.context.jsonld",
+    "./dpp-core.context.jsonld",
+    {
+      "UsageInformation": "dpp-usage:UsageInformation",
+      "MaintenanceLog": "dpp-usage:MaintenanceLog",
+      "UsageHistory": "dpp-usage:UsageHistory",
+      "IncidentsAndErrors": "dpp-usage:IncidentsAndErrors",
+
+      "maintenanceLog": {
+        "@id": "dpp-usage:maintenanceLog",
+        "@type": "@id"
+      },
+      "usageHistory": {
+        "@id": "dpp-usage:usageHistory",
+        "@type": "@id"
+      },
+      "incidentsAndErrors": {
+        "@id": "dpp-usage:incidentsAndErrors",
+        "@type": "@id"
+      }
+    }
+  ]
+}
