@@ -14,7 +14,6 @@
       "dppRegistrationNumber": "dpp-core:dppRegistrationNumber",
       "batchNumber": "dpp-core:batchNumber",
       "serialNumber": "dpp-core:serialNumber",
-      "gtin": "dpp-core:gtin",
       "granularity": "dpp-core:granularity",
       "dataCarrierFormat": "dpp-core:dataCarrierFormat",
       "product": {

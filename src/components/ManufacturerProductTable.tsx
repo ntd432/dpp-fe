@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 interface Manufacturer {
   name: string;
@@ -12,7 +12,6 @@ interface Manufacturer {
 interface Product {
   name: string;
   gtin: string;
-  serial: string;
   country: string;
   documentation: string;
   productionDate: string;
@@ -139,16 +138,15 @@ export default function ManufacturerProductTable() {
               <tr className="bg-gray-50 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                 <th className="px-6 py-3">Name</th>
                 <th className="px-6 py-3">GTIN</th>
-                <th className="px-6 py-3">Serial</th>
-                <th className="px-6 py-3">Country</th>
+                <th className="px-6 py-3">Country of Origin</th>
                 <th className="px-6 py-3">Production Date</th>
                 <th className="px-6 py-3">Docs</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {products.map((p, idx) => (
+              {products.map((p) => (
                 <tr
-                  key={idx}
+                  key={`${p.name}--${p.gtin}--${p.productionDate}--${p.country}--${p.documentation}`}
                   className="hover:bg-gray-50 transition-colors"
                 >
                   <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
@@ -163,17 +161,14 @@ export default function ManufacturerProductTable() {
                       p.name || "—"
                     )}
                   </td>
-                  <td className="px-6 py-4 text-gray-600 font-mono text-xs">
+                  <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                     {p.gtin || "—"}
-                  </td>
-                  <td className="px-6 py-4 text-gray-600 font-mono text-xs">
-                    {p.serial || "—"}
                   </td>
                   <td className="px-6 py-4 text-gray-600">
                     {p.country || "—"}
                   </td>
                   <td className="px-6 py-4 text-gray-600">
-                    {p.productionDate || "—"}
+                    {new Date(p.productionDate).toLocaleDateString() || "—"}
                   </td>
                   <td className="px-6 py-4">
                     {p.documentation ? (

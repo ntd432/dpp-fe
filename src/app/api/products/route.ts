@@ -422,14 +422,11 @@ function transformManufacturer(
   if (isRecord(manufacturer.manufacturerInfo)) {
     result.manufacturerInfo = transformOrganization(manufacturer.manufacturerInfo);
   }
-  if (isRecord(manufacturer.manufacturer)) {
-    result.manufacturer = transformOrganization(manufacturer.manufacturer);
-  }
 
   copyUnhandledProperties(
     manufacturer,
     result,
-    new Set(["id", "@id", "@type", "manufacturerInfo", "manufacturer"]),
+    new Set(["id", "@id", "@type", "manufacturerInfo"]),
   );
 
   return result;
@@ -1007,6 +1004,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       transformNestedObjects,
     );
 
+    // console.log("Generated JSON-LD Payload:", JSON.stringify(jsonLdPayload, null, 2));
     const uploadResult = await uploadToTriplyDB(jsonLdPayload, {
       token,
       datasetName,

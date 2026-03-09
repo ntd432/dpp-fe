@@ -24,6 +24,7 @@ type ProductReference = Product | DPP | string;
  * number, country of origin, and production date.
  */
 export interface ProductIdentificationInformation extends DataPoint {
+  gtin?: string;
   /** Product name */
   productName?: string;
   /** Textual description */

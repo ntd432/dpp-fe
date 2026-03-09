@@ -7,7 +7,7 @@
       "Regulation": "dpp-compliance:Regulation",
       "ComplianceLabel": "dpp-compliance:Label",
       "ProductStatusAssessment": "dpp-compliance:ProductStatusAssessment",
-      "CertificationNode": "dpp-compliance:Certification",
+      "Certification": "dpp-compliance:Certification",
       "DataManagementMethod": "dpp-compliance:DataManagementMethod",
 
       "regulation": {

@@ -85,7 +85,6 @@ export interface DPP {
   dppRegistrationNumber?: string;
   batchNumber?: string;
   serialNumber?: string;
-  gtin?: string;
   granularity?: "model" | "batch" | "item";
   dataCarrierFormat?: "QR code" | "NFC" | "RFID" | "DataMatrix";
   product?: Product;

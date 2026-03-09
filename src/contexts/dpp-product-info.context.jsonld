@@ -35,17 +35,9 @@
         "@id": "dpp-product-info:manufacturer",
         "@type": "@id"
       },
-      "materialComposition": {
-        "@id": "dpp-product-info:materialComposition",
-        "@type": "@id"
-      },
       "materialBills": {
         "@id": "dpp-product-info:materialBills",
         "@type": "xsd:anyURI"
-      },
-      "recycledReusedContent": {
-        "@id": "dpp-product-info:recycledReusedContent",
-        "@type": "@id"
       },
       "sparePartsAvailability": "dpp-product-info:sparePartsAvailability",
       "hazardousSubstances": {
@@ -80,7 +72,10 @@
       },
       "qualityAssessment": "dpp-product-info:qualityAssessment",
       "identifiedRisk": "dpp-product-info:identifiedRisk",
-      "productName": "dpp-product-info:name"
+      "productName": "dpp-product-info:name",
+      "gtin": "dpp-product-info:gtin",
+      "materialComposition": "dpp-product-info:materialComposition",
+      "recycledReusedContent": "dpp-product-info:recycledReusedContent"
     }
   ]
 }
