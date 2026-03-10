@@ -10,10 +10,12 @@
       "CriticalRawMaterial": "dpp-sustainability:CriticalRawMaterial",
       "LifeCycleAssessment": "dpp-sustainability:LifeCycleAssessment",
       "RenewableNonRenewableContent": "dpp-sustainability:RenewableNonRenewableContent",
-      "CommercialSustainableIndicators": "dpp-sustainability:CommercialSustainableIndicators",
+      "CircularEconomyIndicator": "dpp-sustainability:CircularEconomyIndicator",
       "SocialIndicator": "dpp-sustainability:SocialIndicator",
       "SustainabilityAttributes": "dpp-sustainability:SustainabilityAttributes",
       "EnvironmentDeclaration": "dpp-sustainability:EnvironmentDeclaration",
+      "EnvironmentalFootprint": "dpp-sustainability:EnvironmentalFootprint",
+      "ResourceConsumption": "dpp-sustainability:ResourceConsumption",
 
       "environmentalFootprint": {
         "@id": "dpp-sustainability:environmentalFootprint",
@@ -41,8 +43,8 @@
         "@id": "dpp-sustainability:renewableNonRenewableContent",
         "@type": "@id"
       },
-      "commercialSustainableIndicators": {
-        "@id": "dpp-sustainability:commercialSustainableIndicators",
+      "circularEconomyIndicator": {
+        "@id": "dpp-sustainability:circularEconomyIndicator",
         "@type": "@id"
       },
       "labourConditions": "dpp-sustainability:labourConditions",
@@ -57,6 +59,19 @@
       "environmentDeclaration": {
         "@id": "dpp-sustainability:environmentDeclaration",
         "@type": "xsd:anyURI"
+      },
+      "environmentalFootprintType": "dpp-sustainability:environmentalFootprintType",
+      "environmentalFootprintMeasuringMethod": "dpp-sustainability:environmentalFootprintMeasuringMethod",
+      "environmentalFootprintUnit": "dpp-sustainability:environmentalFootprintUnit",
+      "environmentalFootprintValue": {
+        "@id": "dpp-sustainability:environmentalFootprintValue",
+        "@type": "xsd:double"
+      },
+      "resource": "dpp-sustainability:resource",
+      "resourceConsumptionUnit": "dpp-sustainability:resourceConsumptionUnit",
+      "resourceConsumptionValue": {
+        "@id": "dpp-sustainability:resourceConsumptionValue",
+        "@type": "xsd:double"
       }
     }
   ]

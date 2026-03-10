@@ -6,10 +6,9 @@
 import type {
   DPP,
   Country,
-  DataGroup,
-  DataPoint,
   Extension,
   ImageObject,
+  Material,
   Organization,
   Product,
   Substance,
@@ -23,8 +22,9 @@ type ProductReference = Product | DPP | string;
  * Core identifying data for a product, including its name, GTIN, serial
  * number, country of origin, and production date.
  */
-export interface ProductIdentificationInformation extends DataPoint {
+export interface ProductIdentificationInformation {
   gtin?: string;
+  taricCode?: string;
   /** Product name */
   productName?: string;
   /** Textual description */
@@ -37,92 +37,81 @@ export interface ProductIdentificationInformation extends DataPoint {
   productionDate?: string;
 }
 
-/** Information about the entity responsible for manufacturing the product. */
-export interface Manufacturer extends DataPoint {
+export interface Manufacturer {
   manufacturerInfo?: Organization;
 }
 
-/** Composition, bill of materials, and recycled/reused content. */
-export interface MaterialInformation extends DataPoint {
-  materialComposition?: ProductReference;
+export interface MaterialInformation {
+  materialComposition?: Material[];
   /** URI to the bill of materials */
   materialBills?: string;
-  recycledReusedContent?: ProductReference;
+  recycledReusedContent?: Material[];
 }
 
-/** Availability of spare parts for the product. */
-export interface SparePartsAvailability extends DataPoint {
+export interface SparePartsAvailability {
   sparePartsAvailability?: string;
 }
 
-/** Hazardous substances contained in the product. */
-export interface HazardousSubstances extends DataPoint {
+export interface HazardousSubstances {
   hazardousSubstances?: Substance[];
 }
 
-/** Substances of very high concern (SVHCs) present in the product. */
-export interface SubstancesOfConcern extends DataPoint {
-  substancesOfConcern?: string;
+export interface SubstancesOfConcern {
+  substancesOfConcern?: Substance[];
 }
 
-/** Sector-specific required information (extension point). */
-export interface SectorRequiredInformation extends DataPoint {
+export interface SectorRequiredInformation {
   sectorRequiredInformation?: Extension;
 }
 
-/** Technical specifications (dimensions, weight, performance, etc.). */
-export interface ProductSpecification extends DataPoint {
-  productSpecification?: string;
+export interface ProductSpecification {
+  productSpecification?: Extension;
 }
 
-/** Voluntary sector-specific information (extension point). */
-export interface SectorNonRequiredInformation extends DataPoint {
+export interface SectorNonRequiredInformation {
   sectorNonRequiredInformation?: Extension;
 }
 
-/** Links to passports of related objects / components. */
-export interface RelatedObjects extends DataPoint {
+export interface RelatedObjects {
   relatedObjects?: ProductReference[];
 }
 
-/** URI to test reports. */
-export interface TestReports extends DataPoint {
-  testReports?: string;
+export interface TestReport {
+  testReport?: string;
 }
 
-/** Commercial information such as images and lifetime expectancy. */
-export interface ProductCommercialInformation extends DataPoint {
+export interface ProductCommercialInformation {
   image?: ImageObject;
   /** ISO 8601 duration (e.g. "P5Y") */
   lifetimeExpectancy?: string;
+  /** ISO 8601 duration (e.g. "P2Y") */
+  warrantyPeriod?: string;
+  takebackOption?: string;
 }
 
-/** Quality assessment results. */
-export interface QualityAssessment extends DataPoint {
+export interface QualityAssessment {
   qualityAssessment?: string;
 }
 
-/** Identified risks while using the product. */
-export interface IdentifiedRisk extends DataPoint {
+export interface IdentifiedRisk {
   identifiedRisk?: string;
 }
 
 // ── Data Group ──────────────────────────────────────────────────────────────
 
-/** Product data including identification, properties, and attributes. */
-export interface ProductInformation extends DataGroup {
+export interface ProductInformation {
   identification?: ProductIdentificationInformation;
-  manufacturer?: Manufacturer;
+  manufacturer?: Organization;
   material?: MaterialInformation;
-  spareParts?: SparePartsAvailability;
-  hazardousSubstances?: HazardousSubstances;
-  substancesOfConcern?: SubstancesOfConcern;
-  sectorRequiredInformation?: SectorRequiredInformation;
-  productSpecification?: ProductSpecification;
-  sectorNonRequiredInformation?: SectorNonRequiredInformation;
-  relatedObjects?: RelatedObjects;
-  testReports?: TestReports;
+  sparePartsAvailability?: string;
+  hazardousSubstances?: Substance[];
+  substancesOfConcern?: Substance[];
+  sectorRequiredInformation?: Extension;
+  productSpecification?: Extension;
+  sectorNonRequiredInformation?: Extension;
+  relatedObjects?: ProductReference[];
+  testReport?: string;
   commercialInformation?: ProductCommercialInformation;
-  qualityAssessment?: QualityAssessment;
-  identifiedRisk?: IdentifiedRisk;
+  qualityAssessment?: string;
+  identifiedRisk?: string;
 }

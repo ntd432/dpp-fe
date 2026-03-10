@@ -1,0 +1,133 @@
+import { randomUUID } from "node:crypto";
+import { getDataLayer } from "@/config/DataLayerConfig";
+
+export function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+export function createDataPoint(
+  source: Record<string, unknown>,
+  type: string,
+  _label: string,
+  idPrefix: string,
+): Record<string, unknown> {
+  const dataLayer = getDataLayer(type);
+  if (!dataLayer) {
+    return {
+      "@type": type,
+      "@id": source.id ?? `urn:generated:${idPrefix}:${randomUUID()}`,
+    };
+  }
+  return {
+    "@type": type,
+    "@id": source.id ?? `urn:generated:${idPrefix}:${randomUUID()}`,
+    dataLayer,
+  };
+}
+
+export function createNode(
+  source: Record<string, unknown>,
+  type: string,
+  _label: string,
+  idPrefix: string,
+): Record<string, unknown> {
+  return {
+    "@type": type,
+    "@id": source.id ?? `urn:generated:${idPrefix}:${randomUUID()}`,
+  };
+}
+
+export function copyUnhandledProperties(
+  source: Record<string, unknown>,
+  result: Record<string, unknown>,
+  handled: Set<string>,
+): void {
+  for (const [key, value] of Object.entries(source)) {
+    if (!handled.has(key)) {
+      result[key] = value;
+    }
+  }
+}
+
+export function transformEvent(event: Record<string, unknown>): Record<string, unknown> {
+  const result = createNode(event, "Event", "Event", "event");
+
+  if (isRecord(event.location)) {
+    result.location = transformPlace(event.location);
+  }
+
+  if (isRecord(event.actor)) {
+    result.actor = transformOrganization(event.actor);
+  }
+
+  copyUnhandledProperties(event, result, new Set(["id", "@id", "@type", "location", "actor"]));
+  return result;
+}
+
+export function transformPlace(place: Record<string, unknown>): Record<string, unknown> {
+  const result = createNode(place, "Place", "Place", "place");
+  copyUnhandledProperties(place, result, new Set(["id", "@id", "@type"]));
+  return result;
+}
+
+export function transformGuide(guide: Record<string, unknown>): Record<string, unknown> {
+  const result = createNode(guide, "Guide", "Guide", "guide");
+  copyUnhandledProperties(guide, result, new Set(["id", "@id", "@type"]));
+  return result;
+}
+
+export function transformImageObject(image: Record<string, unknown>): Record<string, unknown> {
+  const result = createNode(image, "ImageObject", "Image", "image");
+  copyUnhandledProperties(image, result, new Set(["id", "@id", "@type"]));
+  return result;
+}
+
+export function transformOrganization(org: Record<string, unknown>): Record<string, unknown> {
+  const result = createNode(org, "Organization", "Organization", "organization");
+  copyUnhandledProperties(org, result, new Set(["id", "@id", "@type"]));
+  return result;
+}
+
+export function transformLegislation(legislation: Record<string, unknown>): Record<string, unknown> {
+  const result = createNode(legislation, "Legislation", "Legislation", "legislation");
+  copyUnhandledProperties(legislation, result, new Set(["id", "@id", "@type"]));
+  return result;
+}
+
+export function transformCertificationInfo(certification: Record<string, unknown>): Record<string, unknown> {
+  const result = createNode(certification, "Certification", "Certification", "certification");
+  copyUnhandledProperties(certification, result, new Set(["id", "@id", "@type"]));
+  return result;
+}
+
+export function transformCountry(country: Record<string, unknown>): Record<string, unknown> {
+  const result = createNode(country, "Country", "Country", "country");
+  copyUnhandledProperties(country, result, new Set(["id", "@id", "@type"]));
+  return result;
+}
+
+export function transformSubstance(substance: Record<string, unknown>): Record<string, unknown> {
+  const result = createNode(substance, "Substance", "Substance", "substance");
+  copyUnhandledProperties(substance, result, new Set(["id", "@id", "@type"]));
+  return result;
+}
+
+export function transformResourceConsumption(resource: Record<string, unknown>): Record<string, unknown> {
+  const result = createNode(resource, "ResourceConsumption", "Resource Consumption", "resource-consumption");
+  copyUnhandledProperties(resource, result, new Set(["id", "@id", "@type"]));
+  return result;
+}
+
+export function transformEnvironmentalFootprint(footprint: Record<string, unknown>): Record<string, unknown> {
+  const result = createNode(footprint, "EnvironmentalFootprint", "Environmental Footprint", "environmental-footprint");
+  copyUnhandledProperties(footprint, result, new Set(["id", "@id", "@type"]));
+  return result;
+}
+
+export function transformMaterial(material: Record<string, unknown>[]): Record<string, unknown>[] {
+  return material.map((item) => {
+    const result = createNode(item, "Material", "Material", "material");
+    copyUnhandledProperties(item, result, new Set(["id", "@id", "@type"]));
+    return result;
+  });
+}

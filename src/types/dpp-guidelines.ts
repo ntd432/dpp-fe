@@ -3,56 +3,48 @@
  * @see https://ntd432.github.io/dpp/models/dpp-guidelines.ttl
  */
 
-import type { DataGroup, DataPoint, Guide } from "./dpp-core";
+import type { Guide } from "./dpp-core";
 
 // ── Data Points ─────────────────────────────────────────────────────────────
 
-/** Instructions and guidelines for assembling the product. */
-export interface AssemblyGuideline extends DataPoint {
+export interface AssemblyGuideline {
   assemblyGuideline?: Guide;
 }
 
-/** Instructions for disassembling the product without causing damage. */
-export interface NonDestructiveDisassemblyGuideline extends DataPoint {
+export interface NonDestructiveDisassemblyGuideline {
   nonDestructiveDisassemblyGuideline?: Guide;
 }
 
-/** The official product manual or user guide. */
-export interface ProductManual extends DataPoint {
+export interface ProductManual {
   productManual?: Guide;
 }
 
-/** Guidelines for proper storage and transportation. */
-export interface StorageAndTransportGuideline extends DataPoint {
+export interface StorageAndTransportGuideline {
   storageAndTransportGuideline?: Guide;
 }
 
-/** Commercial instructions (safety, maintenance, waste sorting). */
-export interface CommercialInstruction extends DataPoint {
+export interface CommercialInstruction {
   safetyInstruction?: Guide;
   maintenanceInstruction?: Guide;
   wasteSortingInstruction?: Guide;
 }
 
-/** Accessibility features or accommodations provided by the product. */
-export interface Accessibility extends DataPoint {
+export interface Accessibility {
   accessibility?: string;
 }
 
-/** Characteristics describing how the product is intended to be utilized. */
-export interface UtilizationCharacteristic extends DataPoint {
+export interface UtilizationCharacteristic {
   utilizationCharacteristic?: string;
 }
 
 // ── Data Group ──────────────────────────────────────────────────────────────
 
-/** All guidelines, manuals, and instructions related to the product. */
-export interface GuidelinesAndManuals extends DataGroup {
-  assemblyGuideline?: AssemblyGuideline;
-  nonDestructiveDisassemblyGuideline?: NonDestructiveDisassemblyGuideline;
-  productManual?: ProductManual;
+export interface GuidelinesAndManuals {
+  assemblyGuideline?: Guide;
+  nonDestructiveDisassemblyGuideline?: Guide;
+  productManual?: Guide;
   storageAndTransportGuideline?: StorageAndTransportGuideline;
   commercialInstruction?: CommercialInstruction;
-  accessibility?: Accessibility;
-  utilizationCharacteristic?: UtilizationCharacteristic;
+  accessibility?: string;
+  utilizationCharacteristic?: string;
 }

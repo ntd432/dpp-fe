@@ -1,4 +1,3 @@
-// Sustainability information
 export interface SustainabilityInfo {
   productName: string;
   envFootprint: string;
@@ -10,7 +9,6 @@ export interface SustainabilityInfo {
   [key: string]: string;
 }
 
-// Compliance information
 export interface ComplianceInfo {
   productName: string;
   regulationName: string;

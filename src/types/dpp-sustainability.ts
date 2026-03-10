@@ -3,89 +3,83 @@
  * @see https://ntd432.github.io/dpp/models/dpp-sustainability.ttl
  */
 
-import type { DataGroup, DataPoint, Extension } from "./dpp-core";
+import type { Extension, Material } from "./dpp-core";
 
 // ── Sub-types ───────────────────────────────────────────────────────────────
 
 /** Environmental footprint data (blank node with rdfs:label in the RDF). */
 export interface EnvironmentalFootprint {
-  label?: string;
+  environmentalFootprintType?: string;
+  environmentalFootprintMeasuringMethod?: string;
+  environmentalFootprintUnit?: string;
+  environmentalFootprintValue?: number;
 }
 
 /** Resource consumption data (blank node with rdfs:label in the RDF). */
 export interface ResourceConsumption {
-  label?: string;
+  resource?: string;
+  resourceConsumptionUnit?: string;
+  resourceConsumptionValue?: number;
 }
 
 // ── Data Points ─────────────────────────────────────────────────────────────
 
-/** Environment/circularity performance (footprint, resource consumption). */
-export interface SustainabilityPerformance extends DataPoint {
+export interface SustainabilityPerformance {
   environmentalFootprint?: EnvironmentalFootprint;
   resourceConsumption?: ResourceConsumption;
   plasticsRelease?: string;
 }
 
-/** Ability of the product or materials to break down naturally. */
-export interface Decomposability extends DataPoint {
+export interface Decomposability {
   decomposability?: string;
 }
 
-/** Sector-based sustainability and circularity indicators (extension point). */
-export interface SectorSustainabilityIndicators extends DataPoint {
+export interface SectorSustainabilityIndicators {
   sectorSustainabilityIndicators?: Extension;
 }
 
-/** Critical raw materials contained in the product. */
-export interface CriticalRawMaterial extends DataPoint {
-  criticalRawMaterial?: string;
+export interface CriticalRawMaterial {
+  criticalRawMaterial?: Material | Material[];
 }
 
-/** Life-cycle assessment (standalone data point). */
-export interface LifeCycleAssessment extends DataPoint {
+export interface LifeCycleAssessment {
   /** URI to the LCA report */
   lifeCycleAssessment?: string;
 }
 
-/** Proportion of renewable vs. non-renewable materials. */
-export interface RenewableNonRenewableContent extends DataPoint {
-  renewableNonRenewableContent?: string;
+export interface RenewableNonRenewableContent {
+  renewableNonRenewableContent?: Material | Material[];
 }
 
-/** Other circular economy indicators (extension point). */
-export interface CommercialSustainableIndicators extends DataPoint {
-  commercialSustainableIndicators?: Extension;
+export interface CircularEconomyIndicator {
+  circularEconomyIndicator?: Extension;
 }
 
-/** Metrics related to the social impact (labour conditions, fair trade, etc.). */
-export interface SocialIndicator extends DataPoint {
+export interface SocialIndicator {
   labourConditions?: string;
 }
 
-/** Environmental attributes (resource consumption during use and recovery). */
-export interface SustainabilityAttributes extends DataPoint {
+export interface SustainabilityAttributes {
   resourceConsumptionWhenUsing?: ResourceConsumption;
   resourceConsumptionWhenRecovering?: ResourceConsumption;
 }
 
-/** Formal environmental declaration (e.g. EPD). */
-export interface EnvironmentDeclaration extends DataPoint {
+export interface EnvironmentDeclaration {
   /** URI to the environment declaration document */
   environmentDeclaration?: string;
 }
 
 // ── Data Group ──────────────────────────────────────────────────────────────
 
-/** Sustainability and circularity information for the product. */
-export interface SustainabilityInformation extends DataGroup {
+export interface SustainabilityInformation {
   sustainabilityPerformance?: SustainabilityPerformance;
-  decomposability?: Decomposability;
-  sectorSustainabilityIndicators?: SectorSustainabilityIndicators;
-  criticalRawMaterial?: CriticalRawMaterial;
-  lifeCycleAssessment?: LifeCycleAssessment;
-  renewableNonRenewableContent?: RenewableNonRenewableContent;
-  commercialSustainableIndicators?: CommercialSustainableIndicators;
+  decomposability?: string;
+  sectorSustainabilityIndicators?: Extension;
+  criticalRawMaterial?: Material[];
+  lifeCycleAssessment?: string;
+  renewableNonRenewableContent?: Material[];
+  circularEconomyIndicator?: Extension;
   socialIndicator?: SocialIndicator;
   sustainabilityAttributes?: SustainabilityAttributes;
-  environmentDeclaration?: EnvironmentDeclaration;
+  environmentDeclaration?: string;
 }

@@ -14,7 +14,7 @@
       "ProductSpecification": "dpp-product-info:ProductSpecification",
       "SectorNonRequiredInformation": "dpp-product-info:SectorNonRequiredInformation",
       "RelatedObjects": "dpp-product-info:RelatedObjects",
-      "TestReports": "dpp-product-info:TestReports",
+      "TestReport": "dpp-product-info:TestReport",
       "ProductCommercialInformation": "dpp-product-info:ProductCommercialInformation",
       "QualityAssessment": "dpp-product-info:QualityAssessment",
       "IdentifiedRisk": "dpp-product-info:IdentifiedRisk",
@@ -44,12 +44,10 @@
         "@id": "dpp-product-info:hazardousSubstances",
         "@type": "@id"
       },
-      "substancesOfConcern": "dpp-product-info:substancesOfConcern",
       "sectorRequiredInformation": {
         "@id": "dpp-product-info:sectorRequiredInformation",
         "@type": "@id"
       },
-      "productSpecification": "dpp-product-info:productSpecification",
       "sectorNonRequiredInformation": {
         "@id": "dpp-product-info:sectorNonRequiredInformation",
         "@type": "@id"
@@ -58,8 +56,8 @@
         "@id": "dpp-product-info:relatedObjects",
         "@type": "@id"
       },
-      "testReports": {
-        "@id": "dpp-product-info:testReports",
+      "testReport": {
+        "@id": "dpp-product-info:testReport",
         "@type": "xsd:anyURI"
       },
       "image": {
@@ -70,12 +68,32 @@
         "@id": "dpp-product-info:lifetimeExpectancy",
         "@type": "xsd:duration"
       },
+      "warrantyPeriod": {
+        "@id": "dpp-product-info:warrantyPeriod",
+        "@type": "xsd:duration"
+      },
+      "takebackOption": "dpp-product-info:takebackOption",
+      "taricCode": "dpp-product-info:taricCode",
       "qualityAssessment": "dpp-product-info:qualityAssessment",
       "identifiedRisk": "dpp-product-info:identifiedRisk",
-      "productName": "dpp-product-info:name",
+      "productName": "dpp-product-info:productName",
       "gtin": "dpp-product-info:gtin",
-      "materialComposition": "dpp-product-info:materialComposition",
-      "recycledReusedContent": "dpp-product-info:recycledReusedContent"
+      "materialComposition": {
+        "@id": "dpp-product-info:materialComposition",
+        "@type": "@id"
+      },
+      "recycledReusedContent": {
+        "@id": "dpp-product-info:recycledReusedContent",
+        "@type": "@id"
+      },
+      "substancesOfConcern": {
+        "@id": "dpp-product-info:substancesOfConcern",
+        "@type": "@id"
+      },
+      "productSpecification": {
+        "@id": "dpp-product-info:productSpecification",
+        "@type": "@id"
+      }
     }
   ]
 }

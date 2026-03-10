@@ -29,7 +29,7 @@ const DATA_LAYER: Record<string, string[]> = {
     "ProductSpecification",
     "SectorNonRequiredInformation",
     "RelatedObjects",
-    "TestReports",
+    "TestReport",
     // Sustainability Information group
     "Decomposability",
     "SectorSustainabilityIndicators",

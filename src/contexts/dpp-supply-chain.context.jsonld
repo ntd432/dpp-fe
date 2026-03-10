@@ -16,6 +16,18 @@
       "participant": {
         "@id": "dpp-supply-chain:participant",
         "@type": "@id"
+      },
+      "recyclingPartner": {
+        "@id": "dpp-supply-chain:recyclingPartner",
+        "@type": "@id"
+      },
+      "customerReturnChannel": {
+        "@id": "dpp-supply-chain:customerReturnChannel",
+        "@type": "@id"
+      },
+      "componentSupplier": {
+        "@id": "dpp-supply-chain:componentSupplier",
+        "@type": "@id"
       }
     }
   ]

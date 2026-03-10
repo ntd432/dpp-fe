@@ -3,62 +3,51 @@
  * @see https://ntd432.github.io/dpp/models/dpp-eol.ttl
  */
 
-import type { DataGroup, DataPoint, Event } from "./dpp-core";
+import type { Event } from "./dpp-core";
 
 // ── Data Points ─────────────────────────────────────────────────────────────
 
-/** Potential for recycling or reusing the product or its materials. */
-export interface RecyclingReusePotential extends DataPoint {
+export interface RecyclingReusePotential {
   recyclingReusePotential?: string;
 }
 
-/** Available options for disposing of the product at end-of-life. */
-export interface DisposalOptions extends DataPoint {
+export interface DisposalOptions {
   disposalOptions?: string;
 }
 
-/** Information on unsold consumer products according to ESPR Article 24. */
-export interface UnsoldProductsInformation extends DataPoint {
+export interface UnsoldProductsInformation {
   unsoldProductsInformation?: string;
 }
 
-/** Estimated amount and type of waste generated at end-of-life. */
-export interface ExpectedWaste extends DataPoint {
+export interface ExpectedWaste {
   expectedWaste?: string;
 }
 
-/** Extent to which the product or its components can be reused. */
-export interface Reusability extends DataPoint {
+export interface Reusability {
   reusability?: string;
 }
 
-/** Ease with which the product can be repaired or maintained. */
-export interface Repairability extends DataPoint {
+export interface Repairability {
   repairability?: string;
 }
 
-/** Potential for refurbishing or remanufacturing the product. */
-export interface Refurbrishability extends DataPoint {
+export interface Refurbrishability {
   refurbrishability?: string;
 }
 
-/** Available upgrade options to extend the product lifespan. */
-export interface UpgradeOptions extends DataPoint {
+export interface UpgradeOptions {
   upgradeOptions?: string;
 }
 
-/** Historical record of end-of-life events. */
-export interface EndOfLifeHistory extends DataPoint {
+export interface EndOfLifeHistory {
   endOfLifeHistory?: Event[];
 }
 
-/** Number of complete lifecycles the product has undergone. */
-export interface NumberOfLifecycles extends DataPoint {
+export interface NumberOfLifecycles {
   numberOfLifecycles?: number;
 }
 
-/** Collection, sorting, and treatment information for end-of-life. */
-export interface EndOfLifeInformation extends DataPoint {
+export interface EndOfLifeInformation {
   wastePrevention?: string;
   separateCollection?: string;
   collectionInformation?: string;
@@ -68,17 +57,16 @@ export interface EndOfLifeInformation extends DataPoint {
 
 // ── Data Group ──────────────────────────────────────────────────────────────
 
-/** End-of-life and recovery data for the product. */
-export interface EndOfLifeData extends DataGroup {
-  recyclingReusePotential?: RecyclingReusePotential;
-  disposalOptions?: DisposalOptions;
-  unsoldProductsInformation?: UnsoldProductsInformation;
-  expectedWaste?: ExpectedWaste;
-  reusability?: Reusability;
-  repairability?: Repairability;
-  refurbrishability?: Refurbrishability;
-  upgradeOptions?: UpgradeOptions;
-  endOfLifeHistory?: EndOfLifeHistory;
-  numberOfLifecycles?: NumberOfLifecycles;
+export interface EndOfLifeData {
+  recyclingReusePotential?: string;
+  disposalOptions?: string;
+  unsoldProductsInformation?: string;
+  expectedWaste?: string;
+  reusability?: string;
+  repairability?: string;
+  refurbrishability?: string;
+  upgradeOptions?: string;
+  endOfLifeHistory?: Event[];
+  numberOfLifecycles?: number;
   endOfLifeInformation?: EndOfLifeInformation;
 }

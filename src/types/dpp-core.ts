@@ -5,65 +5,64 @@
 
 // ── Schema.org helper types ─────────────────────────────────────────────────
 
-/** A schema:Organization */
 export interface Organization {
   name?: string;
   url?: string;
   identifier?: string;
 }
 
-/** A schema:Person */
 export interface Person {
   name?: string;
   url?: string;
   identifier?: string;
 }
 
-/** A schema:Place */
 export interface Place {
   name?: string;
   address?: string;
 }
 
-/** A schema:Country */
 export interface Country {
   name?: string;
 }
 
-/** A schema:Substance */
 export interface Substance {
   name?: string;
   description?: string;
 }
 
-/** A schema:Legislation */
 export interface Legislation {
   name?: string;
   identifier?: string;
 }
 
-/** A schema:Certification */
-export interface CertificationInfo {
+export interface Certification {
   name?: string;
   description?: string;
 }
 
-/** A schema:Guide */
 export interface Guide {
   name?: string;
   url?: string;
 }
 
-/** A schema:ImageObject */
 export interface ImageObject {
   url?: string;
   caption?: string;
 }
 
-/** A schema:DefinedTerm */
 export interface DefinedTerm {
   name?: string;
   identifier?: string;
+}
+
+export interface Material {
+  materialName?: string;
+  materialPercentage?: number;
+  materialMassValue?: number;
+  materialMassUnit?: string;
+  materialReference?: string;
+  materialURI?: string;
 }
 
 /** Generic named item (used for labels, status assessments, DMMs, etc.) */
@@ -83,10 +82,16 @@ export interface DPP {
   id?: string;
   label?: string;
   dppRegistrationNumber?: string;
-  batchNumber?: string;
-  serialNumber?: string;
+  productBatchNumber?: string;
+  productSerialNumber?: string;
   granularity?: "model" | "batch" | "item";
   dataCarrierFormat?: "QR code" | "NFC" | "RFID" | "DataMatrix";
+  dataCarrier?: string;
+  productGroup?: string;
+  issuer?: Organization;
+  createdAt?: string;
+  updatedAt?: string;
+  validUntil?: string;
   product?: Product;
 }
 
@@ -106,25 +111,8 @@ export interface Event {
 
 /** A parent class for sector-specific extension information. */
 export interface Extension {
+  extensionType: string;
   [key: string]: unknown;
-}
-
-/**
- * An individual piece of information within a data group.
- * All concrete data-point interfaces extend this.
- */
-export interface DataPoint {
-  /** Access or classification layer (Regulatory, Sectoral, Commercial, Downstream Data) */
-  dataLayer?: "Regulatory" | "Sectoral" | "Commercial" | "Downstream Data";
-  extension?: Extension;
-}
-
-/**
- * A thematic grouping of related data points within a DPP.
- * All concrete data-group interfaces extend this.
- */
-export interface DataGroup {
-  dataPoints?: DataPoint[];
 }
 
 /**
@@ -134,7 +122,7 @@ export interface Product {
   /** IRI of this product resource */
   id?: string;
   label?: string;
-  dataGroup?: DataGroup[];
+  dpp?: DPP | DPP[];
   /** Thematic data groups attached to this product */
   productInfo?: import("./dpp-product-info").ProductInformation;
   compliance?: import("./dpp-compliance").Compliance;

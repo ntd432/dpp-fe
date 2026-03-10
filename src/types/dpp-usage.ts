@@ -3,30 +3,26 @@
  * @see https://ntd432.github.io/dpp/models/dpp-usage.ttl
  */
 
-import type { DataGroup, DataPoint, Event } from "./dpp-core";
+import type { Event } from "./dpp-core";
 
 // ── Data Points ─────────────────────────────────────────────────────────────
 
-/** A log of maintenance activities performed on the product. */
-export interface MaintenanceLog extends DataPoint {
+export interface MaintenanceLog {
   maintenanceLog?: Event[];
 }
 
-/** A record of the product's usage history over time. */
-export interface UsageHistory extends DataPoint {
+export interface UsageHistory {
   usageHistory?: Event[];
 }
 
-/** A record of incidents and errors that occurred with the product. */
-export interface IncidentsAndErrors extends DataPoint {
+export interface IncidentsAndErrors {
   incidentsAndErrors?: Event[];
 }
 
 // ── Data Group ──────────────────────────────────────────────────────────────
 
-/** Usage history, maintenance, and incident tracking for the product. */
-export interface UsageInformation extends DataGroup {
-  maintenanceLog?: MaintenanceLog;
-  usageHistory?: UsageHistory;
-  incidentsAndErrors?: IncidentsAndErrors;
+export interface UsageInformation {
+  maintenanceLog?: Event[];
+  usageHistory?: Event[];
+  incidentsAndErrors?: Event[];
 }

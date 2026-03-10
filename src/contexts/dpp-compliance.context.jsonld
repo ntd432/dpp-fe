@@ -5,7 +5,7 @@
     {
       "Compliance": "dpp-compliance:Compliance",
       "Regulation": "dpp-compliance:Regulation",
-      "ComplianceLabel": "dpp-compliance:Label",
+      "ProductLabel": "dpp-compliance:ProductLabel",
       "ProductStatusAssessment": "dpp-compliance:ProductStatusAssessment",
       "Certification": "dpp-compliance:Certification",
       "DataManagementMethod": "dpp-compliance:DataManagementMethod",
@@ -14,7 +14,18 @@
         "@id": "dpp-compliance:regulation",
         "@type": "@id"
       },
-      "complianceLabel": "dpp-compliance:label",
+      "Label": "dpp-compliance:Label",
+      "productLabel": {
+        "@id": "dpp-compliance:productLabel",
+        "@type": "@id"
+      },
+      "labelName": "dpp-compliance:labelName",
+      "labelDescription": "dpp-compliance:labelDescription",
+      "labelValue": "dpp-compliance:labelValue",
+      "labelDocumentation": {
+        "@id": "dpp-compliance:labelDocumentation",
+        "@type": "xsd:anyURI"
+      },
       "productStatusAssessment": {
         "@id": "dpp-compliance:productStatusAssessment",
         "@type": "xsd:anyURI"

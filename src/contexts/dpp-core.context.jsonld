@@ -10,14 +10,37 @@
       "DataPoint": "dpp-core:DataPoint",
       "Event": "dpp-core:Event",
       "Extension": "dpp-core:Extension",
+      "Material": "dpp-core:Material",
 
       "dppRegistrationNumber": "dpp-core:dppRegistrationNumber",
-      "batchNumber": "dpp-core:batchNumber",
-      "serialNumber": "dpp-core:serialNumber",
+      "productBatchNumber": "dpp-core:productBatchNumber",
+      "productSerialNumber": "dpp-core:productSerialNumber",
       "granularity": "dpp-core:granularity",
       "dataCarrierFormat": "dpp-core:dataCarrierFormat",
+      "dataCarrier": "dpp-core:dataCarrier",
+      "productGroup": "dpp-core:productGroup",
+      "issuer": {
+        "@id": "dpp-core:issuer",
+        "@type": "@id"
+      },
+      "createdAt": {
+        "@id": "dpp-core:createdAt",
+        "@type": "xsd:dateTimeStamp"
+      },
+      "updatedAt": {
+        "@id": "dpp-core:updatedAt",
+        "@type": "xsd:dateTimeStamp"
+      },
+      "validUntil": {
+        "@id": "dpp-core:validUntil",
+        "@type": "xsd:dateTimeStamp"
+      },
       "product": {
         "@id": "dpp-core:product",
+        "@type": "@id"
+      },
+      "dpp": {
+        "@id": "dpp-core:dpp",
         "@type": "@id"
       },
       "dataGroup": {
@@ -43,6 +66,29 @@
       "dataLayer": "dpp-core:dataLayer",
       "actionName": "dpp-core:actionName",
       "actionType": "dpp-core:actionType",
+      "materialComposition": {
+        "@id": "dpp-core:materialComposition",
+        "@type": "@id"
+      },
+      "recycledReusedContent": {
+        "@id": "dpp-core:recycledReusedContent",
+        "@type": "@id"
+      },
+      "materialName": "dpp-core:materialName",
+      "materialPercentage": {
+        "@id": "dpp-core:materialPercentage",
+        "@type": "xsd:double"
+      },
+      "materialMassValue": {
+        "@id": "dpp-core:materialMassValue",
+        "@type": "xsd:double"
+      },
+      "materialMassUnit": "dpp-core:materialMassUnit",
+      "materialReference": "dpp-core:materialReference",
+      "materialURI": {
+        "@id": "dpp-core:materialURI",
+        "@type": "xsd:anyURI"
+      },
       "time": {
         "@id": "dpp-core:time",
         "@type": "xsd:dateTimeStamp"

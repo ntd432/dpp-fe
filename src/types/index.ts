@@ -1,12 +1,3 @@
-/**
- * DPP Ontology — TypeScript interfaces
- *
- * Barrel export mirroring the 8 ontology modules:
- *   dpp-core, dpp-product-info, dpp-compliance, dpp-supply-chain,
- *   dpp-sustainability, dpp-eol, dpp-guidelines, dpp-usage,
- *   extensions/dpp-electronics
- */
-
 export * from "./dpp-core";
 export * from "./dpp-product-info";
 export * from "./dpp-compliance";
