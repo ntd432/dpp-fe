@@ -5,48 +5,6 @@
 
 import type { Event } from "./dpp-core";
 
-// ── Data Points ─────────────────────────────────────────────────────────────
-
-export interface RecyclingReusePotential {
-  recyclingReusePotential?: string;
-}
-
-export interface DisposalOptions {
-  disposalOptions?: string;
-}
-
-export interface UnsoldProductsInformation {
-  unsoldProductsInformation?: string;
-}
-
-export interface ExpectedWaste {
-  expectedWaste?: string;
-}
-
-export interface Reusability {
-  reusability?: string;
-}
-
-export interface Repairability {
-  repairability?: string;
-}
-
-export interface Refurbrishability {
-  refurbrishability?: string;
-}
-
-export interface UpgradeOptions {
-  upgradeOptions?: string;
-}
-
-export interface EndOfLifeHistory {
-  endOfLifeHistory?: Event[];
-}
-
-export interface NumberOfLifecycles {
-  numberOfLifecycles?: number;
-}
-
 export interface EndOfLifeInformation {
   wastePrevention?: string;
   separateCollection?: string;

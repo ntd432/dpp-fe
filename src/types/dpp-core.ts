@@ -65,12 +65,6 @@ export interface Material {
   materialURI?: string;
 }
 
-/** Generic named item (used for labels, status assessments, DMMs, etc.) */
-export interface NamedItem {
-  name?: string;
-  description?: string;
-}
-
 // ── Core classes ────────────────────────────────────────────────────────────
 
 /**

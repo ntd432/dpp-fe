@@ -5,20 +5,6 @@
 
 import type { Event } from "./dpp-core";
 
-// ── Data Points ─────────────────────────────────────────────────────────────
-
-export interface MaintenanceLog {
-  maintenanceLog?: Event[];
-}
-
-export interface UsageHistory {
-  usageHistory?: Event[];
-}
-
-export interface IncidentsAndErrors {
-  incidentsAndErrors?: Event[];
-}
-
 // ── Data Group ──────────────────────────────────────────────────────────────
 
 export interface UsageInformation {

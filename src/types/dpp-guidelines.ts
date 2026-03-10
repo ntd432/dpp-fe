@@ -5,20 +5,6 @@
 
 import type { Guide } from "./dpp-core";
 
-// ── Data Points ─────────────────────────────────────────────────────────────
-
-export interface AssemblyGuideline {
-  assemblyGuideline?: Guide;
-}
-
-export interface NonDestructiveDisassemblyGuideline {
-  nonDestructiveDisassemblyGuideline?: Guide;
-}
-
-export interface ProductManual {
-  productManual?: Guide;
-}
-
 export interface StorageAndTransportGuideline {
   storageAndTransportGuideline?: Guide;
 }
@@ -27,14 +13,6 @@ export interface CommercialInstruction {
   safetyInstruction?: Guide;
   maintenanceInstruction?: Guide;
   wasteSortingInstruction?: Guide;
-}
-
-export interface Accessibility {
-  accessibility?: string;
-}
-
-export interface UtilizationCharacteristic {
-  utilizationCharacteristic?: string;
 }
 
 // ── Data Group ──────────────────────────────────────────────────────────────

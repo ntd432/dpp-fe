@@ -30,31 +30,6 @@ export interface SustainabilityPerformance {
   plasticsRelease?: string;
 }
 
-export interface Decomposability {
-  decomposability?: string;
-}
-
-export interface SectorSustainabilityIndicators {
-  sectorSustainabilityIndicators?: Extension;
-}
-
-export interface CriticalRawMaterial {
-  criticalRawMaterial?: Material | Material[];
-}
-
-export interface LifeCycleAssessment {
-  /** URI to the LCA report */
-  lifeCycleAssessment?: string;
-}
-
-export interface RenewableNonRenewableContent {
-  renewableNonRenewableContent?: Material | Material[];
-}
-
-export interface CircularEconomyIndicator {
-  circularEconomyIndicator?: Extension;
-}
-
 export interface SocialIndicator {
   labourConditions?: string;
 }
@@ -62,11 +37,6 @@ export interface SocialIndicator {
 export interface SustainabilityAttributes {
   resourceConsumptionWhenUsing?: ResourceConsumption;
   resourceConsumptionWhenRecovering?: ResourceConsumption;
-}
-
-export interface EnvironmentDeclaration {
-  /** URI to the environment declaration document */
-  environmentDeclaration?: string;
 }
 
 // ── Data Group ──────────────────────────────────────────────────────────────

@@ -37,47 +37,11 @@ export interface ProductIdentificationInformation {
   productionDate?: string;
 }
 
-export interface Manufacturer {
-  manufacturerInfo?: Organization;
-}
-
 export interface MaterialInformation {
   materialComposition?: Material[];
   /** URI to the bill of materials */
   materialBills?: string;
   recycledReusedContent?: Material[];
-}
-
-export interface SparePartsAvailability {
-  sparePartsAvailability?: string;
-}
-
-export interface HazardousSubstances {
-  hazardousSubstances?: Substance[];
-}
-
-export interface SubstancesOfConcern {
-  substancesOfConcern?: Substance[];
-}
-
-export interface SectorRequiredInformation {
-  sectorRequiredInformation?: Extension;
-}
-
-export interface ProductSpecification {
-  productSpecification?: Extension;
-}
-
-export interface SectorNonRequiredInformation {
-  sectorNonRequiredInformation?: Extension;
-}
-
-export interface RelatedObjects {
-  relatedObjects?: ProductReference[];
-}
-
-export interface TestReport {
-  testReport?: string;
 }
 
 export interface ProductCommercialInformation {
@@ -87,14 +51,6 @@ export interface ProductCommercialInformation {
   /** ISO 8601 duration (e.g. "P2Y") */
   warrantyPeriod?: string;
   takebackOption?: string;
-}
-
-export interface QualityAssessment {
-  qualityAssessment?: string;
-}
-
-export interface IdentifiedRisk {
-  identifiedRisk?: string;
 }
 
 // ── Data Group ──────────────────────────────────────────────────────────────
