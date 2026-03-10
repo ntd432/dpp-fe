@@ -6,39 +6,86 @@ import {
   transformGuide,
 } from "./shared";
 
+interface GuideFieldConfig {
+  key: string;
+  type: string;
+  label: string;
+  idPrefix: string;
+}
+
+interface ScalarFieldConfig {
+  key: string;
+  type: string;
+  label: string;
+  idPrefix: string;
+}
+
+const GUIDE_FIELDS: GuideFieldConfig[] = [
+  {
+    key: "assemblyGuideline",
+    type: "AssemblyGuideline",
+    label: "Assembly Guideline",
+    idPrefix: "assembly-guideline",
+  },
+  {
+    key: "nonDestructiveDisassemblyGuideline",
+    type: "NonDestructiveDisassemblyGuideline",
+    label: "Non Destructive Disassembly Guideline",
+    idPrefix: "non-destructive-disassembly-guideline",
+  },
+  {
+    key: "productManual",
+    type: "ProductManual",
+    label: "Product Manual",
+    idPrefix: "product-manual",
+  },
+];
+
+const SCALAR_FIELDS: ScalarFieldConfig[] = [
+  {
+    key: "accessibility",
+    type: "Accessibility",
+    label: "Accessibility",
+    idPrefix: "accessibility",
+  },
+  {
+    key: "utilizationCharacteristic",
+    type: "UtilizationCharacteristic",
+    label: "Utilization Characteristic",
+    idPrefix: "utilization-characteristic",
+  },
+];
+
 export function transformGuidelinesAndManuals(guidelines: Record<string, unknown>): Record<string, unknown> {
   const result = createNode(guidelines, "GuidelinesAndManuals", "Guidelines And Manuals", "guidelines-manuals");
   const dataPoint: Record<string, unknown>[] = [];
 
-  if (isRecord(guidelines.assemblyGuideline)) {
-    const dp = createDataPoint({}, "AssemblyGuideline", "Assembly Guideline", "assembly-guideline");
-    dp.assemblyGuideline = transformGuide(guidelines.assemblyGuideline);
+  for (const field of GUIDE_FIELDS) {
+    const value = guidelines[field.key];
+    if (!isRecord(value)) {
+      continue;
+    }
+
+    const dp = createDataPoint({}, field.type, field.label, field.idPrefix);
+    dp[field.key] = transformGuide(value);
     dataPoint.push(dp);
   }
-  if (isRecord(guidelines.nonDestructiveDisassemblyGuideline)) {
-    const dp = createDataPoint({}, "NonDestructiveDisassemblyGuideline", "Non Destructive Disassembly Guideline", "non-destructive-disassembly-guideline");
-    dp.nonDestructiveDisassemblyGuideline = transformGuide(guidelines.nonDestructiveDisassemblyGuideline);
-    dataPoint.push(dp);
-  }
-  if (isRecord(guidelines.productManual)) {
-    const dp = createDataPoint({}, "ProductManual", "Product Manual", "product-manual");
-    dp.productManual = transformGuide(guidelines.productManual);
-    dataPoint.push(dp);
-  }
+
   if (isRecord(guidelines.storageAndTransportGuideline)) {
     dataPoint.push(transformStorageAndTransportGuideline(guidelines.storageAndTransportGuideline));
   }
   if (isRecord(guidelines.commercialInstruction)) {
     dataPoint.push(transformCommercialInstruction(guidelines.commercialInstruction));
   }
-  if (guidelines.accessibility !== undefined) {
-    const dp = createDataPoint({}, "Accessibility", "Accessibility", "accessibility");
-    dp.accessibility = guidelines.accessibility;
-    dataPoint.push(dp);
-  }
-  if (guidelines.utilizationCharacteristic !== undefined) {
-    const dp = createDataPoint({}, "UtilizationCharacteristic", "Utilization Characteristic", "utilization-characteristic");
-    dp.utilizationCharacteristic = guidelines.utilizationCharacteristic;
+
+  for (const field of SCALAR_FIELDS) {
+    const value = guidelines[field.key];
+    if (value === undefined) {
+      continue;
+    }
+
+    const dp = createDataPoint({}, field.type, field.label, field.idPrefix);
+    dp[field.key] = value;
     dataPoint.push(dp);
   }
 

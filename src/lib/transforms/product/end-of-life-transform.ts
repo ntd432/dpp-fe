@@ -6,60 +6,91 @@ import {
   transformEvent,
 } from "./shared";
 
+interface ScalarDataPointFieldConfig {
+  key: string;
+  type: string;
+  label: string;
+  idPrefix: string;
+}
+
+const SCALAR_FIELDS: ScalarDataPointFieldConfig[] = [
+  {
+    key: "recyclingReusePotential",
+    type: "RecyclingReusePotential",
+    label: "Recycling Reuse Potential",
+    idPrefix: "recycling-reuse-potential",
+  },
+  {
+    key: "disposalOptions",
+    type: "DisposalOptions",
+    label: "Disposal Options",
+    idPrefix: "disposal-options",
+  },
+  {
+    key: "unsoldProductsInformation",
+    type: "UnsoldProductsInformation",
+    label: "Unsold Products Information",
+    idPrefix: "unsold-products-information",
+  },
+  {
+    key: "expectedWaste",
+    type: "ExpectedWaste",
+    label: "Expected Waste",
+    idPrefix: "expected-waste",
+  },
+  {
+    key: "reusability",
+    type: "Reusability",
+    label: "Reusability",
+    idPrefix: "reusability",
+  },
+  {
+    key: "repairability",
+    type: "Repairability",
+    label: "Repairability",
+    idPrefix: "repairability",
+  },
+  {
+    key: "refurbrishability",
+    type: "Refurbrishability",
+    label: "Refurbrishability",
+    idPrefix: "refurbrishability",
+  },
+  {
+    key: "upgradeOptions",
+    type: "UpgradeOptions",
+    label: "Upgrade Options",
+    idPrefix: "upgrade-options",
+  },
+  {
+    key: "numberOfLifecycles",
+    type: "NumberOfLifecycles",
+    label: "Number Of Lifecycles",
+    idPrefix: "number-of-lifecycles",
+  },
+];
+
 export function transformEndOfLifeData(endOfLife: Record<string, unknown>): Record<string, unknown> {
   const result = createNode(endOfLife, "EndOfLifeData", "End Of Life Data", "end-of-life");
   const dataPoint: Record<string, unknown>[] = [];
 
-  if (endOfLife.recyclingReusePotential !== undefined) {
-    const dp = createDataPoint({}, "RecyclingReusePotential", "Recycling Reuse Potential", "recycling-reuse-potential");
-    dp.recyclingReusePotential = endOfLife.recyclingReusePotential;
+  for (const field of SCALAR_FIELDS) {
+    const value = endOfLife[field.key];
+    if (value === undefined) {
+      continue;
+    }
+
+    const dp = createDataPoint({}, field.type, field.label, field.idPrefix);
+    dp[field.key] = value;
     dataPoint.push(dp);
   }
-  if (endOfLife.disposalOptions !== undefined) {
-    const dp = createDataPoint({}, "DisposalOptions", "Disposal Options", "disposal-options");
-    dp.disposalOptions = endOfLife.disposalOptions;
-    dataPoint.push(dp);
-  }
-  if (endOfLife.unsoldProductsInformation !== undefined) {
-    const dp = createDataPoint({}, "UnsoldProductsInformation", "Unsold Products Information", "unsold-products-information");
-    dp.unsoldProductsInformation = endOfLife.unsoldProductsInformation;
-    dataPoint.push(dp);
-  }
-  if (endOfLife.expectedWaste !== undefined) {
-    const dp = createDataPoint({}, "ExpectedWaste", "Expected Waste", "expected-waste");
-    dp.expectedWaste = endOfLife.expectedWaste;
-    dataPoint.push(dp);
-  }
-  if (endOfLife.reusability !== undefined) {
-    const dp = createDataPoint({}, "Reusability", "Reusability", "reusability");
-    dp.reusability = endOfLife.reusability;
-    dataPoint.push(dp);
-  }
-  if (endOfLife.repairability !== undefined) {
-    const dp = createDataPoint({}, "Repairability", "Repairability", "repairability");
-    dp.repairability = endOfLife.repairability;
-    dataPoint.push(dp);
-  }
-  if (endOfLife.refurbrishability !== undefined) {
-    const dp = createDataPoint({}, "Refurbrishability", "Refurbrishability", "refurbrishability");
-    dp.refurbrishability = endOfLife.refurbrishability;
-    dataPoint.push(dp);
-  }
-  if (endOfLife.upgradeOptions !== undefined) {
-    const dp = createDataPoint({}, "UpgradeOptions", "Upgrade Options", "upgrade-options");
-    dp.upgradeOptions = endOfLife.upgradeOptions;
-    dataPoint.push(dp);
-  }
+
   if (Array.isArray(endOfLife.endOfLifeHistory)) {
     const dp = createDataPoint({}, "EndOfLifeHistory", "End Of Life History", "end-of-life-history");
     dp.endOfLifeHistory = endOfLife.endOfLifeHistory.filter(isRecord).map((event) => transformEvent(event));
     dataPoint.push(dp);
   }
-  if (endOfLife.numberOfLifecycles !== undefined) {
-    const dp = createDataPoint({}, "NumberOfLifecycles", "Number Of Lifecycles", "number-of-lifecycles");
-    dp.numberOfLifecycles = endOfLife.numberOfLifecycles;
-    dataPoint.push(dp);
-  }
+
   if (isRecord(endOfLife.endOfLifeInformation)) {
     dataPoint.push(transformEndOfLifeInformation(endOfLife.endOfLifeInformation));
   }

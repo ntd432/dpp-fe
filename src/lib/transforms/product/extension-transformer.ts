@@ -1,8 +1,5 @@
-import {
-  copyUnhandledProperties,
-  createDataPoint,
-  createNode,
-} from "./shared";
+import { transformElectronicExtension } from "../extensions/electronics-transformer";
+import { createDataPoint } from "./shared";
 
 type ExtensionTransformer = (
   extension: Record<string, unknown>,
@@ -35,18 +32,4 @@ export function transformExtension(
   }
 
   return createDataPoint(extension, "Extension", label, idPrefix);
-}
-
-function transformElectronicExtension(
-  electronics: Record<string, unknown>,
-  label: string,
-  idPrefix: string,
-): Record<string, unknown> {
-  const result = createNode(electronics, "ElectronicExtension", label, idPrefix);
-  copyUnhandledProperties(
-    electronics,
-    result,
-    new Set(["id", "@id", "@type", "extensionType"]),
-  );
-  return result;
 }
