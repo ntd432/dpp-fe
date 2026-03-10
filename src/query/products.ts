@@ -19,7 +19,7 @@ where {
     schema:identifier "${companyID}" .
 
   optional {
-    ?dp  dpp-product-info:name ?name;
+    ?dp  dpp-product-info:productName ?name;
   }
   optional {
     ?dp  dpp-product-info:gtin ?gtin;
@@ -124,7 +124,7 @@ WHERE {
 
   # ── PII ──
   OPTIONAL { ?dpp dpp-core:gtin                      ?gtin }
-  OPTIONAL { ?piiDP dpp-product-info:name            ?name }
+  OPTIONAL { ?piiDP dpp-product-info:productName     ?name }
   OPTIONAL { ?dpp dpp-core:serialNumber              ?serial }
   OPTIONAL { ?piiDP dpp-product-info:documentation   ?documentation }
   OPTIONAL { ?piiDP dpp-product-info:productionDate  ?productionDate }
