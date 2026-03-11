@@ -31,7 +31,7 @@
         "@id": "dpp-product-info:productionDate",
         "@type": "xsd:date"
       },
-      "manufacturerInfo": {
+      "manufacturer": {
         "@id": "dpp-product-info:manufacturer",
         "@type": "@id"
       },

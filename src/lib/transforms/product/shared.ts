@@ -112,16 +112,20 @@ export function transformSubstance(substance: Record<string, unknown>): Record<s
   return result;
 }
 
-export function transformResourceConsumption(resource: Record<string, unknown>): Record<string, unknown> {
-  const result = createNode(resource, "ResourceConsumption", "Resource Consumption", "resource-consumption");
-  copyUnhandledProperties(resource, result, new Set(["id", "@id", "@type"]));
-  return result;
+export function transformResourceConsumption(resources: Record<string, unknown>[]): Record<string, unknown>[] {
+  return resources.map((resource) => {
+    const result = createNode(resource, "ResourceConsumption", "Resource Consumption", "resource-consumption");
+    copyUnhandledProperties(resource, result, new Set(["id", "@id", "@type"]));
+    return result;
+  });
 }
 
-export function transformEnvironmentalFootprint(footprint: Record<string, unknown>): Record<string, unknown> {
-  const result = createNode(footprint, "EnvironmentalFootprint", "Environmental Footprint", "environmental-footprint");
-  copyUnhandledProperties(footprint, result, new Set(["id", "@id", "@type"]));
-  return result;
+export function transformEnvironmentalFootprint(footprints: Record<string, unknown>[]): Record<string, unknown>[] {
+  return footprints.map((footprint) => {
+    const result = createNode(footprint, "EnvironmentalFootprint", "Environmental Footprint", "environmental-footprint");
+    copyUnhandledProperties(footprint, result, new Set(["id", "@id", "@type"]));
+    return result;
+  });
 }
 
 export function transformMaterial(material: Record<string, unknown>[]): Record<string, unknown>[] {

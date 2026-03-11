@@ -63,11 +63,11 @@ export function transformSustainabilityInformation(sustainability: Record<string
 
 function transformSustainabilityPerformance(value: Record<string, unknown>): Record<string, unknown> {
   const result = createDataPoint(value, "SustainabilityPerformance", "Sustainability Performance", "sustainability-performance");
-  if (isRecord(value.environmentalFootprint)) {
-    result.environmentalFootprint = transformEnvironmentalFootprint(value.environmentalFootprint);
+  if (Array.isArray(value.environmentalFootprint)) {
+    result.environmentalFootprint = transformEnvironmentalFootprint(value.environmentalFootprint.filter(isRecord));
   }
-  if (isRecord(value.resourceConsumption)) {
-    result.resourceConsumption = transformResourceConsumption(value.resourceConsumption);
+  if (Array.isArray(value.resourceConsumption)) {
+    result.resourceConsumption = transformResourceConsumption(value.resourceConsumption.filter(isRecord));
   }
   copyUnhandledProperties(value, result, new Set(["id", "@id", "@type", "environmentalFootprint", "resourceConsumption"]));
   return result;
@@ -81,11 +81,11 @@ function transformSocialIndicator(value: Record<string, unknown>): Record<string
 
 function transformSustainabilityAttributes(value: Record<string, unknown>): Record<string, unknown> {
   const result = createDataPoint(value, "SustainabilityAttributes", "Sustainability Attributes", "sustainability-attributes");
-  if (isRecord(value.resourceConsumptionWhenUsing)) {
-    result.resourceConsumptionWhenUsing = transformResourceConsumption(value.resourceConsumptionWhenUsing);
+  if (Array.isArray(value.resourceConsumptionWhenUsing)) {
+    result.resourceConsumptionWhenUsing = transformResourceConsumption(value.resourceConsumptionWhenUsing.filter(isRecord));
   }
-  if (isRecord(value.resourceConsumptionWhenRecovering)) {
-    result.resourceConsumptionWhenRecovering = transformResourceConsumption(value.resourceConsumptionWhenRecovering);
+  if (Array.isArray(value.resourceConsumptionWhenRecovering)) {
+    result.resourceConsumptionWhenRecovering = transformResourceConsumption(value.resourceConsumptionWhenRecovering.filter(isRecord));
   }
   copyUnhandledProperties(value, result, new Set(["id", "@id", "@type", "resourceConsumptionWhenUsing", "resourceConsumptionWhenRecovering"]));
   return result;

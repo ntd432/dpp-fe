@@ -21,7 +21,7 @@ interface ProductData {
   // Manufacturer
   manufacturerName?: string;
   manufacturerUrl?: string;
-  manufacturerIdentifier?: string;
+  manufacturerId?: string;
   // Material
   materialComposition?: string;
   materialBills?: string;

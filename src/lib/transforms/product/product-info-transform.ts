@@ -22,7 +22,7 @@ export function transformProductInformation(
   }
   if (isRecord(info.manufacturer)) {
     const mfr = createDataPoint({}, "Manufacturer", "Manufacturer", "manufacturer");
-    mfr.manufacturerInfo = transformOrganization(info.manufacturer);
+    mfr.manufacturer = transformOrganization(info.manufacturer);
     dataPoint.push(mfr);
   }
   if (isRecord(info.material)) {

@@ -25,8 +25,8 @@ export interface ResourceConsumption {
 // ── Data Points ─────────────────────────────────────────────────────────────
 
 export interface SustainabilityPerformance {
-  environmentalFootprint?: EnvironmentalFootprint;
-  resourceConsumption?: ResourceConsumption;
+  environmentalFootprint?: EnvironmentalFootprint[];
+  resourceConsumption?: ResourceConsumption[];
   plasticsRelease?: string;
 }
 
@@ -35,8 +35,8 @@ export interface SocialIndicator {
 }
 
 export interface SustainabilityAttributes {
-  resourceConsumptionWhenUsing?: ResourceConsumption;
-  resourceConsumptionWhenRecovering?: ResourceConsumption;
+  resourceConsumptionWhenUsing?: ResourceConsumption[];
+  resourceConsumptionWhenRecovering?: ResourceConsumption[];
 }
 
 // ── Data Group ──────────────────────────────────────────────────────────────
