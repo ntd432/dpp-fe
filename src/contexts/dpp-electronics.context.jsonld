@@ -17,6 +17,29 @@
       "AppliedStandardsAndNorms": "dpp-electronics:AppliedStandardsAndNorms",
       "InstalledSoftware": "dpp-electronics:InstalledSoftware",
 
+      "height": {
+        "@id": "dpp-electronics:height",
+        "@type": "@id"
+      },
+      "width": {
+        "@id": "dpp-electronics:width",
+        "@type": "@id"
+      },
+      "depth": {
+        "@id": "dpp-electronics:depth",
+        "@type": "@id"
+      },
+      "weight": {
+        "@id": "dpp-electronics:weight",
+        "@type": "@id"
+      },
+      "networkConnectivity": "dpp-electronics:networkConnectivity",
+      "ingressProtection": "dpp-electronics:ingressProtection",
+      "chargingInterface": "dpp-electronics:chargingInterface",
+      "batteryCapacity": {
+        "@id": "dpp-electronics:batteryCapacity",
+        "@type": "@id"
+      },
       "crossCompatibility": {
         "@id": "dpp-electronics:crossCompatibility",
         "@type": "@id"

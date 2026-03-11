@@ -11,6 +11,7 @@
       "Event": "dpp-core:Event",
       "Extension": "dpp-core:Extension",
       "Material": "dpp-core:Material",
+      "MeasurementEntry": "dpp-core:MeasurementEntry",
 
       "dppRegistrationNumber": "dpp-core:dppRegistrationNumber",
       "productBatchNumber": "dpp-core:productBatchNumber",
@@ -92,7 +93,12 @@
       "time": {
         "@id": "dpp-core:time",
         "@type": "xsd:dateTimeStamp"
-      }
+      },
+      "measurementValue": {
+        "@id": "dpp-core:measurementValue",
+        "@type": "xsd:double"
+      },
+      "measurementUnit": "dpp-core:measurementUnit"
     }
   ]
 }

@@ -109,6 +109,11 @@ export interface Extension {
   [key: string]: unknown;
 }
 
+export interface MeasurementEntry {
+  measurementValue: number;
+  measurementUnit: string;
+}
+
 /**
  * A physical or digital product that is the subject of a Digital Product Passport.
  */

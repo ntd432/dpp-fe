@@ -131,3 +131,9 @@ export function transformMaterial(material: Record<string, unknown>[]): Record<s
     return result;
   });
 }
+
+export function transformMeasurementEntry(measurement: Record<string, unknown>): Record<string, unknown> {
+  const result = createNode(measurement, "MeasurementEntry", "Measurement Entry", "measurement-entry");
+  copyUnhandledProperties(measurement, result, new Set(["id", "@id", "@type"]));
+  return result;
+}

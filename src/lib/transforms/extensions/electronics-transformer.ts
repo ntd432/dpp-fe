@@ -2,6 +2,7 @@ import {
   copyUnhandledProperties,
   createNode,
   isRecord,
+  transformMeasurementEntry,
   transformPlace,
 } from "../product/shared";
 
@@ -64,6 +65,8 @@ const SIMPLE_OBJECT_FIELDS: Record<string, NodeConfig> = {
   },
 };
 
+const MEASUREMENT_FIELDS = new Set(["height", "width", "depth", "weight", "batteryCapacity"]);
+
 export function transformElectronicExtension(
   electronics: Record<string, unknown>,
   label: string,
@@ -75,6 +78,13 @@ export function transformElectronicExtension(
     const value = electronics[field];
     if (isRecord(value)) {
       result[field] = transformSimpleNode(value, config);
+    }
+  }
+
+  for (const field of MEASUREMENT_FIELDS) {
+    const value = electronics[field];
+    if (isRecord(value)) {
+      result[field] = transformMeasurementEntry(value);
     }
   }
 
@@ -99,6 +109,7 @@ export function transformElectronicExtension(
       "assemblyProcess",
       "appliedStandardsAndNorms",
       ...Object.keys(SIMPLE_OBJECT_FIELDS),
+      ...MEASUREMENT_FIELDS,
     ]),
   );
   return result;

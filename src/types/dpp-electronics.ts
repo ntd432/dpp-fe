@@ -3,7 +3,7 @@
  * @see https://ntd432.github.io/dpp/models/extensions/dpp-electronics.ttl
  */
 
-import type { DefinedTerm, Extension, Place } from "./dpp-core";
+import type { DefinedTerm, Extension, MeasurementEntry, Place } from "./dpp-core";
 
 // ── Concept classes ─────────────────────────────────────────────────────────
 
@@ -80,6 +80,14 @@ export interface InstalledSoftware {
 // ── Root extension class ────────────────────────────────────────────────────
 
 export interface ElectronicExtension extends Extension {
+  height?: MeasurementEntry;
+  width?: MeasurementEntry;
+  depth?: MeasurementEntry;
+  weight?: MeasurementEntry;
+  batteryCapacity?: MeasurementEntry;
+  networkConnectivity?: string;
+  ingressProtection?: string;
+  chargingInterface?: string;
   crossCompatibility?: CrossCompatibility;
   assemblyProcess?: AssemblyProcess;
   productionMethod?: ProductionMethod;
