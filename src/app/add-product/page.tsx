@@ -1071,7 +1071,7 @@ export default function AddProductPage() {
             {/* ComplianceLabel */}
             <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
               <legend className="text-sm font-semibold text-gray-800">
-                Compliance Labels
+                Product Labels
               </legend>
               <LabelArrayEditor
                 items={form.productLabels}

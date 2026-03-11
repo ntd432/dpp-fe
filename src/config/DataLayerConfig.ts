@@ -22,7 +22,7 @@ const DATA_LAYER: Record<string, string[]> = {
     "ProductManual",
     // Compliance group
     "Regulation",
-    "ComplianceLabel",
+    "ProductLabel",
   ],
   "Sectoral": [
     // Product Information group

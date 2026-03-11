@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { fetchFromAPI } from "@/lib/api";
-import { Manufacturer } from "@/types/dpp-product-info";
+import { Organization } from "@/types/dpp-core";
 
 export async function GET() {
   try {
-    const data = await fetchFromAPI<Manufacturer>("all-manufacturers");
+    const data = await fetchFromAPI<Organization>("all-manufacturers");
     return NextResponse.json(data);
   } catch (error) {
     console.error("Failed to fetch manufacturers:", error);
