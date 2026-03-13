@@ -1,4 +1,4 @@
-import { createDataPoint, createNode, isRecord, transformEvent } from "./shared";
+import { createDataPoint, createNode, isRecord, transformEvent } from "../shared";
 
 interface EventArrayFieldConfig {
   key: string;

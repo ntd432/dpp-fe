@@ -6,7 +6,7 @@ import {
   transformEnvironmentalFootprint,
   transformMaterial,
   transformResourceConsumption,
-} from "./shared";
+} from "../shared";
 
 export function transformSustainabilityInformation(sustainability: Record<string, unknown>): Record<string, unknown> {
   const result = createNode(sustainability, "SustainabilityInformation", "Sustainability Information", "sustainability");

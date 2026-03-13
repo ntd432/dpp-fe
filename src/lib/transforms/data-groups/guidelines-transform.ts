@@ -4,7 +4,7 @@ import {
   createNode,
   isRecord,
   transformGuide,
-} from "./shared";
+} from "../shared";
 
 interface GuideFieldConfig {
   key: string;

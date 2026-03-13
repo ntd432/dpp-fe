@@ -5,7 +5,7 @@ import {
   isRecord,
   transformEvent,
   transformOrganization,
-} from "./shared";
+} from "../shared";
 
 export function transformSupplyChain(supplyChain: Record<string, unknown>): Record<string, unknown> {
   const result = createNode(supplyChain, "SupplyChain", "Supply Chain", "supply-chain");

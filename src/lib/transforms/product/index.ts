@@ -1,13 +1,13 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { transformCompliance } from "./compliance-transform";
-import { transformEndOfLifeData } from "./end-of-life-transform";
-import { transformGuidelinesAndManuals } from "./guidelines-transform";
-import { transformProductInformation } from "./product-info-transform";
-import { isRecord } from "./shared";
-import { transformSupplyChain } from "./supply-chain-transform";
-import { transformSustainabilityInformation } from "./sustainability-transform";
-import { transformUsageInformation } from "./usage-transform";
+import { transformCompliance } from "../data-groups/compliance-transform";
+import { transformEndOfLifeData } from "../data-groups/end-of-life-transform";
+import { transformGuidelinesAndManuals } from "../data-groups/guidelines-transform";
+import { transformProductInformation } from "../data-groups/product-info-transform";
+import { isRecord } from "../shared";
+import { transformSupplyChain } from "../data-groups/supply-chain-transform";
+import { transformSustainabilityInformation } from "../data-groups/sustainability-transform";
+import { transformUsageInformation } from "../data-groups/usage-transform";
 
 export async function getContext(): Promise<Record<string, unknown>> {
   const contextsDir = join(process.cwd(), "src", "contexts");
@@ -61,9 +61,9 @@ export function transformNestedObjects(product: Record<string, unknown>): void {
   if (isRecord(product.compliance)) {
     dataGroup.push(transformCompliance(product.compliance));
   }
-  if (isRecord(product.supplyChain)) {
-    dataGroup.push(transformSupplyChain(product.supplyChain));
-  }
+//   if (isRecord(product.supplyChain)) {
+//     dataGroup.push(transformSupplyChain(product.supplyChain));
+//   }
   if (isRecord(product.sustainability)) {
     dataGroup.push(transformSustainabilityInformation(product.sustainability));
   }
@@ -73,17 +73,17 @@ export function transformNestedObjects(product: Record<string, unknown>): void {
   if (isRecord(product.guidelines)) {
     dataGroup.push(transformGuidelinesAndManuals(product.guidelines));
   }
-  if (isRecord(product.usage)) {
-    dataGroup.push(transformUsageInformation(product.usage));
-  }
+//   if (isRecord(product.usage)) {
+//     dataGroup.push(transformUsageInformation(product.usage));
+//   }
 
   delete product.productInfo;
   delete product.compliance;
-  delete product.supplyChain;
+//   delete product.supplyChain;
   delete product.sustainability;
   delete product.endOfLife;
   delete product.guidelines;
-  delete product.usage;
+//   delete product.usage;
 
   product.dataGroup = dataGroup;
 }

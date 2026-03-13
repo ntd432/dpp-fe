@@ -5,7 +5,7 @@ import {
   isRecord,
   transformCertificationInfo,
   transformLegislation,
-} from "./shared";
+} from "../shared";
 
 export function transformCompliance(compliance: Record<string, unknown>): Record<string, unknown> {
   const result = createNode(compliance, "Compliance", "Compliance", "compliance");

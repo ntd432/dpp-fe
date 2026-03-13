@@ -4,7 +4,7 @@ import {
   isRecord,
   transformMeasurementEntry,
   transformPlace,
-} from "../product/shared";
+} from "../shared";
 
 interface NodeConfig {
   type: string;

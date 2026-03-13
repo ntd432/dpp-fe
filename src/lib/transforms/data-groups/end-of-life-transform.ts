@@ -4,7 +4,7 @@ import {
   createNode,
   isRecord,
   transformEvent,
-} from "./shared";
+} from "../shared";
 
 interface ScalarDataPointFieldConfig {
   key: string;

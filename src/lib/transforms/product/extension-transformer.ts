@@ -1,5 +1,5 @@
 import { transformElectronicExtension } from "../extensions/electronics-transformer";
-import { createDataPoint } from "./shared";
+import { createDataPoint } from "../shared";
 
 type ExtensionTransformer = (
   extension: Record<string, unknown>,

@@ -1,4 +1,4 @@
-import { transformExtension } from "./extension-transformer";
+import { transformExtension } from "../product/extension-transformer";
 import {
   copyUnhandledProperties,
   createDataPoint,
@@ -9,7 +9,7 @@ import {
   transformMaterial,
   transformOrganization,
   transformSubstance,
-} from "./shared";
+} from "../shared";
 
 export function transformProductInformation(
   info: Record<string, unknown>,
