@@ -51,6 +51,10 @@ export function transformNestedObjects(dpp: Record<string, unknown>): void {
     dataGroup.push(transformUsageInformation(dpp.usage));
   }
 
+  if (dpp.product && typeof dpp.product === "object" && dpp.product !== null) {
+    dpp.product = {...dpp.product, dpp: dpp.id};
+  }
+
   delete dpp.supplyChain;
   delete dpp.usage;
 

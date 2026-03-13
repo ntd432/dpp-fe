@@ -123,7 +123,7 @@ export interface Product {
   id?: string;
   label?: string;
   productSector?: string;
-  dpp?: DPP | DPP[];
+  dpp?: string; // backlink to parent DPP ID for easier querying
   /** Thematic data groups attached to this product */
   productInfo?: import("./dpp-product-info").ProductInformation;
   compliance?: import("./dpp-compliance").Compliance;
