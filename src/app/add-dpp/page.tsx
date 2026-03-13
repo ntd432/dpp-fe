@@ -467,14 +467,14 @@ export default function AddDppPage() {
                 <div className="grid grid-cols-2 gap-4 border-l-2 border-emerald-200 pl-3">
                     <FormField
                     label="Organisation Name"
-                    value={form.issuerName}
+                    value={""}
                     onChange={(v) => set("issuerName", v)}
                     placeholder="e.g. Acme Corp"
                     required
                     />
                     <FormField
                     label="Website URL"
-                    value={form.issuerUrl}
+                    value={""}
                     onChange={(v) => set("issuerUrl", v)}
                     type="url"
                     placeholder="https://example.com"

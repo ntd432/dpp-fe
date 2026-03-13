@@ -48,6 +48,8 @@ export async function POST(request: NextRequest) {
       );
     }
   dpp.dppRegistrationNumber = crypto.randomUUID();
+  dpp.id = `urn:dpp:${dpp.dppRegistrationNumber}`;
+  dpp.dataCarrier = `${process.env.URL}/dpp/${dpp.id}`;
 
   try {
     const jsonLdPayload = await toJsonLdPayload(
@@ -67,7 +69,6 @@ export async function POST(request: NextRequest) {
       message:
         "DPP created, transformed to JSON-LD, and uploaded successfully.",
       dpp: dpp,
-      jsonLdPayload,
       uploadResult,
     });
   } catch (error: unknown) {

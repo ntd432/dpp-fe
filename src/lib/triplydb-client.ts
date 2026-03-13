@@ -89,7 +89,9 @@ export async function toJsonLdPayload(
   // Ensure @context is included
   jsonLdPayload["@context"] = await getContext();
 
-  jsonLdPayload["@id"] = payload.id ?? `urn:generated:${randomUUID()}`;
+  if (!payload.id) {
+    jsonLdPayload["@id"] = `urn:${type}:generated:${randomUUID()}`;
+  }
 
   jsonLdPayload["@type"] ??= type;
 

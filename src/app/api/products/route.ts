@@ -199,7 +199,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       message:
         "Product created, transformed to JSON-LD, and uploaded successfully.",
       product: productData,
-      jsonLdPayload,
       uploadResult,
     });
   } catch (error: unknown) {
