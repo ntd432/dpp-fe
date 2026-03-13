@@ -2,57 +2,7 @@ import App from "@triply/triplydb";
 import { NextRequest, NextResponse } from "next/server";
 import { toJsonLdPayload, TriplyUploadError, uploadToTriplyDB } from "@/lib/triplydb-client";
 import type { DPP } from "@/types/dpp-core";
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
-import { randomUUID } from "node:crypto";
-
-async function getContext() {
-  const contextsDir = join(process.cwd(), "src", "contexts");
-  const [baseContextRaw, dppCoreContextRaw] = await Promise.all([
-    readFile(join(contextsDir, "base.context.jsonld"), "utf-8"),
-    readFile(join(contextsDir, "dpp-core.context.jsonld"), "utf-8"),
-  ]);
-
-  const baseContext = JSON.parse(baseContextRaw) as {
-    "@context": Record<string, unknown>;
-  };
-  const dppCoreContext = JSON.parse(dppCoreContextRaw) as {
-    "@context": unknown[];
-  };
-
-  const base = baseContext["@context"];
-  const coreContextArray = dppCoreContext["@context"];
-  const coreModule =
-    coreContextArray.find(
-      (entry) =>
-        typeof entry === "object" && entry !== null && !Array.isArray(entry),
-    ) ?? {};
-
-  return {
-    ...base,
-    ...(coreModule as Record<string, unknown>),
-  };
-}
-
-function transformNestedObjects(dpp: Record<string, unknown>): void {
-  if (dpp.product && typeof dpp.product === "object" && dpp.product !== null) {
-    dpp.product = transformProduct(dpp.product as Record<string, unknown>);
-  }
-}
-
-function transformProduct(
-  product: Record<string, unknown>,
-): Record<string, unknown> {
-  const result: Record<string, unknown> = { "@type": "Product" };
-  result["@id"] = product.id ?? `urn:generated:product:${randomUUID()}`
-
-  // Copy other properties except those that are handled separately
-  const handledKeys = new Set(["id", "@id", "@type"]);
-  for (const [key, value] of Object.entries(product)) {
-    if (!handledKeys.has(key)) result[key] = value;
-  }
-  return result;
-}
+import { getContext, transformNestedObjects } from "@/lib/transforms/dpp";
 
 export async function GET() {
   const datasetName = process.env.DATASET_NAME;
@@ -97,6 +47,7 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
+  dpp.dppRegistrationNumber = crypto.randomUUID();
 
   try {
     const jsonLdPayload = await toJsonLdPayload(

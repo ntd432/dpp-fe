@@ -8,6 +8,7 @@ import {
   DataLayerGroup,
 } from "@/components/form/CollapsibleSection";
 import { COUNTRIES } from "@/config/countries";
+import { SECTORS } from "@/config/sectors";
 import {
   EXTENSION_FIELD_CONFIG,
   EXTENSION_SECTION_LABELS,
@@ -696,6 +697,7 @@ function LabelArrayEditor({
 // ── Main Form State ─────────────────────────────────────────────────────────
 
 interface FormState {
+  sector: string;
   sectorType: string;
   // Product Information - Identification
   gtin: string;
@@ -827,6 +829,7 @@ interface FormState {
 }
 
 const initialState: FormState = {
+  sector: "Electronics",
   sectorType: "ElectronicExtension",
   gtin: "",
   taricCode: "",
@@ -1114,6 +1117,7 @@ function buildPayload(f: FormState): Record<string, unknown> {
     });
 
   const product: Record<string, unknown> = {
+    productSector: f.sector,
     productInfo: {
       identification: {
         gtin: f.gtin,
@@ -1335,11 +1339,10 @@ export default function AddProductPage() {
   const sectionSteps = [
     "Product Information",
     "Compliance",
-    "Supply Chain",
     "Sustainability",
     "End of Life",
     "Guidelines & Manuals",
-    "Usage & Maintenance",
+    // "Usage & Maintenance",
   ] as const;
   const [currentSectionStep, setCurrentSectionStep] = useState(0);
 
@@ -1452,29 +1455,41 @@ export default function AddProductPage() {
           color="blue"
           defaultOpen
         >
-          {/* Regulatory layer */}
-          <DataLayerGroup layer="Regulatory">
-            {/* ProductIdentificationInformation */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Product Identification Information
-              </legend>
-              <div>
+          <div>
                 <label htmlFor="sector-select" className="block text-sm font-medium text-gray-700 mb-1">
                   Product Sector
                 </label>
                 <select
                   id="sector-select"
                   value={form.sectorType}
-                  onChange={(e) => set("sectorType", e.target.value)}
+                  onChange={(e) => {
+                    const selected = SECTORS.find(
+                      (s) => s.extensionType === e.target.value,
+                    );
+                    set("sectorType", selected?.extensionType ?? "");
+                    set("sector", selected?.label ?? "");
+                  }}
                   className="w-full max-w-xs px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                 >
-                  <option value="ElectronicExtension">Electronics</option>
+                  {SECTORS.map((s) => (
+                    <option key={s.extensionType} value={s.extensionType}>
+                      {s.label}
+                    </option>
+                  ))}
                 </select>
                 <p className="mt-1 text-xs text-gray-400">
                   Determines the extension type for sector-specific fields.
                 </p>
               </div>
+          {/* Regulatory layer */}
+          <DataLayerGroup layer="Regulatory">
+            {/* ProductIdentificationInformation */}
+            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
+              
+              <legend className="text-sm font-semibold text-gray-800">
+                Product Identification Information
+              </legend>
+              
               <div className="grid grid-cols-2 gap-4">
                 <FormField
                   label="Product Name"
@@ -1838,53 +1853,8 @@ export default function AddProductPage() {
         </CollapsibleSection>
         )}
 
-        {/* ── SUPPLY CHAIN ─────────────────────────────────────────────── */}
-        {currentSectionStep === 2 && (
-        <CollapsibleSection title="Supply Chain" color="amber" defaultOpen>
-          <DataLayerGroup layer="Regulatory">
-            {/* ProductTraceability */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Product Traceability
-              </legend>
-              <EventArrayEditor
-                label="Traceability Events"
-                events={form.traceabilityEvents}
-                onChange={(v) => set("traceabilityEvents", v)}
-              />
-            </fieldset>
-          </DataLayerGroup>
-
-          <DataLayerGroup layer="Commercial">
-            {/* RecyclingPartner, CustomerReturnChannel, ComponentSupplier */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Supply Chain Partners
-              </legend>
-              <div className="grid grid-cols-3 gap-4">
-                <FormField
-                  label="Recycling Partner"
-                  value={form.recyclingPartnerName}
-                  onChange={(v) => set("recyclingPartnerName", v)}
-                />
-                <FormField
-                  label="Customer Return Channel"
-                  value={form.customerReturnChannelName}
-                  onChange={(v) => set("customerReturnChannelName", v)}
-                />
-                <FormField
-                  label="Component Supplier"
-                  value={form.componentSupplierName}
-                  onChange={(v) => set("componentSupplierName", v)}
-                />
-              </div>
-            </fieldset>
-          </DataLayerGroup>
-        </CollapsibleSection>
-        )}
-
         {/* ── SUSTAINABILITY ───────────────────────────────────────────── */}
-        {currentSectionStep === 3 && (
+        {currentSectionStep === 2 && (
         <CollapsibleSection title="Sustainability" color="emerald" defaultOpen>
           <DataLayerGroup layer="Regulatory">
             {/* SustainabilityPerformance */}
@@ -2030,7 +2000,7 @@ export default function AddProductPage() {
         )}
 
         {/* ── END OF LIFE ──────────────────────────────────────────────── */}
-        {currentSectionStep === 4 && (
+        {currentSectionStep === 3 && (
         <CollapsibleSection title="End of Life" color="rose" defaultOpen>
           <DataLayerGroup layer="Regulatory">
             <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
@@ -2149,7 +2119,7 @@ export default function AddProductPage() {
         )}
 
         {/* ── GUIDELINES & MANUALS ─────────────────────────────────────── */}
-        {currentSectionStep === 5 && (
+        {currentSectionStep === 4 && (
         <CollapsibleSection title="Guidelines & Manuals" color="cyan" defaultOpen>
           <DataLayerGroup layer="Regulatory">
             <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
@@ -2246,7 +2216,7 @@ export default function AddProductPage() {
         )}
 
         {/* ── USAGE & MAINTENANCE ──────────────────────────────────────── */}
-        {currentSectionStep === 6 && (
+        {currentSectionStep === 5 && (
         <CollapsibleSection title="Usage & Maintenance" color="indigo" defaultOpen>
           <DataLayerGroup layer="Downstream Data">
             <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">

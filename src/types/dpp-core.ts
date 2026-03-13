@@ -81,12 +81,13 @@ export interface DPP {
   granularity?: "model" | "batch" | "item";
   dataCarrierFormat?: "QR code" | "NFC" | "RFID" | "DataMatrix";
   dataCarrier?: string;
-  productGroup?: string;
   issuer?: Organization;
   createdAt?: string;
   updatedAt?: string;
   validUntil?: string;
   product?: Product;
+  supplyChain?: import("./dpp-supply-chain").SupplyChain;
+  usage?: import("./dpp-usage").UsageInformation;
 }
 
 /** A notable occurrence or action in the lifecycle of a product. */
@@ -121,13 +122,14 @@ export interface Product {
   /** IRI of this product resource */
   id?: string;
   label?: string;
+  productSector?: string;
   dpp?: DPP | DPP[];
   /** Thematic data groups attached to this product */
   productInfo?: import("./dpp-product-info").ProductInformation;
   compliance?: import("./dpp-compliance").Compliance;
-  supplyChain?: import("./dpp-supply-chain").SupplyChain;
+  // supplyChain?: import("./dpp-supply-chain").SupplyChain;
   sustainability?: import("./dpp-sustainability").SustainabilityInformation;
   endOfLife?: import("./dpp-eol").EndOfLifeData;
   guidelines?: import("./dpp-guidelines").GuidelinesAndManuals;
-  usage?: import("./dpp-usage").UsageInformation;
+  // usage?: import("./dpp-usage").UsageInformation;
 }

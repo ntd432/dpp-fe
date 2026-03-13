@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { queryFromTriplyDB } from "@/lib/api";
+import { queryFromTriplyDB, fetchFromAPI } from "@/lib/api";
 import {
   queryProductByCompanyQuery,
   queryProductByGTINQuery,
@@ -140,10 +140,16 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  return NextResponse.json(
-    { error: "Either 'manufacturerId' or 'gtin' query parameter is required" },
-    { status: 400 },
-  );
+  try {
+      const data = await fetchFromAPI<Product>("products");
+      return NextResponse.json(data);
+    } catch (error) {
+      console.error("Failed to fetch all products:", error);
+      return NextResponse.json(
+        { error: "Failed to fetch all products" },
+        { status: 500 },
+      );
+    }
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {

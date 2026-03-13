@@ -4,7 +4,7 @@ import { Organization } from "@/types/dpp-core";
 
 export async function GET() {
   try {
-    const data = await fetchFromAPI<Organization>("all-manufacturers", 2);
+    const data = await fetchFromAPI<Organization>("manufacturers", "2");
     return NextResponse.json(data);
   } catch (error) {
     console.error("Failed to fetch manufacturers:", error);

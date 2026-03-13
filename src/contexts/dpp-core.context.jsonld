@@ -19,7 +19,7 @@
       "granularity": "dpp-core:granularity",
       "dataCarrierFormat": "dpp-core:dataCarrierFormat",
       "dataCarrier": "dpp-core:dataCarrier",
-      "productGroup": "dpp-core:productGroup",
+      "productSector": "dpp-core:productSector",
       "issuer": {
         "@id": "dpp-core:issuer",
         "@type": "@id"
