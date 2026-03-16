@@ -22,8 +22,8 @@ export default async function SustainabilityPage() {
           Sustainability Information
         </h1>
         <p className="text-gray-500 mt-1">
-          Environmental footprint, resource consumption, and sustainability
-          declarations for each product.
+          Environmental footprint, resource consumption, life cycle assessment,
+          and sustainability declarations for each product.
         </p>
       </div>
 
@@ -37,7 +37,7 @@ export default async function SustainabilityPage() {
         <div className="space-y-6">
           {data.map((item, idx) => (
             <ProductCard
-              key={idx}
+              key={String(item.productName ?? item.gtin ?? JSON.stringify(item) ?? idx)}
               title={item.productName || `Product ${idx + 1}`}
               data={item}
               accentColor="emerald"

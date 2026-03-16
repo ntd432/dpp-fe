@@ -9,6 +9,7 @@
       "SectorSustainabilityIndicators": "dpp-sustainability:SectorSustainabilityIndicators",
       "CriticalRawMaterial": "dpp-sustainability:CriticalRawMaterial",
       "LifeCycleAssessment": "dpp-sustainability:LifeCycleAssessment",
+      "EnvironmentalImpact": "dpp-sustainability:EnvironmentalImpact",
       "RenewableNonRenewableContent": "dpp-sustainability:RenewableNonRenewableContent",
       "CircularEconomyIndicator": "dpp-sustainability:CircularEconomyIndicator",
       "SocialIndicator": "dpp-sustainability:SocialIndicator",
@@ -35,9 +36,21 @@
         "@id": "dpp-sustainability:criticalRawMaterial",
         "@type": "@id"
       },
-      "lifeCycleAssessment": {
-        "@id": "dpp-sustainability:lifeCycleAssessment",
+      "lifeCycleAssessmentReport": {
+        "@id": "dpp-sustainability:lifeCycleAssessmentReport",
         "@type": "xsd:anyURI"
+      },
+      "environmentalImpact": {
+        "@id": "dpp-sustainability:environmentalImpact",
+        "@type": "@id"
+      },
+      "impactCategory": "dpp-sustainability:impactCategory",
+      "method": "dpp-sustainability:method",
+      "characterizationFactor": "dpp-sustainability:characterizationFactor",
+      "characterizationModel": "dpp-sustainability:characterizationModel",
+      "impactIndicator": {
+        "@id": "dpp-sustainability:impactIndicator",
+        "@type": "@id"
       },
       "renewableNonRenewableContent": {
         "@id": "dpp-sustainability:renewableNonRenewableContent",

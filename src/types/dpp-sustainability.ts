@@ -3,7 +3,7 @@
  * @see https://ntd432.github.io/dpp/models/dpp-sustainability.ttl
  */
 
-import type { Extension, Material } from "./dpp-core";
+import type { Extension, Material, MeasurementEntry } from "./dpp-core";
 
 // ── Sub-types ───────────────────────────────────────────────────────────────
 
@@ -20,6 +20,14 @@ export interface ResourceConsumption {
   resource?: string;
   resourceConsumptionUnit?: string;
   resourceConsumptionValue?: number;
+}
+
+export interface EnvironmentalImpact {
+  impactCategory: string;
+  method?: string;
+  characterizationFactor?: string;
+  characterizationModel?: string;
+  impactIndicator: MeasurementEntry;
 }
 
 // ── Data Points ─────────────────────────────────────────────────────────────
@@ -39,6 +47,11 @@ export interface SustainabilityAttributes {
   resourceConsumptionWhenRecovering?: ResourceConsumption[];
 }
 
+export interface LifeCycleAssessment {
+  lifeCycleAssessmentReport: string;
+  environmentalImpact?: EnvironmentalImpact[];
+}
+
 // ── Data Group ──────────────────────────────────────────────────────────────
 
 export interface SustainabilityInformation {
@@ -46,7 +59,7 @@ export interface SustainabilityInformation {
   decomposability?: string;
   sectorSustainabilityIndicators?: Extension;
   criticalRawMaterial?: Material[];
-  lifeCycleAssessment?: string;
+  lifeCycleAssessment?: LifeCycleAssessment;
   renewableNonRenewableContent?: Material[];
   circularEconomyIndicator?: Extension;
   socialIndicator?: SocialIndicator;

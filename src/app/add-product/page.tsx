@@ -269,7 +269,17 @@ interface ResourceConsumptionEntry {
   measurement: MeasurementValue;
 }
 
+interface EnvironmentalImpactEntry {
+  _key: string;
+  impactCategory: string;
+  method: string;
+  characterizationFactor: string;
+  characterizationModel: string;
+  impactIndicator: MeasurementValue;
+}
+
 const emptyMeasurement = (): MeasurementValue => ({ value: "", unit: "", customUnit: "" });
+const IMPACT_UNITS = ["kg CO2e", "g CO2e", "t CO2e", "MJ", "kWh", "m3", "L", "index"];
 
 function EnvironmentalFootprintArrayEditor({
   items,
@@ -389,6 +399,90 @@ function ResourceConsumptionArrayEditor({
             measurement={item.measurement}
             unitOptions={CONSUMPTION_UNITS}
             onChange={(next) => updateAt(items, i, "measurement", next, onChange)}
+          />
+          <div className="flex justify-end">
+            <button
+              type="button"
+              onClick={() => removeAt(items, i, onChange)}
+              className="text-red-400 hover:text-red-600 px-2 py-1"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function EnvironmentalImpactArrayEditor({
+  items,
+  onChange,
+}: Readonly<{
+  items: EnvironmentalImpactEntry[];
+  onChange: (items: EnvironmentalImpactEntry[]) => void;
+}>) {
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <span className="block text-sm font-medium text-gray-700">Environmental Impact</span>
+        <button
+          type="button"
+          onClick={() =>
+            onChange([
+              ...items,
+              {
+                _key: uid(),
+                impactCategory: "",
+                method: "",
+                characterizationFactor: "",
+                characterizationModel: "",
+                impactIndicator: emptyMeasurement(),
+              },
+            ])
+          }
+          className="text-xs px-2 py-1 bg-emerald-50 text-emerald-700 rounded hover:bg-emerald-100"
+        >
+          + Add Entry
+        </button>
+      </div>
+      {items.map((item, i) => (
+        <div key={item._key} className="space-y-3 p-3 bg-white border border-gray-200 rounded-lg">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <input
+              type="text"
+              placeholder="Impact category"
+              value={item.impactCategory}
+              onChange={(e) => updateAt(items, i, "impactCategory", e.target.value, onChange)}
+              className={INPUT_CLASS}
+            />
+            <input
+              type="text"
+              placeholder="Method"
+              value={item.method}
+              onChange={(e) => updateAt(items, i, "method", e.target.value, onChange)}
+              className={INPUT_CLASS}
+            />
+            <input
+              type="text"
+              placeholder="Characterization factor"
+              value={item.characterizationFactor}
+              onChange={(e) => updateAt(items, i, "characterizationFactor", e.target.value, onChange)}
+              className={INPUT_CLASS}
+            />
+            <input
+              type="text"
+              placeholder="Characterization model"
+              value={item.characterizationModel}
+              onChange={(e) => updateAt(items, i, "characterizationModel", e.target.value, onChange)}
+              className={INPUT_CLASS}
+            />
+          </div>
+          <MeasurementInput
+            label="Impact Indicator"
+            measurement={item.impactIndicator}
+            unitOptions={IMPACT_UNITS}
+            onChange={(next) => updateAt(items, i, "impactIndicator", next, onChange)}
           />
           <div className="flex justify-end">
             <button
@@ -790,7 +884,8 @@ interface FormState {
   decomposability: string;
   sectorSustainabilityIndicatorsText: string;
   criticalRawMaterials: MaterialEntry[];
-  lifeCycleAssessment: string;
+  lifeCycleAssessmentReport: string;
+  environmentalImpacts: EnvironmentalImpactEntry[];
   renewableNonRenewableContent: MaterialEntry[];
   circularEconomyIndicatorText: string;
   labourConditions: string;
@@ -911,7 +1006,8 @@ const initialState: FormState = {
   decomposability: "",
   sectorSustainabilityIndicatorsText: "",
   criticalRawMaterials: [],
-  lifeCycleAssessment: "",
+  lifeCycleAssessmentReport: "",
+  environmentalImpacts: [],
   renewableNonRenewableContent: [],
   circularEconomyIndicatorText: "",
   labourConditions: "",
@@ -1105,6 +1201,14 @@ function buildPayload(f: FormState): Record<string, unknown> {
     resourceConsumptionValue: entry.measurement.value ? Number(entry.measurement.value) : "",
   });
 
+  const toEnvironmentalImpact = (entry: EnvironmentalImpactEntry): Record<string, unknown> => ({
+    impactCategory: entry.impactCategory,
+    method: entry.method,
+    characterizationFactor: entry.characterizationFactor,
+    characterizationModel: entry.characterizationModel,
+    impactIndicator: toMeasurementEntry(entry.impactIndicator),
+  });
+
   const buildEvents = (events: EventEntry[]) =>
     events.map((e) => {
       const ev: Record<string, unknown> = {};
@@ -1267,7 +1371,10 @@ function buildPayload(f: FormState): Record<string, unknown> {
         indicator: f.sectorSustainabilityIndicatorsText,
       },
       criticalRawMaterial: f.criticalRawMaterials.map(toMaterial),
-      lifeCycleAssessment: f.lifeCycleAssessment,
+      lifeCycleAssessment: {
+        lifeCycleAssessmentReport: f.lifeCycleAssessmentReport,
+        environmentalImpact: f.environmentalImpacts.map(toEnvironmentalImpact),
+      },
       renewableNonRenewableContent: f.renewableNonRenewableContent.map(toMaterial),
       circularEconomyIndicator: {
         extensionType: f.sectorType,
@@ -1922,9 +2029,13 @@ export default function AddProductPage() {
               </legend>
               <FormField
                 label="LCA Report URL"
-                value={form.lifeCycleAssessment}
-                onChange={(v) => set("lifeCycleAssessment", v)}
+                value={form.lifeCycleAssessmentReport}
+                onChange={(v) => set("lifeCycleAssessmentReport", v)}
                 type="url"
+              />
+              <EnvironmentalImpactArrayEditor
+                items={form.environmentalImpacts}
+                onChange={(v) => set("environmentalImpacts", v)}
               />
             </fieldset>
           </DataLayerGroup>

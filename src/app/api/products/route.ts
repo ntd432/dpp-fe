@@ -45,10 +45,62 @@ const EVENT_GROUPS: { arrayKey: string; fields: string[] }[] = [
     arrayKey: "incidentEvents",
     fields: ["incidentActionName", "incidentTime"],
   },
+  {
+    arrayKey: "environmentalImpacts",
+    fields: [
+      "impactCategory",
+      "impactMethod",
+      "impactFactor",
+      "impactModel",
+      "impactIndicatorValue",
+      "impactIndicatorUnit",
+    ],
+  },
 ];
 
 /** Flat field names that belong to event groups (used to exclude from scalar copy) */
 const EVENT_FIELD_NAMES = new Set(EVENT_GROUPS.flatMap((g) => g.fields));
+
+function copyScalarFields(row: ProductRow): Record<string, unknown> {
+  const result: Record<string, unknown> = {};
+
+  for (const [key, value] of Object.entries(row)) {
+    if (!EVENT_FIELD_NAMES.has(key) && value !== undefined) {
+      result[key] = value;
+    }
+  }
+
+  return result;
+}
+
+function collectGroupedItems(rows: ProductRow[], fields: string[]): Record<string, string>[] {
+  const seen = new Set<string>();
+  const items: Record<string, string>[] = [];
+
+  for (const row of rows) {
+    const item: Record<string, string> = {};
+
+    for (const field of fields) {
+      if (row[field]) {
+        item[field] = row[field]!;
+      }
+    }
+
+    if (Object.keys(item).length === 0) {
+      continue;
+    }
+
+    const key = JSON.stringify(item);
+    if (seen.has(key)) {
+      continue;
+    }
+
+    seen.add(key);
+    items.push(item);
+  }
+
+  return items;
+}
 
 /**
  * Aggregate flat SPARQL rows into a single product object.
@@ -58,36 +110,10 @@ const EVENT_FIELD_NAMES = new Set(EVENT_GROUPS.flatMap((g) => g.fields));
 function aggregateRows(rows: ProductRow[]): Record<string, unknown> {
   if (rows.length === 0) return {};
 
-  // 1. Copy all scalar (non-event) fields from the first row
-  const result: Record<string, unknown> = {};
-  for (const [key, value] of Object.entries(rows[0])) {
-    if (!EVENT_FIELD_NAMES.has(key) && value !== undefined) {
-      result[key] = value;
-    }
-  }
+  const result = copyScalarFields(rows[0]);
 
-  // 2. Collect event arrays, de-duplicating by serialised value
   for (const group of EVENT_GROUPS) {
-    const seen = new Set<string>();
-    const items: Record<string, string>[] = [];
-
-    for (const row of rows) {
-      const product: Record<string, string> = {};
-      let hasValue = false;
-      for (const field of group.fields) {
-        if (row[field]) {
-          product[field] = row[field]!;
-          hasValue = true;
-        }
-      }
-      if (hasValue) {
-        const key = JSON.stringify(product);
-        if (!seen.has(key)) {
-          seen.add(key);
-          items.push(product);
-        }
-      }
-    }
+    const items = collectGroupedItems(rows, group.fields);
 
     if (items.length > 0) {
       result[group.arrayKey] = items;

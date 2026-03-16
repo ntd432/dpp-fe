@@ -8,6 +8,15 @@ interface EventItem {
   [key: string]: string;
 }
 
+interface EnvironmentalImpactItem {
+  impactCategory?: string;
+  impactMethod?: string;
+  impactFactor?: string;
+  impactModel?: string;
+  impactIndicatorValue?: string;
+  impactIndicatorUnit?: string;
+}
+
 interface ProductData {
   // Identification
   dppLabel?: string;
@@ -58,10 +67,11 @@ interface ProductData {
   resourceConsumption?: string;
   decomposability?: string;
   criticalRawMaterial?: string;
-  lca?: string;
+  lcaReport?: string;
   renewableContent?: string;
   labourConditions?: string;
   envDeclaration?: string;
+  environmentalImpacts?: EnvironmentalImpactItem[];
   // End-of-life
   recyclingReusePotential?: string;
   disposalOptions?: string;
@@ -98,11 +108,11 @@ function Section({
   title,
   color,
   children,
-}: {
+}: Readonly<{
   title: string;
   color: string;
   children: React.ReactNode;
-}) {
+}>) {
   const borderColors: Record<string, string> = {
     blue: "border-blue-500",
     purple: "border-purple-500",
@@ -126,7 +136,7 @@ function Section({
   );
 }
 
-function Field({ label, value }: { label: string; value?: string }) {
+function Field({ label, value }: Readonly<{ label: string; value?: string }>) {
   if (!value) return null;
   const isUrl = value.startsWith("http://") || value.startsWith("https://");
   return (
@@ -153,10 +163,10 @@ function Field({ label, value }: { label: string; value?: string }) {
 function EventTable({
   events,
   columns,
-}: {
+}: Readonly<{
   events: EventItem[];
   columns: { key: string; label: string }[];
-}) {
+}>) {
   return (
     <div className="overflow-x-auto rounded-lg border border-gray-100">
       <table className="w-full text-sm">
@@ -171,7 +181,7 @@ function EventTable({
         </thead>
         <tbody className="divide-y divide-gray-100">
           {events.map((e, i) => (
-            <tr key={i} className="hover:bg-gray-50">
+            <tr key={JSON.stringify(e) || String(i)} className="hover:bg-gray-50">
               {columns.map((c) => (
                 <td key={c.key} className="px-4 py-2 text-gray-700">
                   {e[c.key] || "—"}
@@ -236,6 +246,17 @@ export default function ProductDetailPage() {
   }
 
   const p = product;
+  const hasSustainability = Boolean(
+    p.envFootprint ||
+      p.resourceConsumption ||
+      p.decomposability ||
+      p.criticalRawMaterial ||
+      p.lcaReport ||
+      p.renewableContent ||
+      p.labourConditions ||
+      p.envDeclaration ||
+      (p.environmentalImpacts && p.environmentalImpacts.length > 0),
+  );
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -373,17 +394,37 @@ export default function ProductDetailPage() {
         )}
 
         {/* 6. Sustainability */}
-        {(p.envFootprint || p.resourceConsumption || p.criticalRawMaterial) && (
+        {hasSustainability && (
           <Section title="Sustainability" color="emerald">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <Field label="Environmental Footprint" value={p.envFootprint} />
-              <Field label="Resource Consumption" value={p.resourceConsumption} />
-              <Field label="Decomposability" value={p.decomposability} />
-              <Field label="Critical Raw Material" value={p.criticalRawMaterial} />
-              <Field label="Life Cycle Assessment" value={p.lca} />
-              <Field label="Renewable Content" value={p.renewableContent} />
-              <Field label="Labour Conditions" value={p.labourConditions} />
-              <Field label="Environmental Declaration" value={p.envDeclaration} />
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <Field label="Environmental Footprint" value={p.envFootprint} />
+                <Field label="Resource Consumption" value={p.resourceConsumption} />
+                <Field label="Decomposability" value={p.decomposability} />
+                <Field label="Critical Raw Material" value={p.criticalRawMaterial} />
+                <Field label="LCA Report" value={p.lcaReport} />
+                <Field label="Renewable Content" value={p.renewableContent} />
+                <Field label="Labour Conditions" value={p.labourConditions} />
+                <Field label="Environmental Declaration" value={p.envDeclaration} />
+              </div>
+              {p.environmentalImpacts && p.environmentalImpacts.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-700 mb-2">
+                    Environmental Impacts
+                  </h3>
+                  <EventTable
+                    events={p.environmentalImpacts as EventItem[]}
+                    columns={[
+                      { key: "impactCategory", label: "Category" },
+                      { key: "impactMethod", label: "Method" },
+                      { key: "impactFactor", label: "Factor" },
+                      { key: "impactModel", label: "Model" },
+                      { key: "impactIndicatorValue", label: "Indicator Value" },
+                      { key: "impactIndicatorUnit", label: "Indicator Unit" },
+                    ]}
+                  />
+                </div>
+              )}
             </div>
           </Section>
         )}

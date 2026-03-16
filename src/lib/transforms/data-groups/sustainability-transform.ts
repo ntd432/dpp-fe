@@ -5,6 +5,7 @@ import {
   isRecord,
   transformEnvironmentalFootprint,
   transformMaterial,
+  transformMeasurementEntry,
   transformResourceConsumption,
 } from "../shared";
 
@@ -30,9 +31,11 @@ export function transformSustainabilityInformation(sustainability: Record<string
     crm.criticalRawMaterial = transformMaterial(sustainability.criticalRawMaterial.filter(isRecord));
     dataPoint.push(crm);
   }
-  if (sustainability.lifeCycleAssessment !== undefined) {
+  if (isRecord(sustainability.lifeCycleAssessment)) {
+    dataPoint.push(transformLifeCycleAssessment(sustainability.lifeCycleAssessment));
+  } else if (typeof sustainability.lifeCycleAssessment === "string") {
     const lca = createDataPoint({}, "LifeCycleAssessment", "Life Cycle Assessment", "life-cycle-assessment");
-    lca.lifeCycleAssessment = sustainability.lifeCycleAssessment;
+    lca.lifeCycleAssessmentReport = sustainability.lifeCycleAssessment;
     dataPoint.push(lca);
   }
   if (Array.isArray(sustainability.renewableNonRenewableContent)) {
@@ -89,4 +92,28 @@ function transformSustainabilityAttributes(value: Record<string, unknown>): Reco
   }
   copyUnhandledProperties(value, result, new Set(["id", "@id", "@type", "resourceConsumptionWhenUsing", "resourceConsumptionWhenRecovering"]));
   return result;
+}
+
+function transformLifeCycleAssessment(value: Record<string, unknown>): Record<string, unknown> {
+  const result = createDataPoint(value, "LifeCycleAssessment", "Life Cycle Assessment", "life-cycle-assessment");
+
+  if (Array.isArray(value.environmentalImpact)) {
+    result.environmentalImpact = transformEnvironmentalImpact(value.environmentalImpact.filter(isRecord));
+  }
+
+  copyUnhandledProperties(value, result, new Set(["id", "@id", "@type", "environmentalImpact"]));
+  return result;
+}
+
+function transformEnvironmentalImpact(impacts: Record<string, unknown>[]): Record<string, unknown>[] {
+  return impacts.map((impact) => {
+    const result = createNode(impact, "EnvironmentalImpact", "Environmental Impact", "environmental-impact");
+
+    if (isRecord(impact.impactIndicator)) {
+      result.impactIndicator = transformMeasurementEntry(impact.impactIndicator);
+    }
+
+    copyUnhandledProperties(impact, result, new Set(["id", "@id", "@type", "impactIndicator"]));
+    return result;
+  });
 }
