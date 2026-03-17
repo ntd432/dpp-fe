@@ -122,10 +122,13 @@ interface FieldMapping {
   value: string;
 }
 
+type LeafUsageStatus = "mapped" | "custom";
+
 interface CustomFieldEntry {
   _key: string;
   key: string;
   value: string;
+  sourcePath?: string;
 }
 
 type CustomFieldGroupKey =
@@ -175,14 +178,14 @@ function collectJsonLeaves(value: unknown, basePath = "root"): ImportedLeaf[] {
 }
 
 function normalizeJsonPath(path: string): string {
-  return path.replace(/\[\d+\]/g, "").replace(/^root\.?/, "");
+  return path.replaceAll(/\[\d+\]/g, "").replaceAll(/^root\.?/g, "");
 }
 
 function customFieldNameFromLeafPath(path: string): string {
   const normalized = normalizeJsonPath(path);
   if (!normalized) return "customField";
   const parts = normalized.split(".").filter(Boolean);
-  return parts[parts.length - 1] || normalized;
+  return parts.at(-1) || normalized;
 }
 
 function setControlledElementValue(target: EventTarget | null, value: string): string | null {
@@ -245,11 +248,13 @@ function JsonTree({
   path,
   onLeafDrag,
   onLeafClick,
+  leafUsageByPath,
 }: Readonly<{
   value: unknown;
   path: string;
   onLeafDrag: (leaf: ImportedLeaf, event: React.DragEvent<HTMLElement>) => void;
   onLeafClick: (leaf: ImportedLeaf) => void;
+  leafUsageByPath: Record<string, LeafUsageStatus>;
 }>): React.ReactNode {
   const [open, setOpen] = useState(path === "root");
 
@@ -272,6 +277,7 @@ function JsonTree({
                 path={`${path}[${index}]`}
                 onLeafDrag={onLeafDrag}
                 onLeafClick={onLeafClick}
+                  leafUsageByPath={leafUsageByPath}
               />
             ))}
           </div>
@@ -302,6 +308,7 @@ function JsonTree({
                   path={nextPath}
                   onLeafDrag={onLeafDrag}
                   onLeafClick={onLeafClick}
+                  leafUsageByPath={leafUsageByPath}
                 />
               );
             })}
@@ -315,15 +322,40 @@ function JsonTree({
     path: path,
     value: stringifyJsonLeaf(value),
   };
+  const leafUsage = leafUsageByPath[leaf.path];
+  const isLocked = leafUsage !== undefined;
+  const leafClasses =
+    leafUsage === "mapped"
+      ? "border-emerald-300 bg-emerald-50 text-emerald-900"
+      : leafUsage === "custom"
+        ? "border-amber-300 bg-amber-50 text-amber-900"
+        : "border-gray-200 bg-white";
+  const leafHint =
+    leafUsage === "mapped"
+      ? "Already mapped to an existing form field"
+      : leafUsage === "custom"
+        ? "Already added to custom fields"
+        : "Click to map to focused field, or drag to a field";
 
   return (
     <button
       type="button"
-      className="ml-4 w-full text-left rounded border border-gray-200 bg-white px-2 py-1 text-xs cursor-grab active:cursor-grabbing"
-      draggable
-      onDragStart={(event) => onLeafDrag(leaf, event)}
-      onClick={() => onLeafClick(leaf)}
-      title="Click to map to focused field, or drag to a field"
+      className={`ml-4 w-full text-left rounded border px-2 py-1 text-xs ${leafClasses} ${
+        isLocked ? "cursor-not-allowed opacity-80" : "cursor-grab active:cursor-grabbing"
+      }`}
+      draggable={!isLocked}
+      onDragStart={(event) => {
+        if (isLocked) {
+          event.preventDefault();
+          return;
+        }
+        onLeafDrag(leaf, event);
+      }}
+      onClick={() => {
+        if (isLocked) return;
+        onLeafClick(leaf);
+      }}
+      title={leafHint}
     >
       <div className="font-medium text-gray-700 truncate">{path.split(".")[path.split(".").length - 1]}</div>
       <div className="text-gray-500 truncate">{leaf.value}</div>
@@ -335,10 +367,12 @@ function CustomFieldsEditor({
   title,
   items,
   onChange,
+  canUseLeaf,
 }: Readonly<{
   title: string;
   items: CustomFieldEntry[];
   onChange: (items: CustomFieldEntry[]) => void;
+  canUseLeaf: (leaf: ImportedLeaf) => boolean;
 }>): React.ReactNode {
   const canHandleDrop = (event: React.DragEvent<HTMLElement>) =>
     event.dataTransfer.types.includes(DRAG_MIME);
@@ -354,22 +388,6 @@ function CustomFieldsEditor({
     }
   };
 
-  const applyLeafToIndex = (index: number, leaf: ImportedLeaf) => {
-    const next = [...items];
-    const fallbackKey = customFieldNameFromLeafPath(leaf.path);
-    const existing = next[index];
-
-    if (!existing) return;
-
-    next[index] = {
-      ...existing,
-      key: existing.key || fallbackKey,
-      value: leaf.value,
-    };
-
-    onChange(next);
-  };
-
   const appendLeafAsNewField = (leaf: ImportedLeaf) => {
     onChange([
       ...items,
@@ -377,6 +395,7 @@ function CustomFieldsEditor({
         _key: uid(),
         key: customFieldNameFromLeafPath(leaf.path),
         value: leaf.value,
+        sourcePath: leaf.path,
       },
     ]);
   };
@@ -394,6 +413,7 @@ function CustomFieldsEditor({
         event.stopPropagation();
         const leaf = parseDroppedLeaf(event);
         if (!leaf) return;
+        if (!canUseLeaf(leaf)) return;
         appendLeafAsNewField(leaf);
       }}
     >
@@ -406,24 +426,25 @@ function CustomFieldsEditor({
           <div
             key={field._key}
             className="grid grid-cols-[1fr_1fr_auto] gap-2"
-            onDragOver={(event) => {
-              if (!canHandleDrop(event)) return;
-              event.preventDefault();
-            }}
-            onDrop={(event) => {
-              if (!canHandleDrop(event)) return;
-              event.preventDefault();
-              event.stopPropagation();
-              const leaf = parseDroppedLeaf(event);
-              if (!leaf) return;
-              applyLeafToIndex(index, leaf);
-            }}
           >
             <input
               type="text"
               placeholder="Field name"
               value={field.key}
               onChange={(event) => updateAt(items, index, "key", event.target.value, onChange)}
+              onDragOver={(event) => {
+                if (!canHandleDrop(event)) return;
+                event.preventDefault();
+              }}
+              onDrop={(event) => {
+                if (!canHandleDrop(event)) return;
+                event.preventDefault();
+                event.stopPropagation();
+                const leaf = parseDroppedLeaf(event);
+                if (!leaf) return;
+                if (!canUseLeaf(leaf)) return;
+                appendLeafAsNewField(leaf);
+              }}
               className={INPUT_CLASS}
             />
             <input
@@ -431,6 +452,19 @@ function CustomFieldsEditor({
               placeholder="Value"
               value={field.value}
               onChange={(event) => updateAt(items, index, "value", event.target.value, onChange)}
+              onDragOver={(event) => {
+                if (!canHandleDrop(event)) return;
+                event.preventDefault();
+              }}
+              onDrop={(event) => {
+                if (!canHandleDrop(event)) return;
+                event.preventDefault();
+                event.stopPropagation();
+                const leaf = parseDroppedLeaf(event);
+                if (!leaf) return;
+                if (!canUseLeaf(leaf)) return;
+                appendLeafAsNewField(leaf);
+              }}
               className={INPUT_CLASS}
             />
             <button
@@ -445,7 +479,7 @@ function CustomFieldsEditor({
       </div>
       <button
         type="button"
-        onClick={() => onChange([...items, { _key: uid(), key: "", value: "" }])}
+        onClick={() => onChange([...items, { _key: uid(), key: "", value: "", sourcePath: undefined }])}
         className="text-xs px-2 py-1 bg-emerald-50 text-emerald-700 rounded hover:bg-emerald-100"
       >
         + Add Custom Field
@@ -1961,6 +1995,46 @@ export default function AddProductPage() {
 
   const setField: FormSetter = (key, value) => set(key, value as never);
 
+  const customFieldSourcePaths = useMemo(() => {
+    const groups: CustomFieldEntry[][] = [
+      form.productInfoCustomFields,
+      form.complianceCustomFields,
+      form.sustainabilityCustomFields,
+      form.endOfLifeCustomFields,
+      form.guidelinesCustomFields,
+    ];
+
+    return groups.flatMap((group) =>
+      group
+        .map((entry) => entry.sourcePath)
+        .filter((path): path is string => Boolean(path)),
+    );
+  }, [
+    form.productInfoCustomFields,
+    form.complianceCustomFields,
+    form.sustainabilityCustomFields,
+    form.endOfLifeCustomFields,
+    form.guidelinesCustomFields,
+  ]);
+
+  const leafUsageByPath = useMemo(() => {
+    const usage: Record<string, LeafUsageStatus> = {};
+
+    for (const mapping of mappings) {
+      usage[mapping.sourcePath] = "mapped";
+    }
+
+    for (const sourcePath of customFieldSourcePaths) {
+      if (!usage[sourcePath]) {
+        usage[sourcePath] = "custom";
+      }
+    }
+
+    return usage;
+  }, [mappings, customFieldSourcePaths]);
+
+  const canUseLeaf = (leaf: ImportedLeaf) => !leafUsageByPath[leaf.path];
+
   const importedLeafCount = useMemo(
     () => (importedJson == null ? 0 : collectJsonLeaves(importedJson).length),
     [importedJson],
@@ -2032,6 +2106,11 @@ export default function AddProductPage() {
   };
 
   const handleLeafClick = (leaf: ImportedLeaf) => {
+    if (!canUseLeaf(leaf)) {
+      setImportError("This value is already used and cannot be mapped again.");
+      return;
+    }
+
     const activeElement = document.activeElement;
     const targetField = inferFieldNameFromElement(activeElement);
     const writtenValue = setControlledElementValue(activeElement, leaf.value);
@@ -2054,7 +2133,19 @@ export default function AddProductPage() {
     if (!raw) return;
 
     event.preventDefault();
-    const parsed = JSON.parse(raw) as ImportedLeaf;
+    let parsed: ImportedLeaf;
+    try {
+      parsed = JSON.parse(raw) as ImportedLeaf;
+    } catch {
+      setImportError("Unable to parse dropped JSON value.");
+      return;
+    }
+
+    if (!canUseLeaf(parsed)) {
+      setImportError("This value is already used and cannot be mapped again.");
+      return;
+    }
+
     const targetField = inferFieldNameFromElement(event.target);
     const writtenValue = setControlledElementValue(event.target, parsed.value);
 
@@ -2159,10 +2250,9 @@ export default function AddProductPage() {
               className="block w-full text-xs text-gray-600 file:mr-3 file:px-3 file:py-1.5 file:border file:border-gray-200 file:rounded-md file:bg-gray-50 file:text-gray-700"
             />
             <p className="text-xs text-gray-500">
-              Drag values from the tree onto form fields. Click a value to map it to the currently focused field.
+              Drag values from the tree onto form fields.
             </p>
             <div className="text-xs text-gray-600">
-              <div>Focused field: <span className="font-medium">{focusedFieldName}</span></div>
               <div>Imported leaves: <span className="font-medium">{importedLeafCount}</span></div>
               <div>Mapped fields: <span className="font-medium">{mappings.length}</span></div>
             </div>
@@ -2182,8 +2272,18 @@ export default function AddProductPage() {
                 path="root"
                 onLeafDrag={handleLeafDragStart}
                 onLeafClick={handleLeafClick}
+                leafUsageByPath={leafUsageByPath}
               />
             )}
+          </div>
+
+          <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-gray-600">
+            <span className="inline-flex items-center gap-1 rounded border border-emerald-300 bg-emerald-50 px-2 py-0.5">
+              mapped field
+            </span>
+            <span className="inline-flex items-center gap-1 rounded border border-amber-300 bg-amber-50 px-2 py-0.5">
+              custom field
+            </span>
           </div>
 
           <div className="mt-4">
@@ -2594,6 +2694,7 @@ export default function AddProductPage() {
             title="Product Information Custom Fields"
             items={form.productInfoCustomFields}
             onChange={(items) => setCustomGroupFields("productInfoCustomFields", items)}
+            canUseLeaf={canUseLeaf}
           />
         </CollapsibleSection>
         )}
@@ -2687,6 +2788,7 @@ export default function AddProductPage() {
             title="Compliance Custom Fields"
             items={form.complianceCustomFields}
             onChange={(items) => setCustomGroupFields("complianceCustomFields", items)}
+            canUseLeaf={canUseLeaf}
           />
         </CollapsibleSection>
         )}
@@ -2843,6 +2945,7 @@ export default function AddProductPage() {
             title="Sustainability Custom Fields"
             items={form.sustainabilityCustomFields}
             onChange={(items) => setCustomGroupFields("sustainabilityCustomFields", items)}
+            canUseLeaf={canUseLeaf}
           />
         </CollapsibleSection>
         )}
@@ -2968,6 +3071,7 @@ export default function AddProductPage() {
             title="End of Life Custom Fields"
             items={form.endOfLifeCustomFields}
             onChange={(items) => setCustomGroupFields("endOfLifeCustomFields", items)}
+            canUseLeaf={canUseLeaf}
           />
         </CollapsibleSection>
         )}
@@ -3071,6 +3175,7 @@ export default function AddProductPage() {
             title="Guidelines Custom Fields"
             items={form.guidelinesCustomFields}
             onChange={(items) => setCustomGroupFields("guidelinesCustomFields", items)}
+            canUseLeaf={canUseLeaf}
           />
         </CollapsibleSection>
         )}
