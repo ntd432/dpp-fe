@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FormField, TextAreaField } from "@/components/form/FormField";
 import {
@@ -109,6 +109,349 @@ interface MeasurementValue {
   value: string;
   unit: string;
   customUnit: string;
+}
+
+interface ImportedLeaf {
+  path: string;
+  value: string;
+}
+
+interface FieldMapping {
+  targetField: string;
+  sourcePath: string;
+  value: string;
+}
+
+interface CustomFieldEntry {
+  _key: string;
+  key: string;
+  value: string;
+}
+
+type CustomFieldGroupKey =
+  | "productInfoCustomFields"
+  | "complianceCustomFields"
+  | "sustainabilityCustomFields"
+  | "endOfLifeCustomFields"
+  | "guidelinesCustomFields";
+
+const DRAG_MIME = "application/x-dpp-json-leaf";
+
+function stringifyJsonLeaf(value: unknown): string {
+  if (value === null) return "null";
+  if (value === undefined) return "";
+  if (typeof value === "string") return value;
+  if (typeof value === "number" || typeof value === "boolean") return String(value);
+  try {
+    return JSON.stringify(value);
+  } catch {
+    return "";
+  }
+}
+
+function collectJsonLeaves(value: unknown, basePath = "root"): ImportedLeaf[] {
+  if (value === null || value === undefined) {
+    return [{ path: basePath, value: stringifyJsonLeaf(value) }];
+  }
+
+  if (Array.isArray(value)) {
+    if (value.length === 0) {
+      return [{ path: basePath, value: "[]" }];
+    }
+    return value.flatMap((item, index) => collectJsonLeaves(item, `${basePath}[${index}]`));
+  }
+
+  if (typeof value === "object") {
+    const entries = Object.entries(value as Record<string, unknown>);
+    if (entries.length === 0) {
+      return [{ path: basePath, value: "{}" }];
+    }
+    return entries.flatMap(([key, nested]) =>
+      collectJsonLeaves(nested, basePath === "root" ? key : `${basePath}.${key}`),
+    );
+  }
+
+  return [{ path: basePath, value: stringifyJsonLeaf(value) }];
+}
+
+function normalizeJsonPath(path: string): string {
+  return path.replace(/\[\d+\]/g, "").replace(/^root\.?/, "");
+}
+
+function customFieldNameFromLeafPath(path: string): string {
+  const normalized = normalizeJsonPath(path);
+  if (!normalized) return "customField";
+  const parts = normalized.split(".").filter(Boolean);
+  return parts[parts.length - 1] || normalized;
+}
+
+function setControlledElementValue(target: EventTarget | null, value: string): string | null {
+  if (!(target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement)) {
+    return null;
+  }
+
+  if (target instanceof HTMLSelectElement) {
+    const hasOption = Array.from(target.options).some((option) => option.value === value);
+    if (!hasOption) {
+      return null;
+    }
+    target.value = value;
+    target.dispatchEvent(new Event("change", { bubbles: true }));
+    return target.value;
+  }
+
+  const nativeSetter = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(target), "value")?.set;
+  nativeSetter?.call(target, value);
+  target.dispatchEvent(new Event("input", { bubbles: true }));
+  target.dispatchEvent(new Event("change", { bubbles: true }));
+  return target.value;
+}
+
+function inferFieldNameFromElement(target: EventTarget | null): string {
+  if (!(target instanceof HTMLElement)) return "Unknown field";
+
+  const inputElement = target.closest("input, textarea, select");
+
+  if (!inputElement) return "Unknown field";
+
+  if (inputElement.id) {
+    const explicitLabel = document.querySelector(`label[for="${inputElement.id}"]`);
+    if (explicitLabel?.textContent?.trim()) {
+      return explicitLabel.textContent.trim();
+    }
+  }
+
+  const wrappingLabel = inputElement.closest("label");
+  if (wrappingLabel?.textContent?.trim()) {
+    return wrappingLabel.textContent.trim();
+  }
+
+  const parent = inputElement.closest("div");
+  const localLabel = parent?.querySelector("label, legend, span");
+  if (localLabel?.textContent?.trim()) {
+    return localLabel.textContent.trim();
+  }
+
+  const placeholder =
+    inputElement instanceof HTMLInputElement || inputElement instanceof HTMLTextAreaElement
+      ? inputElement.placeholder
+      : "";
+
+  return placeholder || inputElement.getAttribute("name") || inputElement.id || "Unknown field";
+}
+
+function JsonTree({
+  value,
+  path,
+  onLeafDrag,
+  onLeafClick,
+}: Readonly<{
+  value: unknown;
+  path: string;
+  onLeafDrag: (leaf: ImportedLeaf, event: React.DragEvent<HTMLElement>) => void;
+  onLeafClick: (leaf: ImportedLeaf) => void;
+}>): React.ReactNode {
+  const [open, setOpen] = useState(path === "root");
+
+  if (Array.isArray(value)) {
+    return (
+      <div className="ml-4">
+        <button
+          type="button"
+          onClick={() => setOpen((prev) => !prev)}
+          className="text-xs text-gray-600 hover:text-gray-900"
+        >
+          {open ? "▾" : "▸"} {path.split(".")[path.split(".").length - 1]} [{value.length}]
+        </button>
+        {open && (
+          <div className="mt-1 space-y-1">
+            {value.map((item, index) => (
+              <JsonTree
+                key={`${path}[${index}]`}
+                value={item}
+                path={`${path}[${index}]`}
+                onLeafDrag={onLeafDrag}
+                onLeafClick={onLeafClick}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  if (value !== null && typeof value === "object") {
+    const entries = Object.entries(value as Record<string, unknown>);
+    return (
+      <div className="ml-4">
+        <button
+          type="button"
+          onClick={() => setOpen((prev) => !prev)}
+          className="text-xs text-gray-600 hover:text-gray-900"
+        >
+          {open ? "▾" : "▸"} {path.split(".")[path.split(".").length - 1]} {"{"}{entries.length}{"}"}
+        </button>
+        {open && (
+          <div className="mt-1 space-y-1">
+            {entries.map(([key, nestedValue]) => {
+              const nextPath = path === "root" ? key : `${path}.${key}`;
+              return (
+                <JsonTree
+                  key={nextPath}
+                  value={nestedValue}
+                  path={nextPath}
+                  onLeafDrag={onLeafDrag}
+                  onLeafClick={onLeafClick}
+                />
+              );
+            })}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  const leaf: ImportedLeaf = {
+    path: path,
+    value: stringifyJsonLeaf(value),
+  };
+
+  return (
+    <button
+      type="button"
+      className="ml-4 w-full text-left rounded border border-gray-200 bg-white px-2 py-1 text-xs cursor-grab active:cursor-grabbing"
+      draggable
+      onDragStart={(event) => onLeafDrag(leaf, event)}
+      onClick={() => onLeafClick(leaf)}
+      title="Click to map to focused field, or drag to a field"
+    >
+      <div className="font-medium text-gray-700 truncate">{path.split(".")[path.split(".").length - 1]}</div>
+      <div className="text-gray-500 truncate">{leaf.value}</div>
+    </button>
+  );
+}
+
+function CustomFieldsEditor({
+  title,
+  items,
+  onChange,
+}: Readonly<{
+  title: string;
+  items: CustomFieldEntry[];
+  onChange: (items: CustomFieldEntry[]) => void;
+}>): React.ReactNode {
+  const canHandleDrop = (event: React.DragEvent<HTMLElement>) =>
+    event.dataTransfer.types.includes(DRAG_MIME);
+
+  const parseDroppedLeaf = (event: React.DragEvent<HTMLElement>): ImportedLeaf | null => {
+    const raw = event.dataTransfer.getData(DRAG_MIME);
+    if (!raw) return null;
+
+    try {
+      return JSON.parse(raw) as ImportedLeaf;
+    } catch {
+      return null;
+    }
+  };
+
+  const applyLeafToIndex = (index: number, leaf: ImportedLeaf) => {
+    const next = [...items];
+    const fallbackKey = customFieldNameFromLeafPath(leaf.path);
+    const existing = next[index];
+
+    if (!existing) return;
+
+    next[index] = {
+      ...existing,
+      key: existing.key || fallbackKey,
+      value: leaf.value,
+    };
+
+    onChange(next);
+  };
+
+  const appendLeafAsNewField = (leaf: ImportedLeaf) => {
+    onChange([
+      ...items,
+      {
+        _key: uid(),
+        key: customFieldNameFromLeafPath(leaf.path),
+        value: leaf.value,
+      },
+    ]);
+  };
+
+  return (
+    <fieldset
+      className="space-y-3 p-4 bg-gray-50 rounded-lg border border-dashed border-gray-300"
+      onDragOver={(event) => {
+        if (!canHandleDrop(event)) return;
+        event.preventDefault();
+      }}
+      onDrop={(event) => {
+        if (!canHandleDrop(event)) return;
+        event.preventDefault();
+        event.stopPropagation();
+        const leaf = parseDroppedLeaf(event);
+        if (!leaf) return;
+        appendLeafAsNewField(leaf);
+      }}
+    >
+      <legend className="text-sm font-semibold text-gray-800">{title}</legend>
+      <p className="text-xs text-gray-500">
+        Define manual fields and drag imported JSON values here to auto-fill key and value.
+      </p>
+      <div className="space-y-2">
+        {items.map((field, index) => (
+          <div
+            key={field._key}
+            className="grid grid-cols-[1fr_1fr_auto] gap-2"
+            onDragOver={(event) => {
+              if (!canHandleDrop(event)) return;
+              event.preventDefault();
+            }}
+            onDrop={(event) => {
+              if (!canHandleDrop(event)) return;
+              event.preventDefault();
+              event.stopPropagation();
+              const leaf = parseDroppedLeaf(event);
+              if (!leaf) return;
+              applyLeafToIndex(index, leaf);
+            }}
+          >
+            <input
+              type="text"
+              placeholder="Field name"
+              value={field.key}
+              onChange={(event) => updateAt(items, index, "key", event.target.value, onChange)}
+              className={INPUT_CLASS}
+            />
+            <input
+              type="text"
+              placeholder="Value"
+              value={field.value}
+              onChange={(event) => updateAt(items, index, "value", event.target.value, onChange)}
+              className={INPUT_CLASS}
+            />
+            <button
+              type="button"
+              onClick={() => removeAt(items, index, onChange)}
+              className="text-red-400 hover:text-red-600 px-2 py-1"
+            >
+              ✕
+            </button>
+          </div>
+        ))}
+      </div>
+      <button
+        type="button"
+        onClick={() => onChange([...items, { _key: uid(), key: "", value: "" }])}
+        className="text-xs px-2 py-1 bg-emerald-50 text-emerald-700 rounded hover:bg-emerald-100"
+      >
+        + Add Custom Field
+      </button>
+    </fieldset>
+  );
 }
 
 function MeasurementInput({
@@ -921,6 +1264,11 @@ interface FormState {
   maintenanceLog: EventEntry[];
   usageHistory: EventEntry[];
   incidentsAndErrors: EventEntry[];
+  productInfoCustomFields: CustomFieldEntry[];
+  complianceCustomFields: CustomFieldEntry[];
+  sustainabilityCustomFields: CustomFieldEntry[];
+  endOfLifeCustomFields: CustomFieldEntry[];
+  guidelinesCustomFields: CustomFieldEntry[];
 }
 
 const initialState: FormState = {
@@ -1040,6 +1388,11 @@ const initialState: FormState = {
   maintenanceLog: [],
   usageHistory: [],
   incidentsAndErrors: [],
+  productInfoCustomFields: [],
+  complianceCustomFields: [],
+  sustainabilityCustomFields: [],
+  endOfLifeCustomFields: [],
+  guidelinesCustomFields: [],
 };
 
 type FormSetter = (key: keyof FormState, value: FormState[keyof FormState]) => void;
@@ -1220,6 +1573,15 @@ function buildPayload(f: FormState): Record<string, unknown> {
       return ev;
     });
 
+  const toCustomFieldObject = (fields: CustomFieldEntry[]): Record<string, unknown> =>
+    fields.reduce<Record<string, unknown>>((acc, field) => {
+      if (!field.key.trim()) {
+        return acc;
+      }
+      acc[field.key.trim()] = field.value;
+      return acc;
+    }, {});
+
   const product: Record<string, unknown> = {
     productSector: f.sector,
     productInfo: {
@@ -1343,6 +1705,7 @@ function buildPayload(f: FormState): Record<string, unknown> {
       },
       qualityAssessment: f.qualityAssessment,
       identifiedRisk: f.identifiedRisk,
+      additionalProperties: toCustomFieldObject(f.productInfoCustomFields),
     },
     compliance: {
       regulation: { name: f.regulationName, identifier: f.regulationIdentifier },
@@ -1350,6 +1713,7 @@ function buildPayload(f: FormState): Record<string, unknown> {
       productStatusAssessment: f.productStatusAssessment,
       certification: f.certifications,
       dataManagementMethod: { name: f.dmmName, identifier: f.dmmIdentifier },
+      additionalProperties: toCustomFieldObject(f.complianceCustomFields),
     },
     supplyChain: {
       productTraceability: {
@@ -1388,6 +1752,7 @@ function buildPayload(f: FormState): Record<string, unknown> {
         ),
       },
       environmentDeclaration: f.environmentDeclaration,
+      additionalProperties: toCustomFieldObject(f.sustainabilityCustomFields),
     },
     endOfLife: {
       recyclingReusePotential: f.recyclingReusePotential,
@@ -1408,6 +1773,7 @@ function buildPayload(f: FormState): Record<string, unknown> {
         collectionInformation: f.collectionInformation,
         endOfLifeReport: f.endOfLifeReport,
       },
+      additionalProperties: toCustomFieldObject(f.endOfLifeCustomFields),
     },
     guidelines: {
       assemblyGuideline: { url: f.assemblyGuidelineUrl },
@@ -1423,6 +1789,7 @@ function buildPayload(f: FormState): Record<string, unknown> {
       },
       accessibility: f.accessibility,
       utilizationCharacteristic: f.utilizationCharacteristic,
+      additionalProperties: toCustomFieldObject(f.guidelinesCustomFields),
     },
     usage: {
       maintenanceLog: buildEvents(f.maintenanceLog),
@@ -1438,11 +1805,16 @@ function buildPayload(f: FormState): Record<string, unknown> {
 
 export default function AddProductPage() {
   const router = useRouter();
+  const formRef = useRef<HTMLFormElement | null>(null);
   const [form, setForm] = useState<FormState>(initialState);
   const [manufacturers, setManufacturers] = useState<ManufacturerOption[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [importedJson, setImportedJson] = useState<unknown>(null);
+  const [importError, setImportError] = useState<string | null>(null);
+  const [focusedFieldName, setFocusedFieldName] = useState<string>("No field selected");
+  const [mappings, setMappings] = useState<FieldMapping[]>([]);
   const sectionSteps = [
     "Product Information",
     "Compliance",
@@ -1453,10 +1825,272 @@ export default function AddProductPage() {
   ] as const;
   const [currentSectionStep, setCurrentSectionStep] = useState(0);
 
+  const fieldsByStep: Array<Array<keyof FormState>> = [
+    [
+      "sector",
+      "sectorType",
+      "gtin",
+      "taricCode",
+      "productName",
+      "description",
+      "documentation",
+      "countryOfOrigin",
+      "productionDate",
+      "manufacturerMode",
+      "manufacturerName",
+      "manufacturerUrl",
+      "manufacturerId",
+      "materialComposition",
+      "materialBills",
+      "recycledReusedContent",
+      "sparePartsAvailability",
+      "hazardousSubstances",
+      "substancesOfConcern",
+      "sectorRequiredAssemblyDesc",
+      "sectorRequiredAssemblyAutomationLevel",
+      "sectorRequiredAssemblyLocationName",
+      "sectorRequiredAssemblyLocationAddress",
+      "sectorRequiredProductionDesc",
+      "sectorRequiredManufacturingTechnology",
+      "sectorRequiredProcessCertification",
+      "sectorNonRequiredInformationText",
+      "sectorNonRequiredExpectedEndCondition",
+      "sectorNonRequiredRenewableEnergyProductionValue",
+      "sectorNonRequiredRenewableEnergyType",
+      "sectorNonRequiredRenewableEnergyOutput",
+      "sectorNonRequiredSeparabilityScore",
+      "sectorNonRequiredSeparabilityMethod",
+      "sectorNonRequiredModularityScore",
+      "sectorNonRequiredReplaceableComponent",
+      "sectorNonRequiredProductDesign",
+      "sectorNonRequiredDesignForDisassembly",
+      "sectorNonRequiredAppliedStandardName",
+      "sectorNonRequiredAppliedStandardIdentifier",
+      "sectorNonRequiredStandardReference",
+      "relatedObjectsRaw",
+      "specHeight",
+      "specWidth",
+      "specDepth",
+      "specWeight",
+      "specIngressProtection",
+      "specNetworkConnectivity",
+      "specBatteryCapacity",
+      "specChargingInterface",
+      "specCrossCompatibilityDetails",
+      "specCompatibleInterfaceStandard",
+      "specCompatibilityLevel",
+      "specVolumeMeasurement",
+      "specComponentDescription",
+      "specComponentCount",
+      "specInstalledSoftwareName",
+      "specInstalledSoftwareVersion",
+      "specSoftwareSupportEndDate",
+      "testReport",
+      "imageUrl",
+      "lifetimeExpectancy",
+      "warrantyPeriod",
+      "takebackOption",
+      "qualityAssessment",
+      "identifiedRisk",
+      "productInfoCustomFields",
+    ],
+    [
+      "regulationName",
+      "regulationIdentifier",
+      "productLabels",
+      "productStatusAssessment",
+      "certifications",
+      "dmmName",
+      "dmmIdentifier",
+      "complianceCustomFields",
+    ],
+    [
+      "environmentalFootprints",
+      "resourceConsumptions",
+      "plasticsRelease",
+      "decomposability",
+      "sectorSustainabilityIndicatorsText",
+      "criticalRawMaterials",
+      "lifeCycleAssessmentReport",
+      "environmentalImpacts",
+      "renewableNonRenewableContent",
+      "circularEconomyIndicatorText",
+      "labourConditions",
+      "usingResourceConsumptions",
+      "recoveringResourceConsumptions",
+      "environmentDeclaration",
+      "sustainabilityCustomFields",
+    ],
+    [
+      "recyclingReusePotential",
+      "disposalOptions",
+      "unsoldProductsInformation",
+      "expectedWaste",
+      "reusability",
+      "repairability",
+      "refurbrishability",
+      "upgradeOptions",
+      "endOfLifeHistory",
+      "numberOfLifecycles",
+      "wastePrevention",
+      "separateCollection",
+      "collectionInformation",
+      "endOfLifeReport",
+      "endOfLifeCustomFields",
+    ],
+    [
+      "assemblyGuidelineUrl",
+      "disassemblyGuidelineUrl",
+      "productManualUrl",
+      "storageGuidelineUrl",
+      "safetyInstructionUrl",
+      "maintenanceInstructionUrl",
+      "wasteSortingInstructionUrl",
+      "accessibility",
+      "utilizationCharacteristic",
+      "guidelinesCustomFields",
+    ],
+  ];
+
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setForm((prev) => ({ ...prev, [key]: value }));
 
+  const setCustomGroupFields = (group: CustomFieldGroupKey, items: CustomFieldEntry[]) => {
+    set(group, items);
+  };
+
   const setField: FormSetter = (key, value) => set(key, value as never);
+
+  const importedLeafCount = useMemo(
+    () => (importedJson == null ? 0 : collectJsonLeaves(importedJson).length),
+    [importedJson],
+  );
+
+  const addOrReplaceMapping = (next: FieldMapping) => {
+    setMappings((prev) => {
+      const withoutTarget = prev.filter((mapping) => mapping.targetField !== next.targetField);
+      return [...withoutTarget, next];
+    });
+  };
+
+  const clearMappedValueFromForm = (mapping: FieldMapping) => {
+    const formElement = formRef.current;
+    if (!formElement) return;
+
+    const controls = Array.from(
+      formElement.querySelectorAll("input, textarea, select"),
+    ).filter(
+      (
+        control,
+      ): control is HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement =>
+        control instanceof HTMLInputElement ||
+        control instanceof HTMLTextAreaElement ||
+        control instanceof HTMLSelectElement,
+    );
+
+    const candidates = controls.filter(
+      (control) => inferFieldNameFromElement(control) === mapping.targetField,
+    );
+
+    if (candidates.length === 0) return;
+
+    const exactValueMatch = candidates.find((control) => control.value === mapping.value);
+    const targetControl = exactValueMatch ?? candidates[0];
+    setControlledElementValue(targetControl, "");
+  };
+
+  const removeMapping = (sourcePath: string) => {
+    const mappingToRemove = mappings.find((mapping) => mapping.sourcePath === sourcePath);
+    if (mappingToRemove) {
+      clearMappedValueFromForm(mappingToRemove);
+    }
+    setMappings((prev) => prev.filter((mapping) => mapping.sourcePath !== sourcePath));
+  };
+
+  const handleJsonFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const text = await file.text();
+      const parsed = JSON.parse(text) as unknown;
+      setImportedJson(parsed);
+      setImportError(null);
+      setMappings([]);
+    } catch {
+      setImportError("Invalid JSON file. Please upload a valid JSON document.");
+      setImportedJson(null);
+      setMappings([]);
+    }
+  };
+
+  const handleLeafDragStart = (leaf: ImportedLeaf, event: React.DragEvent<HTMLElement>) => {
+    const payload = JSON.stringify(leaf);
+    event.dataTransfer.setData(DRAG_MIME, payload);
+    event.dataTransfer.setData("text/plain", leaf.value);
+    event.dataTransfer.effectAllowed = "copy";
+  };
+
+  const handleLeafClick = (leaf: ImportedLeaf) => {
+    const activeElement = document.activeElement;
+    const targetField = inferFieldNameFromElement(activeElement);
+    const writtenValue = setControlledElementValue(activeElement, leaf.value);
+
+    if (writtenValue === null) {
+      setImportError("Select a text input, textarea, or compatible dropdown on the right before mapping.");
+      return;
+    }
+
+    setImportError(null);
+    addOrReplaceMapping({
+      targetField,
+      sourcePath: leaf.path,
+      value: writtenValue,
+    });
+  };
+
+  const handleFormDrop = (event: React.DragEvent<HTMLFormElement>) => {
+    const raw = event.dataTransfer.getData(DRAG_MIME);
+    if (!raw) return;
+
+    event.preventDefault();
+    const parsed = JSON.parse(raw) as ImportedLeaf;
+    const targetField = inferFieldNameFromElement(event.target);
+    const writtenValue = setControlledElementValue(event.target, parsed.value);
+
+    if (writtenValue === null) {
+      setImportError("Drop onto a text input, textarea, or compatible dropdown field.");
+      return;
+    }
+
+    setImportError(null);
+    addOrReplaceMapping({
+      targetField,
+      sourcePath: parsed.path,
+      value: writtenValue,
+    });
+  };
+
+  const handleFormDragOver = (event: React.DragEvent<HTMLFormElement>) => {
+    if (event.dataTransfer.types.includes(DRAG_MIME)) {
+      event.preventDefault();
+      event.dataTransfer.dropEffect = "copy";
+    }
+  };
+
+  const clearCurrentStep = () => {
+    const fields = fieldsByStep[currentSectionStep] ?? [];
+    setForm((prev) => {
+      const next = { ...prev } as FormState;
+      for (const field of fields) {
+        (next as unknown as Record<string, unknown>)[field] = initialState[field] as unknown;
+      }
+      return next;
+    });
+
+    const fieldNames = new Set(fields.map((field) => field.toString()));
+    setMappings((prev) => prev.filter((mapping) => !fieldNames.has(mapping.targetField)));
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -1513,7 +2147,74 @@ export default function AddProductPage() {
   };
 
   return (
-    <main className="max-w-4xl mx-auto px-4 py-8">
+    <main className="w-full px-4 py-8">
+      <div className="mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-[360px_minmax(0,1fr)] gap-6">
+        <aside className="rounded-xl border border-gray-200 bg-white shadow-sm p-4 h-fit lg:sticky lg:top-4">
+          <h2 className="text-sm font-semibold text-gray-900 mb-3">Manufacturer JSON Import</h2>
+          <div className="space-y-3">
+            <input
+              type="file"
+              accept="application/json,.json"
+              onChange={handleJsonFileUpload}
+              className="block w-full text-xs text-gray-600 file:mr-3 file:px-3 file:py-1.5 file:border file:border-gray-200 file:rounded-md file:bg-gray-50 file:text-gray-700"
+            />
+            <p className="text-xs text-gray-500">
+              Drag values from the tree onto form fields. Click a value to map it to the currently focused field.
+            </p>
+            <div className="text-xs text-gray-600">
+              <div>Focused field: <span className="font-medium">{focusedFieldName}</span></div>
+              <div>Imported leaves: <span className="font-medium">{importedLeafCount}</span></div>
+              <div>Mapped fields: <span className="font-medium">{mappings.length}</span></div>
+            </div>
+            {importError && (
+              <div className="rounded-md border border-red-200 bg-red-50 px-2 py-1 text-xs text-red-700">
+                {importError}
+              </div>
+            )}
+          </div>
+
+          <div className="mt-4 max-h-[340px] overflow-auto rounded-lg border border-gray-200 bg-gray-50 p-2">
+            {importedJson == null ? (
+              <p className="text-xs text-gray-500">No JSON loaded.</p>
+            ) : (
+              <JsonTree
+                value={importedJson}
+                path="root"
+                onLeafDrag={handleLeafDragStart}
+                onLeafClick={handleLeafClick}
+              />
+            )}
+          </div>
+
+          <div className="mt-4">
+            <h3 className="text-xs font-semibold text-gray-700 mb-2">Current Mappings</h3>
+            <div className="max-h-[220px] overflow-auto space-y-2">
+              {mappings.length === 0 && (
+                <p className="text-xs text-gray-500">No mappings yet.</p>
+              )}
+              {mappings.map((mapping) => (
+                <div key={`${mapping.targetField}:${mapping.sourcePath}`} className="rounded-md border border-emerald-200 bg-emerald-50 px-2 py-1">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0">
+                      <div className="text-[11px] font-medium text-emerald-900 truncate">{mapping.targetField}</div>
+                      <div className="text-[11px] text-emerald-700 truncate">{mapping.sourcePath}</div>
+                      <div className="text-[11px] text-emerald-600 truncate">{mapping.value}</div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => removeMapping(mapping.sourcePath)}
+                      className="text-red-500 hover:text-red-700 text-[11px]"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </aside>
+
+        <section>
       <div className="mb-8">
         <button
           onClick={() => router.back()}
@@ -1528,7 +2229,16 @@ export default function AddProductPage() {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form
+        ref={formRef}
+        onSubmit={handleSubmit}
+        onDrop={handleFormDrop}
+        onDragOver={handleFormDragOver}
+        onFocusCapture={(event) => {
+          setFocusedFieldName(inferFieldNameFromElement(event.target));
+        }}
+        className="space-y-6"
+      >
         <div className="space-y-3 rounded-lg border border-gray-200 bg-white p-4">
           <div className="flex flex-wrap gap-2">
             {sectionSteps.map((step, index) => {
@@ -1551,7 +2261,16 @@ export default function AddProductPage() {
           </div>
           <div className="flex items-center justify-between text-xs text-gray-500">
             <span>Step {currentSectionStep + 1} of {sectionSteps.length}</span>
-            <span>{sectionSteps[currentSectionStep]}</span>
+            <div className="flex items-center gap-3">
+              <span>{sectionSteps[currentSectionStep]}</span>
+              <button
+                type="button"
+                onClick={clearCurrentStep}
+                className="px-2 py-1 border border-gray-300 rounded text-[11px] text-gray-600 disabled:opacity-50"
+              >
+                Clear Current Step
+              </button>
+            </div>
           </div>
         </div>
 
@@ -1870,6 +2589,12 @@ export default function AddProductPage() {
               />
             </fieldset>
           </DataLayerGroup>
+
+          <CustomFieldsEditor
+            title="Product Information Custom Fields"
+            items={form.productInfoCustomFields}
+            onChange={(items) => setCustomGroupFields("productInfoCustomFields", items)}
+          />
         </CollapsibleSection>
         )}
 
@@ -1957,6 +2682,12 @@ export default function AddProductPage() {
               </div>
             </fieldset>
           </DataLayerGroup>
+
+          <CustomFieldsEditor
+            title="Compliance Custom Fields"
+            items={form.complianceCustomFields}
+            onChange={(items) => setCustomGroupFields("complianceCustomFields", items)}
+          />
         </CollapsibleSection>
         )}
 
@@ -2107,6 +2838,12 @@ export default function AddProductPage() {
               />
             </fieldset>
           </DataLayerGroup>
+
+          <CustomFieldsEditor
+            title="Sustainability Custom Fields"
+            items={form.sustainabilityCustomFields}
+            onChange={(items) => setCustomGroupFields("sustainabilityCustomFields", items)}
+          />
         </CollapsibleSection>
         )}
 
@@ -2226,6 +2963,12 @@ export default function AddProductPage() {
               </div>
             </fieldset>
           </DataLayerGroup>
+
+          <CustomFieldsEditor
+            title="End of Life Custom Fields"
+            items={form.endOfLifeCustomFields}
+            onChange={(items) => setCustomGroupFields("endOfLifeCustomFields", items)}
+          />
         </CollapsibleSection>
         )}
 
@@ -2323,6 +3066,12 @@ export default function AddProductPage() {
               />
             </fieldset>
           </DataLayerGroup>
+
+          <CustomFieldsEditor
+            title="Guidelines Custom Fields"
+            items={form.guidelinesCustomFields}
+            onChange={(items) => setCustomGroupFields("guidelinesCustomFields", items)}
+          />
         </CollapsibleSection>
         )}
 
@@ -2436,6 +3185,8 @@ export default function AddProductPage() {
           </div>
         </div>
       </form>
+        </section>
+      </div>
     </main>
   );
 }
