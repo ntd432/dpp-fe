@@ -2,6 +2,7 @@ import {
   copyUnhandledProperties,
   createDataPoint,
   createNode,
+  handleAdditionalProperties,
   isRecord,
   transformEnvironmentalFootprint,
   transformMaterial,
@@ -58,6 +59,9 @@ export function transformSustainabilityInformation(sustainability: Record<string
     const ed = createDataPoint({}, "EnvironmentDeclaration", "Environment Declaration", "environment-declaration");
     ed.environmentDeclaration = sustainability.environmentDeclaration;
     dataPoint.push(ed);
+  }
+  if (isRecord(sustainability.additionalProperties)) {
+    handleAdditionalProperties(result, sustainability.additionalProperties, "dpp-sustainability");
   }
 
   result.dataPoint = dataPoint;

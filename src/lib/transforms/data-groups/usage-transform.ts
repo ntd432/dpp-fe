@@ -1,4 +1,4 @@
-import { createDataPoint, createNode, isRecord, transformEvent } from "../shared";
+import { createDataPoint, createNode, handleAdditionalProperties, isRecord, transformEvent } from "../shared";
 
 interface EventArrayFieldConfig {
   key: string;
@@ -41,6 +41,9 @@ export function transformUsageInformation(usage: Record<string, unknown>): Recor
     const dp = createDataPoint({}, field.type, field.label, field.idPrefix);
     dp[field.key] = value.filter(isRecord).map((event) => transformEvent(event));
     dataPoint.push(dp);
+  }
+  if (isRecord(usage.additionalProperties)) {
+    handleAdditionalProperties(result, usage.additionalProperties, "dpp-usage");
   }
 
   result.dataPoint = dataPoint;

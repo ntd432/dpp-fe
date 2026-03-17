@@ -3,6 +3,7 @@ import {
   copyUnhandledProperties,
   createDataPoint,
   createNode,
+  handleAdditionalProperties,
   isRecord,
   transformCountry,
   transformImageObject,
@@ -96,6 +97,9 @@ export function transformProductInformation(
     const ir = createDataPoint({}, "IdentifiedRisk", "Identified Risk", "identified-risk");
     ir.identifiedRisk = info.identifiedRisk;
     dataPoint.push(ir);
+  }
+  if (isRecord(info.additionalProperties)) {
+    handleAdditionalProperties(result, info.additionalProperties, "dpp-product-info");
   }
 
   result.dataPoint = dataPoint;

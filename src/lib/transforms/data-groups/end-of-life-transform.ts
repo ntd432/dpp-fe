@@ -2,6 +2,7 @@ import {
   copyUnhandledProperties,
   createDataPoint,
   createNode,
+  handleAdditionalProperties,
   isRecord,
   transformEvent,
 } from "../shared";
@@ -93,6 +94,9 @@ export function transformEndOfLifeData(endOfLife: Record<string, unknown>): Reco
 
   if (isRecord(endOfLife.endOfLifeInformation)) {
     dataPoint.push(transformEndOfLifeInformation(endOfLife.endOfLifeInformation));
+  }
+  if (isRecord(endOfLife.additionalProperties)) {
+    handleAdditionalProperties(result, endOfLife.additionalProperties, "dpp-eol");
   }
 
   result.dataPoint = dataPoint;

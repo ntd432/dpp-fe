@@ -2,6 +2,7 @@ import {
   copyUnhandledProperties,
   createDataPoint,
   createNode,
+  handleAdditionalProperties,
   isRecord,
   transformGuide,
 } from "../shared";
@@ -87,6 +88,9 @@ export function transformGuidelinesAndManuals(guidelines: Record<string, unknown
     const dp = createDataPoint({}, field.type, field.label, field.idPrefix);
     dp[field.key] = value;
     dataPoint.push(dp);
+  }
+  if (isRecord(guidelines.additionalProperties)) {
+    handleAdditionalProperties(result, guidelines.additionalProperties, "dpp-guidelines");
   }
 
   result.dataPoint = dataPoint;

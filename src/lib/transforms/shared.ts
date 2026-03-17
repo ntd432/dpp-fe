@@ -41,10 +41,15 @@ export function copyUnhandledProperties(
   source: Record<string, unknown>,
   result: Record<string, unknown>,
   handled: Set<string>,
+  prefix = "",
 ): void {
   for (const [key, value] of Object.entries(source)) {
     if (!handled.has(key)) {
-      result[key] = value;
+      if (prefix) {
+        result[`${prefix}:${key}`] = value;
+      } else {
+        result[key] = value;
+      }
     }
   }
 }
@@ -140,4 +145,9 @@ export function transformMeasurementEntry(measurement: Record<string, unknown>):
   const result = createNode(measurement, "MeasurementEntry", "Measurement Entry", "measurement-entry");
   copyUnhandledProperties(measurement, result, new Set(["id", "@id", "@type"]));
   return result;
+}
+
+export function handleAdditionalProperties(current: Record<string, unknown>, info: Record<string, unknown>, prefix=""): Record<string, unknown> {
+  copyUnhandledProperties(info, current, new Set(["id", "@id", "@type"]), prefix);
+  return current;
 }

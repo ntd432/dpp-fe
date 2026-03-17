@@ -2,6 +2,7 @@ import {
   copyUnhandledProperties,
   createDataPoint,
   createNode,
+  handleAdditionalProperties,
   isRecord,
   transformEvent,
   transformOrganization,
@@ -28,6 +29,9 @@ export function transformSupplyChain(supplyChain: Record<string, unknown>): Reco
     const cs = createDataPoint({}, "ComponentSupplier", "Component Supplier", "component-supplier");
     cs.componentSupplier = transformOrganization(supplyChain.componentSupplier);
     dataPoint.push(cs);
+  }
+  if (isRecord(supplyChain.additionalProperties)) {
+    handleAdditionalProperties(result, supplyChain.additionalProperties, "dpp-supply-chain");
   }
 
   result.dataPoint = dataPoint;

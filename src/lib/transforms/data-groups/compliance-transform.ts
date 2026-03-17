@@ -2,6 +2,7 @@ import {
   copyUnhandledProperties,
   createDataPoint,
   createNode,
+  handleAdditionalProperties,
   isRecord,
   transformCertificationInfo,
   transformLegislation,
@@ -37,6 +38,9 @@ export function transformCompliance(compliance: Record<string, unknown>): Record
     const dmm = createDataPoint({}, "DataManagementMethod", "Data Management Method", "data-management-method");
     dmm.dataManagementMethod = transformLegislation(compliance.dataManagementMethod);
     dataPoint.push(dmm);
+  }
+  if (isRecord(compliance.additionalProperties)) {
+      handleAdditionalProperties(result, compliance.additionalProperties, "dpp-compliance");
   }
 
   result.dataPoint = dataPoint;
