@@ -507,7 +507,7 @@ function MeasurementInput({
         <input
           type="number"
           step="any"
-          placeholder="Value"
+          placeholder={`${label} value`}
           value={measurement.value}
           onChange={(e) => onChange({ ...measurement, value: e.target.value })}
           className={INPUT_CLASS}
@@ -2042,7 +2042,7 @@ export default function AddProductPage() {
 
   const addOrReplaceMapping = (next: FieldMapping) => {
     setMappings((prev) => {
-      const withoutTarget = prev.filter((mapping) => mapping.targetField !== next.targetField);
+      const withoutTarget = prev.filter((mapping) => mapping.targetField !== next.targetField || mapping.sourcePath !== next.sourcePath);
       return [...withoutTarget, next];
     });
   };
