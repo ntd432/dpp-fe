@@ -3,7 +3,7 @@
  * @see https://ntd432.github.io/dpp/models/dpp-sustainability.ttl
  */
 
-import type { Extension, Material, MeasurementEntry } from "./dpp-core";
+import type { Extension, Component, MeasurementEntry } from "./dpp-core";
 
 // ── Sub-types ───────────────────────────────────────────────────────────────
 
@@ -58,9 +58,9 @@ export interface SustainabilityInformation {
   sustainabilityPerformance?: SustainabilityPerformance;
   decomposability?: string;
   sectorSustainabilityIndicators?: Extension;
-  criticalRawMaterial?: Material[];
+  criticalRawMaterial?: Component[];
   lifeCycleAssessment?: LifeCycleAssessment;
-  renewableNonRenewableContent?: Material[];
+  renewableNonRenewableContent?: Component[];
   circularEconomyIndicator?: Extension;
   socialIndicator?: SocialIndicator;
   sustainabilityAttributes?: SustainabilityAttributes;

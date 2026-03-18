@@ -25,11 +25,6 @@ export interface ProductionMethod {
   processCertification?: string;
 }
 
-export interface Volume {
-  volumeValue?: number;
-  volumeUnit?: string;
-}
-
 export interface Components {
   componentDescription?: string;
   componentCount?: number;
@@ -91,7 +86,7 @@ export interface ElectronicExtension extends Extension {
   crossCompatibility?: CrossCompatibility;
   assemblyProcess?: AssemblyProcess;
   productionMethod?: ProductionMethod;
-  volume?: Volume;
+  volume?: MeasurementEntry;
   components?: Components;
   expectedEndConditionInfo?: ExpectedEndCondition;
   renewableEnergyProductionInfo?: RenewableEnergyProduction;

@@ -1,4 +1,4 @@
-import { BATTERY_UNITS, LENGTH_UNITS, MASS_UNITS, VOLUME_UNITS, ENERGY_OUTPUT_UNITS } from "./master-data";
+import { BATTERY_UNITS, LENGTH_UNITS, MASS_UNITS, ENERGY_OUTPUT_UNITS } from "./master-data";
 import { ExtensionSectionGroups } from "./product-extension-fields";
 
 export const ELECTRONIC_EXTENSION_FIELDS: ExtensionSectionGroups = {
@@ -123,13 +123,7 @@ export const ELECTRONIC_EXTENSION_FIELDS: ExtensionSectionGroups = {
         ],
       },
     ],
-    "Volume and Components": [
-      {
-        key: "specVolumeMeasurement",
-        label: "Volume",
-        kind: "measurement",
-        unitOptions: VOLUME_UNITS,
-      },
+    Components: [
       {
         key: "specComponentDescription",
         label: "Component Description",

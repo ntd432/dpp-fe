@@ -16,7 +16,7 @@ export interface Label {
 // ── Data Group ──────────────────────────────────────────────────────────────
 
 export interface Compliance {
-  regulation?: Legislation;
+  regulation?: Legislation[];
   productLabel?: Label[];
   productStatusAssessment?: string;
   certification?: Certification[];

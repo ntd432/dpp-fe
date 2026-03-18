@@ -8,7 +8,7 @@ import type {
   Country,
   Extension,
   ImageObject,
-  Material,
+  Component,
   Organization,
   Product,
   Substance,
@@ -37,11 +37,11 @@ export interface ProductIdentificationInformation {
   productionDate?: string;
 }
 
-export interface MaterialInformation {
-  materialComposition?: Material[];
+export interface ComponentInformation {
+  componentComposition?: Component[];
   /** URI to the bill of materials */
-  materialBills?: string;
-  recycledReusedContent?: Material[];
+  componentBills?: string;
+  recycledReusedContent?: Component[];
 }
 
 export interface ProductCommercialInformation {
@@ -58,7 +58,7 @@ export interface ProductCommercialInformation {
 export interface ProductInformation {
   identification?: ProductIdentificationInformation;
   manufacturer?: Organization;
-  material?: MaterialInformation;
+  component?: ComponentInformation;
   sparePartsAvailability?: string;
   hazardousSubstances?: Substance[];
   substancesOfConcern?: Substance[];

@@ -876,27 +876,27 @@ function EnvironmentalImpactArrayEditor({
   );
 }
 
-// ── Material array helpers ──────────────────────────────────────────────────
+// ── Component array helpers ─────────────────────────────────────────────────
 
-interface MaterialEntry {
+interface ComponentEntry {
   _key: string;
-  materialName: string;
+  componentName: string;
   mode: "percentage" | "mass";
-  materialPercentage: string;
-  materialMassValue: string;
-  materialMassUnit: string;
-  materialMassCustomUnit: string;
+  componentPercentage: string;
+  componentCountValue: string;
+  componentCountUnit: string;
+  componentCountCustomUnit: string;
 }
 
-function MaterialArrayEditor({
+function ComponentArrayEditor({
   label,
   items,
   onChange,
   showPercentage = true,
 }: Readonly<{
   label: string;
-  items: MaterialEntry[];
-  onChange: (items: MaterialEntry[]) => void;
+  items: ComponentEntry[];
+  onChange: (items: ComponentEntry[]) => void;
   showPercentage?: boolean;
 }>) {
   return (
@@ -910,27 +910,27 @@ function MaterialArrayEditor({
               ...items,
               {
                 _key: uid(),
-                materialName: "",
+                componentName: "",
                 mode: "percentage",
-                materialPercentage: "",
-                materialMassValue: "",
-                materialMassUnit: "",
-                materialMassCustomUnit: "",
+                componentPercentage: "",
+                componentCountValue: "",
+                componentCountUnit: "",
+                componentCountCustomUnit: "",
               },
             ])
           }
           className="text-xs px-2 py-1 bg-emerald-50 text-emerald-700 rounded hover:bg-emerald-100"
         >
-          + Add Material
+          + Add Component
         </button>
       </div>
       {items.map((m, i) => (
         <div key={m._key} className="grid grid-cols-6 gap-2 items-center">
           <input
             type="text"
-            placeholder="Material name"
-            value={m.materialName}
-            onChange={(e) => updateAt(items, i, "materialName", e.target.value, onChange)}
+            placeholder="Component name"
+            value={m.componentName}
+            onChange={(e) => updateAt(items, i, "componentName", e.target.value, onChange)}
             className={`col-span-2 ${INPUT_CLASS}`}
           />
           {showPercentage && (
@@ -955,9 +955,9 @@ function MaterialArrayEditor({
                 <input
                   type="number"
                   placeholder="%"
-                  value={m.materialPercentage}
+                  value={m.componentPercentage}
                   onChange={(e) =>
-                    updateAt(items, i, "materialPercentage", e.target.value, onChange)
+                    updateAt(items, i, "componentPercentage", e.target.value, onChange)
                   }
                   className={INPUT_CLASS}
                 />
@@ -966,17 +966,17 @@ function MaterialArrayEditor({
                   <input
                     type="number"
                     step="any"
-                    placeholder="Mass"
-                    value={m.materialMassValue}
+                    placeholder="Count value"
+                    value={m.componentCountValue}
                     onChange={(e) =>
-                      updateAt(items, i, "materialMassValue", e.target.value, onChange)
+                      updateAt(items, i, "componentCountValue", e.target.value, onChange)
                     }
                     className={INPUT_CLASS}
                   />
                   <select
-                    value={m.materialMassUnit}
+                    value={m.componentCountUnit}
                     onChange={(e) =>
-                      updateAt(items, i, "materialMassUnit", e.target.value, onChange)
+                      updateAt(items, i, "componentCountUnit", e.target.value, onChange)
                     }
                     className={INPUT_CLASS}
                   >
@@ -990,16 +990,16 @@ function MaterialArrayEditor({
                   </select>
                 </>
               )}
-              {m.mode === "mass" && m.materialMassUnit === "custom" && (
+              {m.mode === "mass" && m.componentCountUnit === "custom" && (
                 <input
                   type="text"
                   placeholder="Custom unit"
-                  value={m.materialMassCustomUnit}
+                  value={m.componentCountCustomUnit}
                   onChange={(e) =>
                     updateAt(
                       items,
                       i,
-                      "materialMassCustomUnit",
+                      "componentCountCustomUnit",
                       e.target.value,
                       onChange,
                     )
@@ -1022,12 +1022,178 @@ function MaterialArrayEditor({
   );
 }
 
+interface SubstanceEntry {
+  _key: string;
+  iupacName: string;
+  ecNumber: string;
+  casNumber: string;
+  concentrationLevel: string;
+  locationWithinProduct: string;
+  safeUsageInstruction: string;
+  disassemblyInstruction: string;
+}
+
+function SubstanceArrayEditor({
+  label,
+  items,
+  onChange,
+}: Readonly<{
+  label: string;
+  items: SubstanceEntry[];
+  onChange: (items: SubstanceEntry[]) => void;
+}>) {
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <span className="block text-sm font-medium text-gray-700">{label}</span>
+        <button
+          type="button"
+          onClick={() =>
+            onChange([
+              ...items,
+              {
+                _key: uid(),
+                iupacName: "",
+                ecNumber: "",
+                casNumber: "",
+                concentrationLevel: "",
+                locationWithinProduct: "",
+                safeUsageInstruction: "",
+                disassemblyInstruction: "",
+              },
+            ])
+          }
+          className="text-xs px-2 py-1 bg-emerald-50 text-emerald-700 rounded hover:bg-emerald-100"
+        >
+          + Add Substance
+        </button>
+      </div>
+      {items.map((item, i) => (
+        <div key={item._key} className="grid grid-cols-1 md:grid-cols-2 gap-2 p-3 bg-white border border-gray-200 rounded-lg">
+          <input
+            type="text"
+            placeholder="IUPAC name"
+            value={item.iupacName}
+            onChange={(e) => updateAt(items, i, "iupacName", e.target.value, onChange)}
+            className={INPUT_CLASS}
+          />
+          <input
+            type="text"
+            placeholder="EC number"
+            value={item.ecNumber}
+            onChange={(e) => updateAt(items, i, "ecNumber", e.target.value, onChange)}
+            className={INPUT_CLASS}
+          />
+          <input
+            type="text"
+            placeholder="CAS number"
+            value={item.casNumber}
+            onChange={(e) => updateAt(items, i, "casNumber", e.target.value, onChange)}
+            className={INPUT_CLASS}
+          />
+          <input
+            type="text"
+            placeholder="Concentration level"
+            value={item.concentrationLevel}
+            onChange={(e) => updateAt(items, i, "concentrationLevel", e.target.value, onChange)}
+            className={INPUT_CLASS}
+          />
+          <input
+            type="text"
+            placeholder="Location within product"
+            value={item.locationWithinProduct}
+            onChange={(e) => updateAt(items, i, "locationWithinProduct", e.target.value, onChange)}
+            className={INPUT_CLASS}
+          />
+          <input
+            type="text"
+            placeholder="Safe usage instruction"
+            value={item.safeUsageInstruction}
+            onChange={(e) => updateAt(items, i, "safeUsageInstruction", e.target.value, onChange)}
+            className={INPUT_CLASS}
+          />
+          <input
+            type="text"
+            placeholder="Disassembly instruction"
+            value={item.disassemblyInstruction}
+            onChange={(e) => updateAt(items, i, "disassemblyInstruction", e.target.value, onChange)}
+            className="md:col-span-2 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+          />
+          <div className="md:col-span-2 flex justify-end">
+            <button
+              type="button"
+              onClick={() => removeAt(items, i, onChange)}
+              className="text-red-400 hover:text-red-600 px-2 py-1"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 // ── Name-description pair array (substances, certifications) ────────────────
 
 interface NameDescEntry {
   _key: string;
   name: string;
   description: string;
+}
+
+interface RegulationEntry {
+  _key: string;
+  name: string;
+  identifier: string;
+}
+
+function RegulationArrayEditor({
+  items,
+  onChange,
+}: Readonly<{
+  items: RegulationEntry[];
+  onChange: (items: RegulationEntry[]) => void;
+}>) {
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <span className="block text-sm font-medium text-gray-700">Regulations</span>
+        <button
+          type="button"
+          onClick={() => onChange([...items, { _key: uid(), name: "", identifier: "" }])}
+          className="text-xs px-2 py-1 bg-emerald-50 text-emerald-700 rounded hover:bg-emerald-100"
+        >
+          + Add Regulation
+        </button>
+      </div>
+      {items.map((entry, i) => (
+        <div key={entry._key} className="flex gap-2 items-start">
+          <input
+            type="text"
+            placeholder="Regulation name"
+            value={entry.name}
+            onChange={(e) => updateAt(items, i, "name", e.target.value, onChange)}
+            className={`flex-1 ${INPUT_CLASS}`}
+          />
+          <input
+            type="text"
+            placeholder="Regulation identifier"
+            value={entry.identifier}
+            onChange={(e) => updateAt(items, i, "identifier", e.target.value, onChange)}
+            className={`flex-1 ${INPUT_CLASS}`}
+          />
+          <button
+            type="button"
+            onClick={() => removeAt(items, i, onChange)}
+            className="text-red-400 hover:text-red-600 px-2 py-2"
+          >
+            ✕
+          </button>
+        </div>
+      ))}
+    </div>
+  );
 }
 
 function NameDescArrayEditor({
@@ -1184,13 +1350,13 @@ interface FormState {
   manufacturerUrl: string;
   manufacturerId: string;
   // Product Information - Material
-  materialComposition: MaterialEntry[];
-  materialBills: string;
-  recycledReusedContent: MaterialEntry[];
+  componentComposition: ComponentEntry[];
+  componentBills: string;
+  recycledReusedContent: ComponentEntry[];
   // Product Information - Other
   sparePartsAvailability: string;
-  hazardousSubstances: NameDescEntry[];
-  substancesOfConcern: NameDescEntry[];
+  hazardousSubstances: SubstanceEntry[];
+  substancesOfConcern: SubstanceEntry[];
   // Product Information - Sector Required (Extension)
   sectorRequiredAssemblyDesc: string;
   sectorRequiredAssemblyAutomationLevel: string;
@@ -1226,7 +1392,6 @@ interface FormState {
   specCrossCompatibilityDetails: string;
   specCompatibleInterfaceStandard: string;
   specCompatibilityLevel: string;
-  specVolumeMeasurement: MeasurementValue;
   specComponentDescription: string;
   specComponentCount: string;
   specInstalledSoftwareName: string;
@@ -1242,8 +1407,7 @@ interface FormState {
   qualityAssessment: string;
   identifiedRisk: string;
   // Compliance
-  regulationName: string;
-  regulationIdentifier: string;
+  regulations: RegulationEntry[];
   productLabels: LabelEntry[];
   productStatusAssessment: string;
   certifications: NameDescEntry[];
@@ -1260,10 +1424,10 @@ interface FormState {
   plasticsRelease: string;
   decomposability: string;
   sectorSustainabilityIndicatorsText: string;
-  criticalRawMaterials: MaterialEntry[];
+  criticalRawMaterials: ComponentEntry[];
   lifeCycleAssessmentReport: string;
   environmentalImpacts: EnvironmentalImpactEntry[];
-  renewableNonRenewableContent: MaterialEntry[];
+  renewableNonRenewableContent: ComponentEntry[];
   circularEconomyIndicatorText: string;
   labourConditions: string;
   usingResourceConsumptions: ResourceConsumptionEntry[];
@@ -1319,8 +1483,8 @@ const initialState: FormState = {
   manufacturerName: "",
   manufacturerUrl: "",
   manufacturerId: "",
-  materialComposition: [],
-  materialBills: "",
+  componentComposition: [],
+  componentBills: "",
   recycledReusedContent: [],
   sparePartsAvailability: "",
   hazardousSubstances: [],
@@ -1358,7 +1522,6 @@ const initialState: FormState = {
   specCrossCompatibilityDetails: "",
   specCompatibleInterfaceStandard: "",
   specCompatibilityLevel: "",
-  specVolumeMeasurement: { value: "", unit: "", customUnit: "" },
   specComponentDescription: "",
   specComponentCount: "",
   specInstalledSoftwareName: "",
@@ -1371,8 +1534,7 @@ const initialState: FormState = {
   takebackOption: "",
   qualityAssessment: "",
   identifiedRisk: "",
-  regulationName: "",
-  regulationIdentifier: "",
+  regulations: [],
   productLabels: [],
   productStatusAssessment: "",
   certifications: [],
@@ -1545,20 +1707,30 @@ function buildPayload(f: FormState): Record<string, unknown> {
   const resolveUnit = (m: MeasurementValue) =>
     m.unit === "custom" ? m.customUnit : m.unit;
 
-  const toMaterial = (m: MaterialEntry): Record<string, unknown> => ({
-    materialName: m.materialName,
-    ...(m.mode === "percentage" && m.materialPercentage
-      ? { materialPercentage: Number(m.materialPercentage) }
+  const toComponent = (m: ComponentEntry): Record<string, unknown> => ({
+    componentName: m.componentName,
+    ...(m.mode === "percentage" && m.componentPercentage
+      ? { componentPercentage: Number(m.componentPercentage) }
       : {}),
-    ...(m.mode === "mass" && m.materialMassValue
+    ...(m.mode === "mass" && m.componentCountValue
       ? {
-          materialMassValue: Number(m.materialMassValue),
-          materialMassUnit:
-            m.materialMassUnit === "custom"
-              ? m.materialMassCustomUnit
-              : m.materialMassUnit,
+          componentCountValue: Number(m.componentCountValue),
+          componentCountUnit:
+            m.componentCountUnit === "custom"
+              ? m.componentCountCustomUnit
+              : m.componentCountUnit,
         }
       : {}),
+  });
+
+  const toSubstance = (s: SubstanceEntry): Record<string, unknown> => ({
+    iupacName: s.iupacName,
+    ecNumber: s.ecNumber,
+    casNumber: s.casNumber,
+    concentrationLevel: s.concentrationLevel,
+    locationWithinProduct: s.locationWithinProduct,
+    safeUsageInstruction: s.safeUsageInstruction,
+    disassemblyInstruction: s.disassemblyInstruction,
   });
 
   const toMeasurementEntry = (m: MeasurementValue): Record<string, unknown> => ({
@@ -1635,14 +1807,14 @@ function buildPayload(f: FormState): Record<string, unknown> {
               name: f.manufacturerName,
               url: f.manufacturerUrl,
             },
-      material: {
-        materialComposition: f.materialComposition.map(toMaterial),
-        materialBills: f.materialBills,
-        recycledReusedContent: f.recycledReusedContent.map(toMaterial),
+      component: {
+        componentComposition: f.componentComposition.map(toComponent),
+        componentBills: f.componentBills,
+        recycledReusedContent: f.recycledReusedContent.map(toComponent),
       },
       sparePartsAvailability: f.sparePartsAvailability,
-      hazardousSubstances: f.hazardousSubstances,
-      substancesOfConcern: f.substancesOfConcern,
+      hazardousSubstances: f.hazardousSubstances.map(toSubstance),
+      substancesOfConcern: f.substancesOfConcern.map(toSubstance),
       sectorRequiredInformation: {
         extensionType: f.sectorType,
         assemblyProcess: {
@@ -1719,7 +1891,6 @@ function buildPayload(f: FormState): Record<string, unknown> {
           compatibleInterfaceStandard: f.specCompatibleInterfaceStandard,
           compatibilityLevel: f.specCompatibilityLevel,
         },
-        volume: toValueUnitObject(f.specVolumeMeasurement, "volumeValue", "volumeUnit"),
         components: {
           componentDescription: f.specComponentDescription,
           componentCount: f.specComponentCount ? Number(f.specComponentCount) : "",
@@ -1742,7 +1913,10 @@ function buildPayload(f: FormState): Record<string, unknown> {
       additionalProperties: toCustomFieldObject(f.productInfoCustomFields),
     },
     compliance: {
-      regulation: { name: f.regulationName, identifier: f.regulationIdentifier },
+      regulation: f.regulations.map((regulation) => ({
+        name: regulation.name,
+        identifier: regulation.identifier,
+      })),
       productLabel: f.productLabels,
       productStatusAssessment: f.productStatusAssessment,
       certification: f.certifications,
@@ -1768,12 +1942,12 @@ function buildPayload(f: FormState): Record<string, unknown> {
         extensionType: f.sectorType,
         indicator: f.sectorSustainabilityIndicatorsText,
       },
-      criticalRawMaterial: f.criticalRawMaterials.map(toMaterial),
+      criticalRawMaterial: f.criticalRawMaterials.map(toComponent),
       lifeCycleAssessment: {
         lifeCycleAssessmentReport: f.lifeCycleAssessmentReport,
         environmentalImpact: f.environmentalImpacts.map(toEnvironmentalImpact),
       },
-      renewableNonRenewableContent: f.renewableNonRenewableContent.map(toMaterial),
+      renewableNonRenewableContent: f.renewableNonRenewableContent.map(toComponent),
       circularEconomyIndicator: {
         extensionType: f.sectorType,
         indicator: f.circularEconomyIndicatorText,
@@ -1847,7 +2021,6 @@ export default function AddProductPage() {
   const [success, setSuccess] = useState(false);
   const [importedJson, setImportedJson] = useState<unknown>(null);
   const [importError, setImportError] = useState<string | null>(null);
-  const [focusedFieldName, setFocusedFieldName] = useState<string>("No field selected");
   const [mappings, setMappings] = useState<FieldMapping[]>([]);
   const sectionSteps = [
     "Product Information",
@@ -1874,8 +2047,8 @@ export default function AddProductPage() {
       "manufacturerName",
       "manufacturerUrl",
       "manufacturerId",
-      "materialComposition",
-      "materialBills",
+      "componentComposition",
+      "componentBills",
       "recycledReusedContent",
       "sparePartsAvailability",
       "hazardousSubstances",
@@ -1913,7 +2086,6 @@ export default function AddProductPage() {
       "specCrossCompatibilityDetails",
       "specCompatibleInterfaceStandard",
       "specCompatibilityLevel",
-      "specVolumeMeasurement",
       "specComponentDescription",
       "specComponentCount",
       "specInstalledSoftwareName",
@@ -1929,8 +2101,7 @@ export default function AddProductPage() {
       "productInfoCustomFields",
     ],
     [
-      "regulationName",
-      "regulationIdentifier",
+      "regulations",
       "productLabels",
       "productStatusAssessment",
       "certifications",
@@ -2334,9 +2505,6 @@ export default function AddProductPage() {
         onSubmit={handleSubmit}
         onDrop={handleFormDrop}
         onDragOver={handleFormDragOver}
-        onFocusCapture={(event) => {
-          setFocusedFieldName(inferFieldNameFromElement(event.target));
-        }}
         className="space-y-6"
       >
         <div className="space-y-3 rounded-lg border border-gray-200 bg-white p-4">
@@ -2534,24 +2702,24 @@ export default function AddProductPage() {
               )}
             </fieldset>
 
-            {/* MaterialInformation */}
+            {/* ComponentInformation */}
             <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
               <legend className="text-sm font-semibold text-gray-800">
-                Material Information
+                Component Information
               </legend>
-              <MaterialArrayEditor
-                label="Material Composition"
-                items={form.materialComposition}
-                onChange={(v) => set("materialComposition", v)}
+              <ComponentArrayEditor
+                label="Component Composition"
+                items={form.componentComposition}
+                onChange={(v) => set("componentComposition", v)}
                 showPercentage
               />
               <FormField
-                label="Material Bills URL"
-                value={form.materialBills}
-                onChange={(v) => set("materialBills", v)}
+                label="Component Bills URL"
+                value={form.componentBills}
+                onChange={(v) => set("componentBills", v)}
                 type="url"
               />
-              <MaterialArrayEditor
+              <ComponentArrayEditor
                 label="Recycled / Reused Content"
                 items={form.recycledReusedContent}
                 onChange={(v) => set("recycledReusedContent", v)}
@@ -2575,7 +2743,7 @@ export default function AddProductPage() {
               <legend className="text-sm font-semibold text-gray-800">
                 Hazardous Substances
               </legend>
-              <NameDescArrayEditor
+              <SubstanceArrayEditor
                 label="Hazardous Substances"
                 items={form.hazardousSubstances}
                 onChange={(v) => set("hazardousSubstances", v)}
@@ -2587,7 +2755,7 @@ export default function AddProductPage() {
               <legend className="text-sm font-semibold text-gray-800">
                 Substances of Concern
               </legend>
-              <NameDescArrayEditor
+              <SubstanceArrayEditor
                 label="Substances of Concern"
                 items={form.substancesOfConcern}
                 onChange={(v) => set("substancesOfConcern", v)}
@@ -2706,20 +2874,12 @@ export default function AddProductPage() {
             {/* Regulation */}
             <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
               <legend className="text-sm font-semibold text-gray-800">
-                Regulation
+                Regulations
               </legend>
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  label="Regulation Name"
-                  value={form.regulationName}
-                  onChange={(v) => set("regulationName", v)}
-                />
-                <FormField
-                  label="Regulation Identifier"
-                  value={form.regulationIdentifier}
-                  onChange={(v) => set("regulationIdentifier", v)}
-                />
-              </div>
+              <RegulationArrayEditor
+                items={form.regulations}
+                onChange={(v) => set("regulations", v)}
+              />
             </fieldset>
 
             {/* ComplianceLabel */}
@@ -2848,8 +3008,8 @@ export default function AddProductPage() {
               <legend className="text-sm font-semibold text-gray-800">
                 Critical Raw Materials
               </legend>
-              <MaterialArrayEditor
-                label="Critical Raw Materials"
+              <ComponentArrayEditor
+                label="Critical Raw Components"
                 items={form.criticalRawMaterials}
                 onChange={(v) => set("criticalRawMaterials", v)}
               />
@@ -2879,8 +3039,8 @@ export default function AddProductPage() {
               <legend className="text-sm font-semibold text-gray-800">
                 Renewable / Non-Renewable Content
               </legend>
-              <MaterialArrayEditor
-                label="Materials"
+              <ComponentArrayEditor
+                label="Components"
                 items={form.renewableNonRenewableContent}
                 onChange={(v) => set("renewableNonRenewableContent", v)}
               />

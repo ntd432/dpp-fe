@@ -27,8 +27,13 @@ export interface Country {
 }
 
 export interface Substance {
-  name?: string;
-  description?: string;
+  iupacName?: string;
+  ecNumber?: string;
+  casNumber?: string;
+  concentrationLevel?: string;
+  locationWithinProduct?: string;
+  safeUsageInstruction?: string;
+  disassemblyInstruction?: string;
 }
 
 export interface Legislation {
@@ -56,13 +61,14 @@ export interface DefinedTerm {
   identifier?: string;
 }
 
-export interface Material {
-  materialName?: string;
-  materialPercentage?: number;
-  materialMassValue?: number;
-  materialMassUnit?: string;
-  materialReference?: string;
-  materialURI?: string;
+export interface Component {
+  componentName?: string;
+  componentPercentage?: number;
+  componentCountValue?: number;
+  componentCountUnit?: string;
+  componentReference?: string;
+  componentURI?: string;
+  componentSupplier?: Organization;
 }
 
 // ── Core classes ────────────────────────────────────────────────────────────
