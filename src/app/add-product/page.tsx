@@ -96,7 +96,7 @@ function removeAt<T>(items: T[], index: number, onChange: (items: T[]) => void) 
 }
 
 const INPUT_CLASS =
-  "px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500";
+  "px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-blue-light)] focus:border-[var(--color-brand-blue-light)]";
 
 const MASS_UNITS = ["g", "kg", "mg", "lb", "oz"];
 const FOOTPRINT_UNITS = ["kg CO2e", "g CO2e", "t CO2e"];
@@ -632,7 +632,7 @@ function EventArrayEditor({
               placeholder="Actor name"
               value={ev.actorName}
               onChange={(e) => updateAt(events, i, "actorName", e.target.value, onChange)}
-              className="col-span-2 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              className="col-span-2 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-blue-light)] focus:border-[var(--color-brand-blue-light)]"
             />
           </div>
           <button
@@ -1138,7 +1138,7 @@ function SubstanceArrayEditor({
             placeholder="Disassembly instruction"
             value={item.disassemblyInstruction}
             onChange={(e) => updateAt(items, i, "disassemblyInstruction", e.target.value, onChange)}
-            className="md:col-span-2 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="md:col-span-2 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-blue-light)] focus:border-[var(--color-brand-blue-light)]"
           />
           <div className="md:col-span-2 flex justify-end">
             <button

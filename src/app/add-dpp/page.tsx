@@ -10,7 +10,7 @@ import { AddEntryButton } from "@/components/form/AddEntryButton";
 // ── Constants ────────────────────────────────────────────────────────────────
 
 const INPUT_CLASS =
-  "px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 w-full";
+  "px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-blue-light)] focus:border-[var(--color-brand-blue-light)] w-full";
 
 const GRANULARITY_OPTIONS = ["model", "batch", "item"] as const;
 const DATA_CARRIER_FORMAT_OPTIONS = ["QR code", "NFC", "RFID", "DataMatrix"] as const;
@@ -120,7 +120,7 @@ function EventArrayEditor({
               placeholder="Actor name"
               value={ev.actorName}
               onChange={(e) => updateAt(events, i, "actorName", e.target.value, onChange)}
-              className="col-span-2 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              className="col-span-2 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-blue-light)] focus:border-[var(--color-brand-blue-light)]"
             />
           </div>
           <button
@@ -459,7 +459,7 @@ export default function AddDppPage() {
                 </div>
 
                 {form.issuerMode === "new" && (
-                <div className="grid grid-cols-2 gap-4 border-l-2 border-emerald-200 pl-3">
+                <div className="grid grid-cols-2 gap-4 border-l-2 border-[var(--color-brand-blue-light)] pl-3">
                     <FormField
                     label="Organisation Name"
                     value={""}

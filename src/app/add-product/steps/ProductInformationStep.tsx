@@ -46,7 +46,7 @@ export function ProductInformationStep({ shared }: { shared: any }) {
                     set("sectorType", selected?.extensionType ?? "");
                     set("sector", selected?.label ?? "");
                   }}
-                  className="w-full max-w-xs px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                  className="w-full max-w-xs px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-blue-light)] focus:border-[var(--color-brand-blue-light)]"
                 >
                   {SECTORS.map((s) => (
                     <option key={s.extensionType} value={s.extensionType}>
