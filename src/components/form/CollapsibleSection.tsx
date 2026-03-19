@@ -41,8 +41,8 @@ export function CollapsibleSection({
   const bgColor = BG_COLORS[color] || "bg-gray-50";
 
   return (
-    <div className={`border-l-4 ${borderColor} bg-white rounded-lg shadow-sm overflow-hidden`}>
-      <div className={`px-6 py-4 ${bgColor}`}>
+    <div className={`border-l-4 border-[var(--color-brand-blue)] bg-white rounded-lg shadow-sm overflow-hidden`}>
+      <div className={`px-6 py-4 bg-[var(--color-brand-blue)]/20`}>
         <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
       </div>
       <div className="px-6 py-4 space-y-6">{children}</div>
@@ -63,7 +63,7 @@ export function DataLayerGroup({ layer, children }: Readonly<DataLayerGroupProps
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
-        className="w-full flex items-center gap-2"
+        className="w-full flex items-center gap-2 hover:cursor-pointer"
       >
         <DataLayerBadge layer={layer} />
         <div className="flex-1 h-px bg-gray-200" />

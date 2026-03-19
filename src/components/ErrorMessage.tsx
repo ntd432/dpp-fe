@@ -25,7 +25,7 @@ export default function ErrorMessage({ message, onRetry }: ErrorMessageProps) {
       {onRetry && (
         <button
           onClick={onRetry}
-          className="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700 transition-colors"
+          className="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700 transition-colors hover:cursor-pointer"
         >
           Try Again
         </button>

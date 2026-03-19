@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { FormField } from "@/components/form/FormField";
 import { CollapsibleSection, DataLayerGroup } from "@/components/form/CollapsibleSection";
 import { SECTORS } from "@/config/sectors";
+import { AddEntryButton } from "@/components/form/AddEntryButton";
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
@@ -82,13 +83,7 @@ function EventArrayEditor({
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <span className="block text-sm font-medium text-gray-700">{label}</span>
-        <button
-          type="button"
-          onClick={() => onChange([...events, emptyEvent()])}
-          className="text-xs px-2 py-1 bg-emerald-50 text-emerald-700 rounded hover:bg-emerald-100"
-        >
-          + Add Entry
-        </button>
+        <AddEntryButton label="+ Add Entry" onClick={() => onChange([...events, emptyEvent()])} />
       </div>
       {events.map((ev, i) => (
         <div key={ev._key} className="flex gap-2 items-start">
@@ -131,7 +126,7 @@ function EventArrayEditor({
           <button
             type="button"
             onClick={() => removeAt(events, i, onChange)}
-            className="text-red-400 hover:text-red-600 px-2 py-2"
+            className="text-red-400 hover:text-red-600 px-2 py-2 hover:cursor-pointer"
           >
             x
           </button>
@@ -345,7 +340,7 @@ export default function AddDppPage() {
       <div className="mb-8">
         <button
           onClick={() => router.back()}
-          className="text-sm text-gray-500 hover:text-gray-700 mb-4 inline-flex items-center gap-1"
+          className="text-sm text-gray-500 hover:text-gray-700 mb-4 inline-flex items-center gap-1 hover:cursor-pointer"
         >
           ← Back
         </button>
@@ -548,14 +543,14 @@ export default function AddDppPage() {
           <button
             type="button"
             onClick={() => router.back()}
-            className="px-4 py-2 text-sm rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50"
+            className="px-4 py-2 text-sm rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 hover:cursor-pointer"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={submitting}
-            className="px-5 py-2 text-sm rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-5 py-2 text-sm rounded-lg bg-[var(--color-brand-pink)] text-white font-bold hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed hover:cursor-pointer"
           >
             {submitting ? "Registering…" : "Register DPP"}
           </button>

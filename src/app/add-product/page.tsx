@@ -14,6 +14,7 @@ import {
   EXTENSION_SECTION_LABELS,
   type ExtensionSectionKey,
 } from "@/config/product-extension-fields";
+import { AddEntryButton } from "@/components/form/AddEntryButton";
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -264,7 +265,7 @@ function JsonTree({
         <button
           type="button"
           onClick={() => setOpen((prev) => !prev)}
-          className="text-xs text-gray-600 hover:text-gray-900"
+          className="text-xs text-gray-600 hover:text-gray-900 hover:cursor-pointer"
         >
           {open ? "▾" : "▸"} {path.split(".")[path.split(".").length - 1]} [{value.length}]
         </button>
@@ -293,7 +294,7 @@ function JsonTree({
         <button
           type="button"
           onClick={() => setOpen((prev) => !prev)}
-          className="text-xs text-gray-600 hover:text-gray-900"
+          className="text-xs text-gray-600 hover:text-gray-900 hover:cursor-pointer"
         >
           {open ? "▾" : "▸"} {path.split(".")[path.split(".").length - 1]} {"{"}{entries.length}{"}"}
         </button>
@@ -326,9 +327,9 @@ function JsonTree({
   const isLocked = leafUsage !== undefined;
   const leafClasses =
     leafUsage === "mapped"
-      ? "border-emerald-300 bg-emerald-50 text-emerald-900"
+      ? "border-[var(--color-brand-pink)] bg-[var(--color-brand-pink)]/6 text-[var(--color-brand-pink)]"
       : leafUsage === "custom"
-        ? "border-amber-300 bg-amber-50 text-amber-900"
+        ? "border-[var(--color-brand-blue)] bg-[var(--color-brand-blue)]/6 text-[var(--color-brand-blue)]"
         : "border-gray-200 bg-white";
   const leafHint =
     leafUsage === "mapped"
@@ -342,7 +343,7 @@ function JsonTree({
       type="button"
       className={`ml-4 w-full text-left rounded border px-2 py-1 text-xs ${leafClasses} ${
         isLocked ? "cursor-not-allowed opacity-80" : "cursor-grab active:cursor-grabbing"
-      }`}
+      } hover:cursor-pointer`}
       draggable={!isLocked}
       onDragStart={(event) => {
         if (isLocked) {
@@ -401,8 +402,9 @@ function CustomFieldsEditor({
   };
 
   return (
-    <fieldset
-      className="space-y-3 p-4 bg-gray-50 rounded-lg border border-dashed border-gray-300"
+    <details
+      open
+      className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden"
       onDragOver={(event) => {
         if (!canHandleDrop(event)) return;
         event.preventDefault();
@@ -417,7 +419,21 @@ function CustomFieldsEditor({
         appendLeafAsNewField(leaf);
       }}
     >
-      <legend className="text-sm font-semibold text-gray-800">{title}</legend>
+      <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+        <span className="flex items-center justify-between">
+          {title}
+          <svg
+            className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </span>
+      </summary>
+      <div className="space-y-3 px-4 pb-4 pt-2">
       <p className="text-xs text-gray-500">
         Define manual fields and drag imported JSON values here to auto-fill key and value.
       </p>
@@ -470,21 +486,23 @@ function CustomFieldsEditor({
             <button
               type="button"
               onClick={() => removeAt(items, index, onChange)}
-              className="text-red-400 hover:text-red-600 px-2 py-1"
+              className="text-red-400 hover:text-red-600 px-2 py-1 hover:cursor-pointer"
             >
               ✕
             </button>
           </div>
         ))}
       </div>
-      <button
+      {/* <button
         type="button"
         onClick={() => onChange([...items, { _key: uid(), key: "", value: "", sourcePath: undefined }])}
-        className="text-xs px-2 py-1 bg-emerald-50 text-emerald-700 rounded hover:bg-emerald-100"
+        className="text-xs px-2 py-1 bg-[var(--color-brand-blue-super-light)] text-[var(--color-brand-blue-super-dark)] rounded hover:bg-[var(--color-brand-blue-light)] hover:cursor-pointer"
       >
         + Add Custom Field
-      </button>
-    </fieldset>
+      </button> */}
+      <AddEntryButton label="+ Add Custom Field" onClick={() => onChange([...items, { _key: uid(), key: "", value: "", sourcePath: undefined }])} />
+      </div>
+    </details>
   );
 }
 
@@ -574,13 +592,7 @@ function EventArrayEditor({
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <span className="block text-sm font-medium text-gray-700">{label}</span>
-        <button
-          type="button"
-          onClick={() => onChange([...events, emptyEvent()])}
-          className="text-xs px-2 py-1 bg-emerald-50 text-emerald-700 rounded hover:bg-emerald-100"
-        >
-          + Add Entry
-        </button>
+        <AddEntryButton label="+ Add Entry" onClick={() => onChange([...events, emptyEvent()])} />
       </div>
       {events.map((ev, i) => (
         <div key={ev._key} className="flex gap-2 items-start">
@@ -623,7 +635,7 @@ function EventArrayEditor({
           <button
             type="button"
             onClick={() => removeAt(events, i, onChange)}
-            className="text-red-400 hover:text-red-600 px-2 py-2"
+            className="text-red-400 hover:text-red-600 px-2 py-2 hover:cursor-pointer"
           >
             ✕
           </button>
@@ -669,10 +681,7 @@ function EnvironmentalFootprintArrayEditor({
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <span className="block text-sm font-medium text-gray-700">Environmental Footprint</span>
-        <button
-          type="button"
-          onClick={() =>
-            onChange([
+        <AddEntryButton label="+ Add Entry" onClick={() => onChange([
               ...items,
               {
                 _key: uid(),
@@ -680,12 +689,7 @@ function EnvironmentalFootprintArrayEditor({
                 environmentalFootprintMeasuringMethod: "",
                 measurement: emptyMeasurement(),
               },
-            ])
-          }
-          className="text-xs px-2 py-1 bg-emerald-50 text-emerald-700 rounded hover:bg-emerald-100"
-        >
-          + Add Entry
-        </button>
+            ])} />
       </div>
       {items.map((item, i) => (
         <div key={item._key} className="space-y-3 p-3 bg-white border border-gray-200 rounded-lg">
@@ -725,7 +729,7 @@ function EnvironmentalFootprintArrayEditor({
             <button
               type="button"
               onClick={() => removeAt(items, i, onChange)}
-              className="text-red-400 hover:text-red-600 px-2 py-1"
+              className="text-red-400 hover:text-red-600 px-2 py-1 hover:cursor-pointer"
             >
               ✕
             </button>
@@ -749,18 +753,10 @@ function ResourceConsumptionArrayEditor({
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <span className="block text-sm font-medium text-gray-700">{label}</span>
-        <button
-          type="button"
-          onClick={() =>
-            onChange([
+        <AddEntryButton label="+ Add Entry" onClick={() => onChange([
               ...items,
               { _key: uid(), resource: "", measurement: emptyMeasurement() },
-            ])
-          }
-          className="text-xs px-2 py-1 bg-emerald-50 text-emerald-700 rounded hover:bg-emerald-100"
-        >
-          + Add Entry
-        </button>
+            ])} />
       </div>
       {items.map((item, i) => (
         <div key={item._key} className="space-y-3 p-3 bg-white border border-gray-200 rounded-lg">
@@ -781,7 +777,7 @@ function ResourceConsumptionArrayEditor({
             <button
               type="button"
               onClick={() => removeAt(items, i, onChange)}
-              className="text-red-400 hover:text-red-600 px-2 py-1"
+              className="text-red-400 hover:text-red-600 px-2 py-1 hover:cursor-pointer"
             >
               ✕
             </button>
@@ -803,10 +799,7 @@ function EnvironmentalImpactArrayEditor({
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <span className="block text-sm font-medium text-gray-700">Environmental Impact</span>
-        <button
-          type="button"
-          onClick={() =>
-            onChange([
+        <AddEntryButton label="+ Add Entry" onClick={() => onChange([
               ...items,
               {
                 _key: uid(),
@@ -816,12 +809,7 @@ function EnvironmentalImpactArrayEditor({
                 characterizationModel: "",
                 impactIndicator: emptyMeasurement(),
               },
-            ])
-          }
-          className="text-xs px-2 py-1 bg-emerald-50 text-emerald-700 rounded hover:bg-emerald-100"
-        >
-          + Add Entry
-        </button>
+            ])} />
       </div>
       {items.map((item, i) => (
         <div key={item._key} className="space-y-3 p-3 bg-white border border-gray-200 rounded-lg">
@@ -865,7 +853,7 @@ function EnvironmentalImpactArrayEditor({
             <button
               type="button"
               onClick={() => removeAt(items, i, onChange)}
-              className="text-red-400 hover:text-red-600 px-2 py-1"
+              className="text-red-400 hover:text-red-600 px-2 py-1 hover:cursor-pointer"
             >
               ✕
             </button>
@@ -903,26 +891,18 @@ function ComponentArrayEditor({
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <span className="block text-sm font-medium text-gray-700">{label}</span>
-        <button
-          type="button"
-          onClick={() =>
-            onChange([
-              ...items,
-              {
-                _key: uid(),
-                componentName: "",
-                mode: "percentage",
-                componentPercentage: "",
-                componentCountValue: "",
-                componentCountUnit: "",
-                componentCountCustomUnit: "",
-              },
-            ])
-          }
-          className="text-xs px-2 py-1 bg-emerald-50 text-emerald-700 rounded hover:bg-emerald-100"
-        >
-          + Add Component
-        </button>
+        <AddEntryButton label="+ Add Entry" onClick={() => onChange([
+          ...items,
+          {
+            _key: uid(),
+            componentName: "",
+            mode: "percentage",
+            componentPercentage: "",
+            componentCountValue: "",
+            componentCountUnit: "",
+            componentCountCustomUnit: "",
+          },
+        ])} />  
       </div>
       {items.map((m, i) => (
         <div key={m._key} className="grid grid-cols-6 gap-2 items-center">
@@ -1012,7 +992,7 @@ function ComponentArrayEditor({
           <button
             type="button"
             onClick={() => removeAt(items, i, onChange)}
-            className="text-red-400 hover:text-red-600 px-2 py-2"
+            className="text-red-400 hover:text-red-600 px-2 py-2 hover:cursor-pointer"
           >
             ✕
           </button>
@@ -1046,27 +1026,19 @@ function SubstanceArrayEditor({
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <span className="block text-sm font-medium text-gray-700">{label}</span>
-        <button
-          type="button"
-          onClick={() =>
-            onChange([
-              ...items,
-              {
-                _key: uid(),
-                iupacName: "",
-                ecNumber: "",
-                casNumber: "",
-                concentrationLevel: "",
-                locationWithinProduct: "",
-                safeUsageInstruction: "",
-                disassemblyInstruction: "",
-              },
-            ])
-          }
-          className="text-xs px-2 py-1 bg-emerald-50 text-emerald-700 rounded hover:bg-emerald-100"
-        >
-          + Add Substance
-        </button>
+        <AddEntryButton label="+ Add Entry" onClick={() => onChange([
+          ...items,
+          {
+            _key: uid(),
+            iupacName: "",
+            ecNumber: "",
+            casNumber: "",
+            concentrationLevel: "",
+            locationWithinProduct: "",
+            safeUsageInstruction: "",
+            disassemblyInstruction: "",
+          },
+        ])} />  
       </div>
       {items.map((item, i) => (
         <div key={item._key} className="grid grid-cols-1 md:grid-cols-2 gap-2 p-3 bg-white border border-gray-200 rounded-lg">
@@ -1123,7 +1095,7 @@ function SubstanceArrayEditor({
             <button
               type="button"
               onClick={() => removeAt(items, i, onChange)}
-              className="text-red-400 hover:text-red-600 px-2 py-1"
+              className="text-red-400 hover:text-red-600 px-2 py-1 hover:cursor-pointer"
             >
               ✕
             </button>
@@ -1159,13 +1131,7 @@ function RegulationArrayEditor({
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <span className="block text-sm font-medium text-gray-700">Regulations</span>
-        <button
-          type="button"
-          onClick={() => onChange([...items, { _key: uid(), name: "", identifier: "" }])}
-          className="text-xs px-2 py-1 bg-emerald-50 text-emerald-700 rounded hover:bg-emerald-100"
-        >
-          + Add Regulation
-        </button>
+        <AddEntryButton label="+ Add Entry" onClick={() => onChange([...items, { _key: uid(), name: "", identifier: "" }])} />
       </div>
       {items.map((entry, i) => (
         <div key={entry._key} className="flex gap-2 items-start">
@@ -1186,7 +1152,7 @@ function RegulationArrayEditor({
           <button
             type="button"
             onClick={() => removeAt(items, i, onChange)}
-            className="text-red-400 hover:text-red-600 px-2 py-2"
+            className="text-red-400 hover:text-red-600 px-2 py-2 hover:cursor-pointer"
           >
             ✕
           </button>
@@ -1215,13 +1181,7 @@ function NameDescArrayEditor({
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <span className="block text-sm font-medium text-gray-700">{label}</span>
-        <button
-          type="button"
-          onClick={() => onChange([...items, { _key: uid(), name: "", description: "" }])}
-          className="text-xs px-2 py-1 bg-emerald-50 text-emerald-700 rounded hover:bg-emerald-100"
-        >
-          {addLabel}
-        </button>
+        <AddEntryButton label={addLabel} onClick={() => onChange([...items, { _key: uid(), name: "", description: "" }])} />
       </div>
       {items.map((s, i) => (
         <div key={s._key} className="flex gap-2 items-start">
@@ -1242,7 +1202,7 @@ function NameDescArrayEditor({
           <button
             type="button"
             onClick={() => removeAt(items, i, onChange)}
-            className="text-red-400 hover:text-red-600 px-2 py-2"
+            className="text-red-400 hover:text-red-600 px-2 py-2 hover:cursor-pointer"
           >
             ✕
           </button>
@@ -1275,18 +1235,7 @@ function LabelArrayEditor({
         <span className="block text-sm font-medium text-gray-700">
           Product Labels
         </span>
-        <button
-          type="button"
-          onClick={() =>
-            onChange([
-              ...items,
-              { _key: uid(), labelName: "", labelValue: "", labelDescription: "", labelDocumentation: "" },
-            ])
-          }
-          className="text-xs px-2 py-1 bg-emerald-50 text-emerald-700 rounded hover:bg-emerald-100"
-        >
-          + Add Label
-        </button>
+        <AddEntryButton label="+ Add Entry" onClick={() => onChange([...items, { _key: uid(), labelName: "", labelValue: "", labelDescription: "", labelDocumentation: "" }])} />
       </div>
       {items.map((l, i) => (
         <div key={l._key} className="grid grid-cols-2 gap-2 p-3 bg-gray-50 rounded-lg relative">
@@ -1321,7 +1270,7 @@ function LabelArrayEditor({
           <button
             type="button"
             onClick={() => removeAt(items, i, onChange)}
-            className="absolute top-2 right-2 text-red-400 hover:text-red-600"
+            className="absolute top-2 right-2 text-red-400 hover:text-red-600 hover:cursor-pointer"
           >
             ✕
           </button>
@@ -1605,16 +1554,38 @@ function renderExtensionSection(
   }
 
   return (
-    <details open className="bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
-      <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100">
-        {EXTENSION_SECTION_LABELS[section]}
+    <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+      <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+        <span className="flex items-center justify-between">
+          {EXTENSION_SECTION_LABELS[section]}
+          <svg
+            className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </span>
       </summary>
       <div className="space-y-4 px-4 pb-4 pt-2">
       {Object.entries(groups).map(([groupName, groupFields]) => {
         return (
-          <details key={groupName} className="border border-gray-200 rounded-lg bg-white">
-            <summary className="cursor-pointer list-none px-4 py-3 text-xs font-semibold uppercase tracking-wide text-gray-600">
-              {groupName}
+          <details key={groupName} className="group/group border border-gray-200 rounded-lg bg-white">
+            <summary className="cursor-pointer list-none px-4 py-3 text-xs font-semibold uppercase tracking-wide text-gray-600 [&::-webkit-details-marker]:hidden">
+              <span className="flex items-center justify-between">
+                {groupName}
+                <svg
+                  className="w-4 h-4 text-gray-400 transition-transform group-open/group:rotate-180"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </span>
             </summary>
             <div className="px-4 pb-4 grid grid-cols-2 gap-4">
               {groupFields.map((field) => {
@@ -2449,11 +2420,11 @@ export default function AddProductPage() {
           </div>
 
           <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-gray-600">
-            <span className="inline-flex items-center gap-1 rounded border border-emerald-300 bg-emerald-50 px-2 py-0.5">
-              mapped field
+            <span className="inline-flex items-center gap-1 rounded border border-[var(--color-brand-pink)] bg-[var(--color-brand-pink-super-light)] px-2 py-0.5">
+              Mapped field
             </span>
-            <span className="inline-flex items-center gap-1 rounded border border-amber-300 bg-amber-50 px-2 py-0.5">
-              custom field
+            <span className="inline-flex items-center gap-1 rounded border border-[var(--color-brand-blue)] bg-[var(--color-brand-blue-super-light)] px-2 py-0.5">
+              Custom field
             </span>
           </div>
 
@@ -2464,17 +2435,17 @@ export default function AddProductPage() {
                 <p className="text-xs text-gray-500">No mappings yet.</p>
               )}
               {mappings.map((mapping) => (
-                <div key={`${mapping.targetField}:${mapping.sourcePath}`} className="rounded-md border border-emerald-200 bg-emerald-50 px-2 py-1">
+                <div key={`${mapping.targetField}:${mapping.sourcePath}`} className="rounded-md border border-[var(--color-brand-pink)] bg-[var(--color-brand-pink)]/6 px-2 py-1">
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
-                      <div className="text-[11px] font-medium text-emerald-900 truncate">{mapping.targetField}</div>
-                      <div className="text-[11px] text-emerald-700 truncate">{mapping.sourcePath}</div>
-                      <div className="text-[11px] text-emerald-600 truncate">{mapping.value}</div>
+                      <div className="text-[11px] font-medium text-[var(--color-brand-pink)] truncate">{mapping.targetField}</div>
+                      <div className="text-[11px] text-[var(--color-brand-pink)]/80 truncate">{mapping.sourcePath}</div>
+                      <div className="text-[11px] text-[var(--color-brand-pink)]/60 truncate">{mapping.value}</div>
                     </div>
                     <button
                       type="button"
                       onClick={() => removeMapping(mapping.sourcePath)}
-                      className="text-red-500 hover:text-red-700 text-[11px]"
+                      className="text-red-500 hover:text-red-700 text-[11px] hover:cursor-pointer"
                     >
                       Remove
                     </button>
@@ -2489,7 +2460,7 @@ export default function AddProductPage() {
       <div className="mb-8">
         <button
           onClick={() => router.back()}
-          className="text-sm text-gray-500 hover:text-gray-700 mb-4 inline-flex items-center gap-1"
+          className="text-sm text-gray-500 hover:text-gray-700 mb-4 inline-flex items-center gap-1 hover:cursor-pointer"
         >
           ← Back
         </button>
@@ -2516,10 +2487,10 @@ export default function AddProductPage() {
                   key={step}
                   type="button"
                   onClick={() => setCurrentSectionStep(index)}
-                  className={`px-3 py-1.5 text-xs rounded-full border transition-colors ${
+                  className={`px-3 py-1.5 text-xs rounded-full border transition-colors hover:cursor-pointer ${
                     isActive
-                      ? "bg-emerald-100 border-emerald-300 text-emerald-800"
-                      : "bg-white border-gray-200 text-gray-600 hover:bg-gray-50"
+                      ? "bg-[var(--color-brand-pink)] border-[var(--color-brand-pink)] text-white"
+                      : "bg-white border-gray-200 text-gray-600 hover:bg-gray-50 hover:cursor-pointer"
                   }`}
                 >
                   {index + 1}. {step}
@@ -2530,11 +2501,11 @@ export default function AddProductPage() {
           <div className="flex items-center justify-between text-xs text-gray-500">
             <span>Step {currentSectionStep + 1} of {sectionSteps.length}</span>
             <div className="flex items-center gap-3">
-              <span>{sectionSteps[currentSectionStep]}</span>
+              {/* <span>{sectionSteps[currentSectionStep]}</span> */}
               <button
                 type="button"
                 onClick={clearCurrentStep}
-                className="px-2 py-1 border border-gray-300 rounded text-[11px] text-gray-600 disabled:opacity-50"
+                className="px-2 py-1 border border-gray-300 rounded text-[11px] text-gray-600 disabled:opacity-50 hover:cursor-pointer"
               >
                 Clear Current Step
               </button>
@@ -2578,11 +2549,22 @@ export default function AddProductPage() {
           {/* Regulatory layer */}
           <DataLayerGroup layer="Regulatory">
             {/* ProductIdentificationInformation */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              
-              <legend className="text-sm font-semibold text-gray-800">
-                Product Identification Information
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Product Identification Information
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               
               <div className="grid grid-cols-2 gap-4">
                 <FormField
@@ -2641,13 +2623,26 @@ export default function AddProductPage() {
                 value={form.description}
                 onChange={(v) => set("description", v)}
               />
-            </fieldset>
+              </div>
+            </details>
 
             {/* Manufacturer */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Manufacturer
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Manufacturer
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <div>
                 <label
                   htmlFor="manufacturer-select"
@@ -2700,13 +2695,26 @@ export default function AddProductPage() {
                   />
                 </div>
               )}
-            </fieldset>
+              </div>
+            </details>
 
             {/* ComponentInformation */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Component Information
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Component Information
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <ComponentArrayEditor
                 label="Component Composition"
                 items={form.componentComposition}
@@ -2724,43 +2732,84 @@ export default function AddProductPage() {
                 items={form.recycledReusedContent}
                 onChange={(v) => set("recycledReusedContent", v)}
               />
-            </fieldset>
+              </div>
+            </details>
 
             {/* SparePartsAvailability */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Spare Parts Availability
-              </legend>
-              <TextAreaField
-                label="Spare Parts"
-                value={form.sparePartsAvailability}
-                onChange={(v) => set("sparePartsAvailability", v)}
-              />
-            </fieldset>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Spare Parts Availability
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
+                <TextAreaField
+                    label="Spare Parts"
+                    value={form.sparePartsAvailability}
+                    onChange={(v) => set("sparePartsAvailability", v)}
+                  />
+              </div>
+            </details>
 
             {/* HazardousSubstances */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Hazardous Substances
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Hazardous Substances
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <SubstanceArrayEditor
                 label="Hazardous Substances"
                 items={form.hazardousSubstances}
                 onChange={(v) => set("hazardousSubstances", v)}
               />
-            </fieldset>
+              </div>
+            </details>
 
             {/* SubstancesOfConcern */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Substances of Concern
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Substances of Concern
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <SubstanceArrayEditor
                 label="Substances of Concern"
                 items={form.substancesOfConcern}
                 onChange={(v) => set("substancesOfConcern", v)}
               />
-            </fieldset>
+              </div>
+            </details>
 
             {/* SectorRequiredInformation */}
             {renderExtensionSection("sectorRequiredInformation", form, setField)}
@@ -2773,39 +2822,77 @@ export default function AddProductPage() {
 
             {renderExtensionSection("sectorNonRequiredInformation", form, setField)}
 
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Related Objects
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Related Objects
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <TextAreaField
                 label="One related object URI/ID per line"
                 value={form.relatedObjectsRaw}
                 onChange={(v) => set("relatedObjectsRaw", v)}
                 rows={4}
               />
-            </fieldset>
+              </div>
+            </details>
 
             {/* TestReport */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Test Report
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Test Report
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <FormField
                 label="Test Report URL"
                 value={form.testReport}
                 onChange={(v) => set("testReport", v)}
                 type="url"
               />
-            </fieldset>
+              </div>
+            </details>
           </DataLayerGroup>
 
           {/* Commercial layer */}
           <DataLayerGroup layer="Commercial">
             {/* ProductCommercialInformation */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Product Commercial Information
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Product Commercial Information
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <div className="grid grid-cols-2 gap-4">
                 <FormField
                   label="Image URL"
@@ -2831,39 +2918,68 @@ export default function AddProductPage() {
                   onChange={(v) => set("takebackOption", v)}
                 />
               </div>
-            </fieldset>
+              </div>
+            </details>
 
             {/* QualityAssessment */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Quality Assessment
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Quality Assessment
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <TextAreaField
                 label="Quality Assessment"
                 value={form.qualityAssessment}
                 onChange={(v) => set("qualityAssessment", v)}
               />
-            </fieldset>
+              </div>
+            </details>
 
             {/* IdentifiedRisk */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Identified Risk
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Identified Risk
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <TextAreaField
                 label="Identified Risk"
                 value={form.identifiedRisk}
                 onChange={(v) => set("identifiedRisk", v)}
               />
-            </fieldset>
+              </div>
+            </details>
           </DataLayerGroup>
 
-          <CustomFieldsEditor
-            title="Product Information Custom Fields"
-            items={form.productInfoCustomFields}
-            onChange={(items) => setCustomGroupFields("productInfoCustomFields", items)}
-            canUseLeaf={canUseLeaf}
-          />
+          <DataLayerGroup layer="Custom Fields">
+            <CustomFieldsEditor
+              title="Product Information Custom Fields"
+              items={form.productInfoCustomFields}
+              onChange={(items) => setCustomGroupFields("productInfoCustomFields", items)}
+              canUseLeaf={canUseLeaf}
+            />
+          </DataLayerGroup>
         </CollapsibleSection>
         )}
 
@@ -2872,63 +2988,126 @@ export default function AddProductPage() {
         <CollapsibleSection title="Compliance" color="purple" defaultOpen>
           <DataLayerGroup layer="Regulatory">
             {/* Regulation */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Regulations
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Regulations
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <RegulationArrayEditor
                 items={form.regulations}
                 onChange={(v) => set("regulations", v)}
               />
-            </fieldset>
+              </div>
+            </details>
 
             {/* ComplianceLabel */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Product Labels
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Product Labels
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <LabelArrayEditor
                 items={form.productLabels}
                 onChange={(v) => set("productLabels", v)}
               />
-            </fieldset>
+              </div>
+            </details>
           </DataLayerGroup>
 
           <DataLayerGroup layer="Sectoral">
             {/* ProductStatusAssessment */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Product Status Assessment
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Product Status Assessment
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <FormField
                 label="Assessment URL"
                 value={form.productStatusAssessment}
                 onChange={(v) => set("productStatusAssessment", v)}
                 type="url"
               />
-            </fieldset>
+              </div>
+            </details>
           </DataLayerGroup>
 
           <DataLayerGroup layer="Commercial">
             {/* Certification */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Certifications
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Certifications
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <NameDescArrayEditor
                 label="Certifications"
                 items={form.certifications}
                 onChange={(v) => set("certifications", v)}
                 namePlaceholder="Certification name"
-                addLabel="+ Add Certification"
               />
-            </fieldset>
+              </div>
+            </details>
 
             {/* DataManagementMethod */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Data Management Method
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Data Management Method
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <div className="grid grid-cols-2 gap-4">
                 <FormField
                   label="Name"
@@ -2941,15 +3120,19 @@ export default function AddProductPage() {
                   onChange={(v) => set("dmmIdentifier", v)}
                 />
               </div>
-            </fieldset>
+              </div>
+            </details>
           </DataLayerGroup>
 
-          <CustomFieldsEditor
-            title="Compliance Custom Fields"
-            items={form.complianceCustomFields}
-            onChange={(items) => setCustomGroupFields("complianceCustomFields", items)}
-            canUseLeaf={canUseLeaf}
-          />
+          <DataLayerGroup layer="Custom Fields">
+            <CustomFieldsEditor
+              title="Compliance Custom Fields"
+              items={form.complianceCustomFields}
+              onChange={(items) => setCustomGroupFields("complianceCustomFields", items)}
+              canUseLeaf={canUseLeaf}
+            />
+          </DataLayerGroup>
+          
         </CollapsibleSection>
         )}
 
@@ -2958,10 +3141,22 @@ export default function AddProductPage() {
         <CollapsibleSection title="Sustainability" color="emerald" defaultOpen>
           <DataLayerGroup layer="Regulatory">
             {/* SustainabilityPerformance */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Sustainability Performance
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Sustainability Performance
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <EnvironmentalFootprintArrayEditor
                 items={form.environmentalFootprints}
                 onChange={(v) => set("environmentalFootprints", v)}
@@ -2976,50 +3171,102 @@ export default function AddProductPage() {
                 value={form.plasticsRelease}
                 onChange={(v) => set("plasticsRelease", v)}
               />
-            </fieldset>
+              </div>
+            </details>
           </DataLayerGroup>
 
           <DataLayerGroup layer="Sectoral">
             {/* Decomposability */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Decomposability
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Decomposability
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <TextAreaField
                 label="Decomposability"
                 value={form.decomposability}
                 onChange={(v) => set("decomposability", v)}
               />
-            </fieldset>
+              </div>
+            </details>
 
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Sector Sustainability Indicators
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Sector Sustainability Indicators
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <TextAreaField
                 label="Sector indicators"
                 value={form.sectorSustainabilityIndicatorsText}
                 onChange={(v) => set("sectorSustainabilityIndicatorsText", v)}
               />
-            </fieldset>
+              </div>
+            </details>
 
             {/* CriticalRawMaterial */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Critical Raw Materials
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Critical Raw Materials
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <ComponentArrayEditor
                 label="Critical Raw Components"
                 items={form.criticalRawMaterials}
                 onChange={(v) => set("criticalRawMaterials", v)}
               />
-            </fieldset>
+              </div>
+            </details>
 
             {/* LifeCycleAssessment */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Life Cycle Assessment
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Life Cycle Assessment
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <FormField
                 label="LCA Report URL"
                 value={form.lifeCycleAssessmentReport}
@@ -3030,49 +3277,101 @@ export default function AddProductPage() {
                 items={form.environmentalImpacts}
                 onChange={(v) => set("environmentalImpacts", v)}
               />
-            </fieldset>
+              </div>
+            </details>
           </DataLayerGroup>
 
           <DataLayerGroup layer="Commercial">
             {/* RenewableNonRenewableContent */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Renewable / Non-Renewable Content
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Renewable / Non-Renewable Content
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <ComponentArrayEditor
                 label="Components"
                 items={form.renewableNonRenewableContent}
                 onChange={(v) => set("renewableNonRenewableContent", v)}
               />
-            </fieldset>
+              </div>
+            </details>
 
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Circular Economy Indicator
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Circular Economy Indicator
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <TextAreaField
                 label="Circular economy indicator"
                 value={form.circularEconomyIndicatorText}
                 onChange={(v) => set("circularEconomyIndicatorText", v)}
               />
-            </fieldset>
+              </div>
+            </details>
 
             {/* SocialIndicator */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Social Indicator
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Social Indicator
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <TextAreaField
                 label="Labour Conditions"
                 value={form.labourConditions}
                 onChange={(v) => set("labourConditions", v)}
               />
-            </fieldset>
+              </div>
+            </details>
 
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Sustainability Attributes
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Sustainability Attributes
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <div className="space-y-4">
                 <ResourceConsumptionArrayEditor
                   label="Resource Consumption When Using"
@@ -3085,28 +3384,44 @@ export default function AddProductPage() {
                   onChange={(v) => set("recoveringResourceConsumptions", v)}
                 />
               </div>
-            </fieldset>
+              </div>
+            </details>
 
             {/* EnvironmentDeclaration */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Environment Declaration
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Environment Declaration
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <FormField
                 label="Declaration URL"
                 value={form.environmentDeclaration}
                 onChange={(v) => set("environmentDeclaration", v)}
                 type="url"
               />
-            </fieldset>
+              </div>
+            </details>
           </DataLayerGroup>
 
-          <CustomFieldsEditor
-            title="Sustainability Custom Fields"
-            items={form.sustainabilityCustomFields}
-            onChange={(items) => setCustomGroupFields("sustainabilityCustomFields", items)}
-            canUseLeaf={canUseLeaf}
-          />
+          <DataLayerGroup layer="Custom Fields">
+            <CustomFieldsEditor
+              title="Sustainability Custom Fields"
+              items={form.sustainabilityCustomFields}
+              onChange={(items) => setCustomGroupFields("sustainabilityCustomFields", items)}
+              canUseLeaf={canUseLeaf}
+            />
+          </DataLayerGroup>
         </CollapsibleSection>
         )}
 
@@ -3114,10 +3429,22 @@ export default function AddProductPage() {
         {currentSectionStep === 3 && (
         <CollapsibleSection title="End of Life" color="rose" defaultOpen>
           <DataLayerGroup layer="Regulatory">
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Recycling & Disposal
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Recycling & Disposal
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <TextAreaField
                 label="Recycling / Reuse Potential"
                 value={form.recyclingReusePotential}
@@ -3133,27 +3460,53 @@ export default function AddProductPage() {
                 value={form.unsoldProductsInformation}
                 onChange={(v) => set("unsoldProductsInformation", v)}
               />
-            </fieldset>
+              </div>
+            </details>
           </DataLayerGroup>
 
           <DataLayerGroup layer="Sectoral">
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Expected Waste
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Expected Waste
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <TextAreaField
                 label="Expected Waste"
                 value={form.expectedWaste}
                 onChange={(v) => set("expectedWaste", v)}
               />
-            </fieldset>
+              </div>
+            </details>
           </DataLayerGroup>
 
           <DataLayerGroup layer="Commercial">
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Circularity Options
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Circularity Options
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <div className="space-y-4">
                 <TextAreaField
                   label="Reusability"
@@ -3176,14 +3529,27 @@ export default function AddProductPage() {
                   onChange={(v) => set("upgradeOptions", v)}
                 />
               </div>
-            </fieldset>
+              </div>
+            </details>
           </DataLayerGroup>
 
           <DataLayerGroup layer="Downstream Data">
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                End-of-Life Lifecycle Data
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  End-of-Life Lifecycle Data
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <EventArrayEditor
                 label="End-of-Life History"
                 events={form.endOfLifeHistory}
@@ -3195,12 +3561,25 @@ export default function AddProductPage() {
                 onChange={(v) => set("numberOfLifecycles", v)}
                 type="number"
               />
-            </fieldset>
+              </div>
+            </details>
 
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                End-of-Life Information
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  End-of-Life Information
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <div className="space-y-4">
                 <TextAreaField
                   label="Waste Prevention"
@@ -3224,15 +3603,18 @@ export default function AddProductPage() {
                   type="url"
                 />
               </div>
-            </fieldset>
+              </div>
+            </details>
           </DataLayerGroup>
 
-          <CustomFieldsEditor
-            title="End of Life Custom Fields"
-            items={form.endOfLifeCustomFields}
-            onChange={(items) => setCustomGroupFields("endOfLifeCustomFields", items)}
-            canUseLeaf={canUseLeaf}
-          />
+          <DataLayerGroup layer="Custom Fields">
+            <CustomFieldsEditor
+              title="End of Life Custom Fields"
+              items={form.endOfLifeCustomFields}
+              onChange={(items) => setCustomGroupFields("endOfLifeCustomFields", items)}
+              canUseLeaf={canUseLeaf}
+            />
+          </DataLayerGroup>
         </CollapsibleSection>
         )}
 
@@ -3240,10 +3622,22 @@ export default function AddProductPage() {
         {currentSectionStep === 4 && (
         <CollapsibleSection title="Guidelines & Manuals" color="cyan" defaultOpen>
           <DataLayerGroup layer="Regulatory">
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Assembly & Disassembly Guides
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Assembly & Disassembly Guides
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <div className="grid grid-cols-2 gap-4">
                 <FormField
                   label="Assembly Guideline URL"
@@ -3258,40 +3652,79 @@ export default function AddProductPage() {
                   type="url"
                 />
               </div>
-            </fieldset>
+              </div>
+            </details>
 
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Product Manual
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Product Manual
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <FormField
                 label="Product Manual URL"
                 value={form.productManualUrl}
                 onChange={(v) => set("productManualUrl", v)}
                 type="url"
               />
-            </fieldset>
+              </div>
+            </details>
           </DataLayerGroup>
 
           <DataLayerGroup layer="Sectoral">
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Storage & Transport
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Storage & Transport
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <FormField
                 label="Storage & Transport Guideline URL"
                 value={form.storageGuidelineUrl}
                 onChange={(v) => set("storageGuidelineUrl", v)}
                 type="url"
               />
-            </fieldset>
+              </div>
+            </details>
           </DataLayerGroup>
 
           <DataLayerGroup layer="Commercial">
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Commercial Instructions
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Commercial Instructions
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <div className="grid grid-cols-3 gap-4">
                 <FormField
                   label="Safety Instruction URL"
@@ -3312,12 +3745,25 @@ export default function AddProductPage() {
                   type="url"
                 />
               </div>
-            </fieldset>
+              </div>
+            </details>
 
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Accessibility & Utilization
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Accessibility & Utilization
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <TextAreaField
                 label="Accessibility"
                 value={form.accessibility}
@@ -3328,15 +3774,18 @@ export default function AddProductPage() {
                 value={form.utilizationCharacteristic}
                 onChange={(v) => set("utilizationCharacteristic", v)}
               />
-            </fieldset>
+              </div>
+            </details>
           </DataLayerGroup>
 
-          <CustomFieldsEditor
-            title="Guidelines Custom Fields"
-            items={form.guidelinesCustomFields}
-            onChange={(items) => setCustomGroupFields("guidelinesCustomFields", items)}
-            canUseLeaf={canUseLeaf}
-          />
+          <DataLayerGroup layer="Custom Fields">
+            <CustomFieldsEditor
+              title="Guidelines Custom Fields"
+              items={form.guidelinesCustomFields}
+              onChange={(items) => setCustomGroupFields("guidelinesCustomFields", items)}
+              canUseLeaf={canUseLeaf}
+            />
+          </DataLayerGroup>
         </CollapsibleSection>
         )}
 
@@ -3344,38 +3793,77 @@ export default function AddProductPage() {
         {currentSectionStep === 5 && (
         <CollapsibleSection title="Usage & Maintenance" color="indigo" defaultOpen>
           <DataLayerGroup layer="Downstream Data">
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Maintenance Log
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Maintenance Log
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <EventArrayEditor
                 label="Maintenance Events"
                 events={form.maintenanceLog}
                 onChange={(v) => set("maintenanceLog", v)}
               />
-            </fieldset>
+              </div>
+            </details>
 
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Usage History
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Usage History
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <EventArrayEditor
                 label="Usage Events"
                 events={form.usageHistory}
                 onChange={(v) => set("usageHistory", v)}
               />
-            </fieldset>
+              </div>
+            </details>
 
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Incidents & Errors
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Incidents & Errors
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <EventArrayEditor
                 label="Incident Events"
                 events={form.incidentsAndErrors}
                 onChange={(v) => set("incidentsAndErrors", v)}
               />
-            </fieldset>
+              </div>
+            </details>
           </DataLayerGroup>
         </CollapsibleSection>
         )}
@@ -3389,7 +3877,7 @@ export default function AddProductPage() {
                 setCurrentSectionStep((prev) => Math.max(prev - 1, 0))
               }
               disabled={currentSectionStep === 0}
-              className="px-3 py-1.5 text-sm border border-gray-300 rounded-md disabled:opacity-50"
+              className="px-3 py-1.5 text-sm border border-gray-300 rounded-md disabled:opacity-50 hover:cursor-pointer"
             >
               Previous Section
             </button>
@@ -3401,7 +3889,7 @@ export default function AddProductPage() {
                 )
               }
               disabled={currentSectionStep === sectionSteps.length - 1}
-              className="px-3 py-1.5 text-sm border border-gray-300 rounded-md disabled:opacity-50"
+              className="px-3 py-1.5 text-sm border border-gray-300 rounded-md disabled:opacity-50 hover:cursor-pointer"
             >
               Next Section
             </button>
@@ -3411,7 +3899,7 @@ export default function AddProductPage() {
           <button
             type="submit"
             disabled={submitting}
-            className="px-6 py-3 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="px-6 py-3 bg-[var(--color-brand-pink)] text-white font-bold rounded-xl hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-colors hover:cursor-pointer"
           >
             {submitting ? "Submitting…" : "Add Product"}
           </button>
