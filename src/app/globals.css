@@ -1,20 +1,37 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  --background: #f0f4f7;
   --foreground: #171717;
+  --corp-bg: #f0f4f7;
+  --mix-100: 10%;
+  --mix-300: 30%;
+  --mix-500: 50%;
+  --mix-700: 70%;
+  --mix-900: 90%;
+  --color-brand-blue: #00b5d1;
+  --color-brand-blue-dark: color-mix(in srgb, var(--color-brand-blue), black var(--mix-300));
+  --color-brand-blue-super-dark: color-mix(in srgb, var(--color-brand-blue), black var(--mix-500));
+  --color-brand-blue-light: color-mix(in srgb, var(--color-brand-blue), white var(--mix-700));
+  --color-brand-blue-super-light: color-mix(in srgb, var(--color-brand-blue), white var(--mix-900));
+  --color-brand-pink: #df0f79;
+  --color-brand-pink-dark: color-mix(in srgb, var(--color-brand-pink), black var(--mix-100));
+  --color-brand-pink-super-dark: color-mix(in srgb, var(--color-brand-pink), black var(--mix-300));
+  --color-brand-pink-light: color-mix(in srgb, var(--color-brand-pink), white var(--mix-700));
+  --color-brand-pink-super-light: color-mix(in srgb, var(--color-brand-pink), white var(--mix-900));
+  --font-outfit: "Outfit", sans-serif;
 }
 
 @theme inline {
-  --color-background: var(--background);
+  --color-background: var(--corp-bg);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-outfit);
   --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: var(--corp-bg);
     --foreground: #ededed;
   }
 }
@@ -22,5 +39,5 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), sans-serif;
 }

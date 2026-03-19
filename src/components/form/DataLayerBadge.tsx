@@ -17,7 +17,7 @@ export function DataLayerBadge({ layer }: Readonly<DataLayerBadgeProps>) {
   const color = LAYER_COLORS[layer] || "bg-gray-50 text-gray-700 border-gray-200";
   return (
     <span
-      className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${color}`}
+      className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-[var(--color-brand-pink-super-light)] text-[var(--color-brand-pink-dark)]`}
     >
       {layer}
     </span>

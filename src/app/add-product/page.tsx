@@ -14,6 +14,7 @@ import {
   EXTENSION_SECTION_LABELS,
   type ExtensionSectionKey,
 } from "@/config/product-extension-fields";
+import { AddEntryButton } from "@/components/form/AddEntryButton";
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -264,7 +265,7 @@ function JsonTree({
         <button
           type="button"
           onClick={() => setOpen((prev) => !prev)}
-          className="text-xs text-gray-600 hover:text-gray-900"
+          className="text-xs text-gray-600 hover:text-gray-900 hover:cursor-pointer"
         >
           {open ? "▾" : "▸"} {path.split(".")[path.split(".").length - 1]} [{value.length}]
         </button>
@@ -293,7 +294,7 @@ function JsonTree({
         <button
           type="button"
           onClick={() => setOpen((prev) => !prev)}
-          className="text-xs text-gray-600 hover:text-gray-900"
+          className="text-xs text-gray-600 hover:text-gray-900 hover:cursor-pointer"
         >
           {open ? "▾" : "▸"} {path.split(".")[path.split(".").length - 1]} {"{"}{entries.length}{"}"}
         </button>
@@ -326,9 +327,9 @@ function JsonTree({
   const isLocked = leafUsage !== undefined;
   const leafClasses =
     leafUsage === "mapped"
-      ? "border-emerald-300 bg-emerald-50 text-emerald-900"
+      ? "border-[var(--color-brand-pink)] bg-[var(--color-brand-pink)]/6 text-[var(--color-brand-pink)]"
       : leafUsage === "custom"
-        ? "border-amber-300 bg-amber-50 text-amber-900"
+        ? "border-[var(--color-brand-blue)] bg-[var(--color-brand-blue)]/6 text-[var(--color-brand-blue)]"
         : "border-gray-200 bg-white";
   const leafHint =
     leafUsage === "mapped"
@@ -342,7 +343,7 @@ function JsonTree({
       type="button"
       className={`ml-4 w-full text-left rounded border px-2 py-1 text-xs ${leafClasses} ${
         isLocked ? "cursor-not-allowed opacity-80" : "cursor-grab active:cursor-grabbing"
-      }`}
+      } hover:cursor-pointer`}
       draggable={!isLocked}
       onDragStart={(event) => {
         if (isLocked) {
@@ -470,20 +471,21 @@ function CustomFieldsEditor({
             <button
               type="button"
               onClick={() => removeAt(items, index, onChange)}
-              className="text-red-400 hover:text-red-600 px-2 py-1"
+              className="text-red-400 hover:text-red-600 px-2 py-1 hover:cursor-pointer"
             >
               ✕
             </button>
           </div>
         ))}
       </div>
-      <button
+      {/* <button
         type="button"
         onClick={() => onChange([...items, { _key: uid(), key: "", value: "", sourcePath: undefined }])}
-        className="text-xs px-2 py-1 bg-emerald-50 text-emerald-700 rounded hover:bg-emerald-100"
+        className="text-xs px-2 py-1 bg-[var(--color-brand-blue-super-light)] text-[var(--color-brand-blue-super-dark)] rounded hover:bg-[var(--color-brand-blue-light)] hover:cursor-pointer"
       >
         + Add Custom Field
-      </button>
+      </button> */}
+      <AddEntryButton label="+ Add Custom Field" onClick={() => onChange([...items, { _key: uid(), key: "", value: "", sourcePath: undefined }])} />
     </fieldset>
   );
 }
@@ -574,13 +576,7 @@ function EventArrayEditor({
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <span className="block text-sm font-medium text-gray-700">{label}</span>
-        <button
-          type="button"
-          onClick={() => onChange([...events, emptyEvent()])}
-          className="text-xs px-2 py-1 bg-emerald-50 text-emerald-700 rounded hover:bg-emerald-100"
-        >
-          + Add Entry
-        </button>
+        <AddEntryButton label="+ Add Entry" onClick={() => onChange([...events, emptyEvent()])} />
       </div>
       {events.map((ev, i) => (
         <div key={ev._key} className="flex gap-2 items-start">
@@ -623,7 +619,7 @@ function EventArrayEditor({
           <button
             type="button"
             onClick={() => removeAt(events, i, onChange)}
-            className="text-red-400 hover:text-red-600 px-2 py-2"
+            className="text-red-400 hover:text-red-600 px-2 py-2 hover:cursor-pointer"
           >
             ✕
           </button>
@@ -669,10 +665,7 @@ function EnvironmentalFootprintArrayEditor({
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <span className="block text-sm font-medium text-gray-700">Environmental Footprint</span>
-        <button
-          type="button"
-          onClick={() =>
-            onChange([
+        <AddEntryButton label="+ Add Entry" onClick={() => onChange([
               ...items,
               {
                 _key: uid(),
@@ -680,12 +673,7 @@ function EnvironmentalFootprintArrayEditor({
                 environmentalFootprintMeasuringMethod: "",
                 measurement: emptyMeasurement(),
               },
-            ])
-          }
-          className="text-xs px-2 py-1 bg-emerald-50 text-emerald-700 rounded hover:bg-emerald-100"
-        >
-          + Add Entry
-        </button>
+            ])} />
       </div>
       {items.map((item, i) => (
         <div key={item._key} className="space-y-3 p-3 bg-white border border-gray-200 rounded-lg">
@@ -725,7 +713,7 @@ function EnvironmentalFootprintArrayEditor({
             <button
               type="button"
               onClick={() => removeAt(items, i, onChange)}
-              className="text-red-400 hover:text-red-600 px-2 py-1"
+              className="text-red-400 hover:text-red-600 px-2 py-1 hover:cursor-pointer"
             >
               ✕
             </button>
@@ -749,18 +737,10 @@ function ResourceConsumptionArrayEditor({
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <span className="block text-sm font-medium text-gray-700">{label}</span>
-        <button
-          type="button"
-          onClick={() =>
-            onChange([
+        <AddEntryButton label="+ Add Entry" onClick={() => onChange([
               ...items,
               { _key: uid(), resource: "", measurement: emptyMeasurement() },
-            ])
-          }
-          className="text-xs px-2 py-1 bg-emerald-50 text-emerald-700 rounded hover:bg-emerald-100"
-        >
-          + Add Entry
-        </button>
+            ])} />
       </div>
       {items.map((item, i) => (
         <div key={item._key} className="space-y-3 p-3 bg-white border border-gray-200 rounded-lg">
@@ -781,7 +761,7 @@ function ResourceConsumptionArrayEditor({
             <button
               type="button"
               onClick={() => removeAt(items, i, onChange)}
-              className="text-red-400 hover:text-red-600 px-2 py-1"
+              className="text-red-400 hover:text-red-600 px-2 py-1 hover:cursor-pointer"
             >
               ✕
             </button>
@@ -803,10 +783,7 @@ function EnvironmentalImpactArrayEditor({
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <span className="block text-sm font-medium text-gray-700">Environmental Impact</span>
-        <button
-          type="button"
-          onClick={() =>
-            onChange([
+        <AddEntryButton label="+ Add Entry" onClick={() => onChange([
               ...items,
               {
                 _key: uid(),
@@ -816,12 +793,7 @@ function EnvironmentalImpactArrayEditor({
                 characterizationModel: "",
                 impactIndicator: emptyMeasurement(),
               },
-            ])
-          }
-          className="text-xs px-2 py-1 bg-emerald-50 text-emerald-700 rounded hover:bg-emerald-100"
-        >
-          + Add Entry
-        </button>
+            ])} />
       </div>
       {items.map((item, i) => (
         <div key={item._key} className="space-y-3 p-3 bg-white border border-gray-200 rounded-lg">
@@ -865,7 +837,7 @@ function EnvironmentalImpactArrayEditor({
             <button
               type="button"
               onClick={() => removeAt(items, i, onChange)}
-              className="text-red-400 hover:text-red-600 px-2 py-1"
+              className="text-red-400 hover:text-red-600 px-2 py-1 hover:cursor-pointer"
             >
               ✕
             </button>
@@ -903,26 +875,18 @@ function ComponentArrayEditor({
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <span className="block text-sm font-medium text-gray-700">{label}</span>
-        <button
-          type="button"
-          onClick={() =>
-            onChange([
-              ...items,
-              {
-                _key: uid(),
-                componentName: "",
-                mode: "percentage",
-                componentPercentage: "",
-                componentCountValue: "",
-                componentCountUnit: "",
-                componentCountCustomUnit: "",
-              },
-            ])
-          }
-          className="text-xs px-2 py-1 bg-emerald-50 text-emerald-700 rounded hover:bg-emerald-100"
-        >
-          + Add Component
-        </button>
+        <AddEntryButton label="+ Add Entry" onClick={() => onChange([
+          ...items,
+          {
+            _key: uid(),
+            componentName: "",
+            mode: "percentage",
+            componentPercentage: "",
+            componentCountValue: "",
+            componentCountUnit: "",
+            componentCountCustomUnit: "",
+          },
+        ])} />  
       </div>
       {items.map((m, i) => (
         <div key={m._key} className="grid grid-cols-6 gap-2 items-center">
@@ -1012,7 +976,7 @@ function ComponentArrayEditor({
           <button
             type="button"
             onClick={() => removeAt(items, i, onChange)}
-            className="text-red-400 hover:text-red-600 px-2 py-2"
+            className="text-red-400 hover:text-red-600 px-2 py-2 hover:cursor-pointer"
           >
             ✕
           </button>
@@ -1046,27 +1010,19 @@ function SubstanceArrayEditor({
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <span className="block text-sm font-medium text-gray-700">{label}</span>
-        <button
-          type="button"
-          onClick={() =>
-            onChange([
-              ...items,
-              {
-                _key: uid(),
-                iupacName: "",
-                ecNumber: "",
-                casNumber: "",
-                concentrationLevel: "",
-                locationWithinProduct: "",
-                safeUsageInstruction: "",
-                disassemblyInstruction: "",
-              },
-            ])
-          }
-          className="text-xs px-2 py-1 bg-emerald-50 text-emerald-700 rounded hover:bg-emerald-100"
-        >
-          + Add Substance
-        </button>
+        <AddEntryButton label="+ Add Entry" onClick={() => onChange([
+          ...items,
+          {
+            _key: uid(),
+            iupacName: "",
+            ecNumber: "",
+            casNumber: "",
+            concentrationLevel: "",
+            locationWithinProduct: "",
+            safeUsageInstruction: "",
+            disassemblyInstruction: "",
+          },
+        ])} />  
       </div>
       {items.map((item, i) => (
         <div key={item._key} className="grid grid-cols-1 md:grid-cols-2 gap-2 p-3 bg-white border border-gray-200 rounded-lg">
@@ -1123,7 +1079,7 @@ function SubstanceArrayEditor({
             <button
               type="button"
               onClick={() => removeAt(items, i, onChange)}
-              className="text-red-400 hover:text-red-600 px-2 py-1"
+              className="text-red-400 hover:text-red-600 px-2 py-1 hover:cursor-pointer"
             >
               ✕
             </button>
@@ -1159,13 +1115,7 @@ function RegulationArrayEditor({
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <span className="block text-sm font-medium text-gray-700">Regulations</span>
-        <button
-          type="button"
-          onClick={() => onChange([...items, { _key: uid(), name: "", identifier: "" }])}
-          className="text-xs px-2 py-1 bg-emerald-50 text-emerald-700 rounded hover:bg-emerald-100"
-        >
-          + Add Regulation
-        </button>
+        <AddEntryButton label="+ Add Entry" onClick={() => onChange([...items, { _key: uid(), name: "", identifier: "" }])} />
       </div>
       {items.map((entry, i) => (
         <div key={entry._key} className="flex gap-2 items-start">
@@ -1186,7 +1136,7 @@ function RegulationArrayEditor({
           <button
             type="button"
             onClick={() => removeAt(items, i, onChange)}
-            className="text-red-400 hover:text-red-600 px-2 py-2"
+            className="text-red-400 hover:text-red-600 px-2 py-2 hover:cursor-pointer"
           >
             ✕
           </button>
@@ -1215,13 +1165,7 @@ function NameDescArrayEditor({
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <span className="block text-sm font-medium text-gray-700">{label}</span>
-        <button
-          type="button"
-          onClick={() => onChange([...items, { _key: uid(), name: "", description: "" }])}
-          className="text-xs px-2 py-1 bg-emerald-50 text-emerald-700 rounded hover:bg-emerald-100"
-        >
-          {addLabel}
-        </button>
+        <AddEntryButton label={addLabel} onClick={() => onChange([...items, { _key: uid(), name: "", description: "" }])} />
       </div>
       {items.map((s, i) => (
         <div key={s._key} className="flex gap-2 items-start">
@@ -1242,7 +1186,7 @@ function NameDescArrayEditor({
           <button
             type="button"
             onClick={() => removeAt(items, i, onChange)}
-            className="text-red-400 hover:text-red-600 px-2 py-2"
+            className="text-red-400 hover:text-red-600 px-2 py-2 hover:cursor-pointer"
           >
             ✕
           </button>
@@ -1275,18 +1219,7 @@ function LabelArrayEditor({
         <span className="block text-sm font-medium text-gray-700">
           Product Labels
         </span>
-        <button
-          type="button"
-          onClick={() =>
-            onChange([
-              ...items,
-              { _key: uid(), labelName: "", labelValue: "", labelDescription: "", labelDocumentation: "" },
-            ])
-          }
-          className="text-xs px-2 py-1 bg-emerald-50 text-emerald-700 rounded hover:bg-emerald-100"
-        >
-          + Add Label
-        </button>
+        <AddEntryButton label="+ Add Entry" onClick={() => onChange([...items, { _key: uid(), labelName: "", labelValue: "", labelDescription: "", labelDocumentation: "" }])} />
       </div>
       {items.map((l, i) => (
         <div key={l._key} className="grid grid-cols-2 gap-2 p-3 bg-gray-50 rounded-lg relative">
@@ -1321,7 +1254,7 @@ function LabelArrayEditor({
           <button
             type="button"
             onClick={() => removeAt(items, i, onChange)}
-            className="absolute top-2 right-2 text-red-400 hover:text-red-600"
+            className="absolute top-2 right-2 text-red-400 hover:text-red-600 hover:cursor-pointer"
           >
             ✕
           </button>
@@ -1605,16 +1538,38 @@ function renderExtensionSection(
   }
 
   return (
-    <details open className="bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
-      <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100">
-        {EXTENSION_SECTION_LABELS[section]}
+    <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+      <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+        <span className="flex items-center justify-between">
+          {EXTENSION_SECTION_LABELS[section]}
+          <svg
+            className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </span>
       </summary>
       <div className="space-y-4 px-4 pb-4 pt-2">
       {Object.entries(groups).map(([groupName, groupFields]) => {
         return (
-          <details key={groupName} className="border border-gray-200 rounded-lg bg-white">
-            <summary className="cursor-pointer list-none px-4 py-3 text-xs font-semibold uppercase tracking-wide text-gray-600">
-              {groupName}
+          <details key={groupName} className="group/group border border-gray-200 rounded-lg bg-white">
+            <summary className="cursor-pointer list-none px-4 py-3 text-xs font-semibold uppercase tracking-wide text-gray-600 [&::-webkit-details-marker]:hidden">
+              <span className="flex items-center justify-between">
+                {groupName}
+                <svg
+                  className="w-4 h-4 text-gray-400 transition-transform group-open/group:rotate-180"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </span>
             </summary>
             <div className="px-4 pb-4 grid grid-cols-2 gap-4">
               {groupFields.map((field) => {
@@ -2449,11 +2404,11 @@ export default function AddProductPage() {
           </div>
 
           <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-gray-600">
-            <span className="inline-flex items-center gap-1 rounded border border-emerald-300 bg-emerald-50 px-2 py-0.5">
-              mapped field
+            <span className="inline-flex items-center gap-1 rounded border border-[var(--color-brand-pink)] bg-[var(--color-brand-pink-super-light)] px-2 py-0.5">
+              Mapped field
             </span>
-            <span className="inline-flex items-center gap-1 rounded border border-amber-300 bg-amber-50 px-2 py-0.5">
-              custom field
+            <span className="inline-flex items-center gap-1 rounded border border-[var(--color-brand-blue)] bg-[var(--color-brand-blue-super-light)] px-2 py-0.5">
+              Custom field
             </span>
           </div>
 
@@ -2464,17 +2419,17 @@ export default function AddProductPage() {
                 <p className="text-xs text-gray-500">No mappings yet.</p>
               )}
               {mappings.map((mapping) => (
-                <div key={`${mapping.targetField}:${mapping.sourcePath}`} className="rounded-md border border-emerald-200 bg-emerald-50 px-2 py-1">
+                <div key={`${mapping.targetField}:${mapping.sourcePath}`} className="rounded-md border border-[var(--color-brand-pink)] bg-[var(--color-brand-pink)]/6 px-2 py-1">
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
-                      <div className="text-[11px] font-medium text-emerald-900 truncate">{mapping.targetField}</div>
-                      <div className="text-[11px] text-emerald-700 truncate">{mapping.sourcePath}</div>
-                      <div className="text-[11px] text-emerald-600 truncate">{mapping.value}</div>
+                      <div className="text-[11px] font-medium text-[var(--color-brand-pink)] truncate">{mapping.targetField}</div>
+                      <div className="text-[11px] text-[var(--color-brand-pink)]/80 truncate">{mapping.sourcePath}</div>
+                      <div className="text-[11px] text-[var(--color-brand-pink)]/60 truncate">{mapping.value}</div>
                     </div>
                     <button
                       type="button"
                       onClick={() => removeMapping(mapping.sourcePath)}
-                      className="text-red-500 hover:text-red-700 text-[11px]"
+                      className="text-red-500 hover:text-red-700 text-[11px] hover:cursor-pointer"
                     >
                       Remove
                     </button>
@@ -2489,7 +2444,7 @@ export default function AddProductPage() {
       <div className="mb-8">
         <button
           onClick={() => router.back()}
-          className="text-sm text-gray-500 hover:text-gray-700 mb-4 inline-flex items-center gap-1"
+          className="text-sm text-gray-500 hover:text-gray-700 mb-4 inline-flex items-center gap-1 hover:cursor-pointer"
         >
           ← Back
         </button>
@@ -2516,10 +2471,10 @@ export default function AddProductPage() {
                   key={step}
                   type="button"
                   onClick={() => setCurrentSectionStep(index)}
-                  className={`px-3 py-1.5 text-xs rounded-full border transition-colors ${
+                  className={`px-3 py-1.5 text-xs rounded-full border transition-colors hover:cursor-pointer ${
                     isActive
-                      ? "bg-emerald-100 border-emerald-300 text-emerald-800"
-                      : "bg-white border-gray-200 text-gray-600 hover:bg-gray-50"
+                      ? "bg-[var(--color-brand-pink)] border-[var(--color-brand-pink)] text-white"
+                      : "bg-white border-gray-200 text-gray-600 hover:bg-gray-50 hover:cursor-pointer"
                   }`}
                 >
                   {index + 1}. {step}
@@ -2530,11 +2485,11 @@ export default function AddProductPage() {
           <div className="flex items-center justify-between text-xs text-gray-500">
             <span>Step {currentSectionStep + 1} of {sectionSteps.length}</span>
             <div className="flex items-center gap-3">
-              <span>{sectionSteps[currentSectionStep]}</span>
+              {/* <span>{sectionSteps[currentSectionStep]}</span> */}
               <button
                 type="button"
                 onClick={clearCurrentStep}
-                className="px-2 py-1 border border-gray-300 rounded text-[11px] text-gray-600 disabled:opacity-50"
+                className="px-2 py-1 border border-gray-300 rounded text-[11px] text-gray-600 disabled:opacity-50 hover:cursor-pointer"
               >
                 Clear Current Step
               </button>
@@ -2580,7 +2535,7 @@ export default function AddProductPage() {
             {/* ProductIdentificationInformation */}
             <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
               
-              <legend className="text-sm font-semibold text-gray-800">
+              <legend className="text-sm mb-0 font-semibold text-gray-800">
                 Product Identification Information
               </legend>
               
@@ -2645,7 +2600,7 @@ export default function AddProductPage() {
 
             {/* Manufacturer */}
             <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
+              <legend className="text-sm mb-0 font-semibold text-gray-800">
                 Manufacturer
               </legend>
               <div>
@@ -2920,7 +2875,6 @@ export default function AddProductPage() {
                 items={form.certifications}
                 onChange={(v) => set("certifications", v)}
                 namePlaceholder="Certification name"
-                addLabel="+ Add Certification"
               />
             </fieldset>
 
@@ -3389,7 +3343,7 @@ export default function AddProductPage() {
                 setCurrentSectionStep((prev) => Math.max(prev - 1, 0))
               }
               disabled={currentSectionStep === 0}
-              className="px-3 py-1.5 text-sm border border-gray-300 rounded-md disabled:opacity-50"
+              className="px-3 py-1.5 text-sm border border-gray-300 rounded-md disabled:opacity-50 hover:cursor-pointer"
             >
               Previous Section
             </button>
@@ -3401,7 +3355,7 @@ export default function AddProductPage() {
                 )
               }
               disabled={currentSectionStep === sectionSteps.length - 1}
-              className="px-3 py-1.5 text-sm border border-gray-300 rounded-md disabled:opacity-50"
+              className="px-3 py-1.5 text-sm border border-gray-300 rounded-md disabled:opacity-50 hover:cursor-pointer"
             >
               Next Section
             </button>
@@ -3411,7 +3365,7 @@ export default function AddProductPage() {
           <button
             type="submit"
             disabled={submitting}
-            className="px-6 py-3 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="px-6 py-3 bg-[var(--color-brand-pink)] text-white font-bold rounded-xl hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-colors hover:cursor-pointer"
           >
             {submitting ? "Submitting…" : "Add Product"}
           </button>

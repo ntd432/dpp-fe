@@ -16,14 +16,14 @@ export default function Navbar() {
     <nav className="bg-white border-b border-gray-200 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center">
+          <button className="flex items-center gap-2 hover:cursor-pointer" onClick={() => globalThis.location.href = "/"}>
+            <div className="w-8 h-8 bg-[var(--color-brand-pink)] rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">DPP</span>
             </div>
             <span className="text-lg font-semibold text-gray-900">
               Digital Product Passport
             </span>
-          </div>
+          </button>
           <div className="flex space-x-1">
             {navItems.map((item) => {
               const isActive = pathname === item.href;
@@ -31,10 +31,10 @@ export default function Navbar() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  className={`px-4 py-2 transition duration-500 rounded-lg text-sm font-medium transition-colors ${
                     isActive
-                      ? "bg-emerald-50 text-emerald-700"
-                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                      ? "bg-[var(--color-brand-pink)]/20 text-[var(--color-brand-pink)]"
+                      : "text-gray-600 hover:text-white transition duration-300 hover:bg-[var(--color-brand-pink)]"
                   }`}
                 >
                   {item.label}
