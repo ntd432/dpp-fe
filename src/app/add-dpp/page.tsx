@@ -496,8 +496,7 @@ export default function AddDppPage() {
                     ))}
                 </select>
                 </div>
-        </CollapsibleSection>
-        
+        </CollapsibleSection>  
 
         <CollapsibleSection title="Product Supply Chain Information" color="amber" defaultOpen>
           <DataLayerGroup layer="Regulatory">
