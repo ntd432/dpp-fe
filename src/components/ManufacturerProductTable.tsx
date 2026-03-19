@@ -74,7 +74,7 @@ export default function ManufacturerProductTable() {
               value={selectedId}
               onChange={(e) => setSelectedId(e.target.value)}
               disabled={loadingManufacturers}
-              className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 shadow-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 shadow-sm focus:ring-2 focus:ring-[var(--color-brand-blue-light)] focus:border-[var(--color-brand-blue-light)] focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <option value="">
                 {loadingManufacturers
