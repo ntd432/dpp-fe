@@ -402,8 +402,9 @@ function CustomFieldsEditor({
   };
 
   return (
-    <fieldset
-      className="space-y-3 p-4 bg-gray-50 rounded-lg border border-dashed border-gray-300"
+    <details
+      open
+      className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden"
       onDragOver={(event) => {
         if (!canHandleDrop(event)) return;
         event.preventDefault();
@@ -418,7 +419,21 @@ function CustomFieldsEditor({
         appendLeafAsNewField(leaf);
       }}
     >
-      <legend className="text-sm font-semibold text-gray-800">{title}</legend>
+      <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+        <span className="flex items-center justify-between">
+          {title}
+          <svg
+            className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </span>
+      </summary>
+      <div className="space-y-3 px-4 pb-4 pt-2">
       <p className="text-xs text-gray-500">
         Define manual fields and drag imported JSON values here to auto-fill key and value.
       </p>
@@ -486,7 +501,8 @@ function CustomFieldsEditor({
         + Add Custom Field
       </button> */}
       <AddEntryButton label="+ Add Custom Field" onClick={() => onChange([...items, { _key: uid(), key: "", value: "", sourcePath: undefined }])} />
-    </fieldset>
+      </div>
+    </details>
   );
 }
 
@@ -2533,11 +2549,22 @@ export default function AddProductPage() {
           {/* Regulatory layer */}
           <DataLayerGroup layer="Regulatory">
             {/* ProductIdentificationInformation */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              
-              <legend className="text-sm mb-0 font-semibold text-gray-800">
-                Product Identification Information
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Product Identification Information
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               
               <div className="grid grid-cols-2 gap-4">
                 <FormField
@@ -2596,13 +2623,26 @@ export default function AddProductPage() {
                 value={form.description}
                 onChange={(v) => set("description", v)}
               />
-            </fieldset>
+              </div>
+            </details>
 
             {/* Manufacturer */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm mb-0 font-semibold text-gray-800">
-                Manufacturer
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Manufacturer
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <div>
                 <label
                   htmlFor="manufacturer-select"
@@ -2655,13 +2695,26 @@ export default function AddProductPage() {
                   />
                 </div>
               )}
-            </fieldset>
+              </div>
+            </details>
 
             {/* ComponentInformation */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Component Information
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Component Information
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <ComponentArrayEditor
                 label="Component Composition"
                 items={form.componentComposition}
@@ -2679,43 +2732,84 @@ export default function AddProductPage() {
                 items={form.recycledReusedContent}
                 onChange={(v) => set("recycledReusedContent", v)}
               />
-            </fieldset>
+              </div>
+            </details>
 
             {/* SparePartsAvailability */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Spare Parts Availability
-              </legend>
-              <TextAreaField
-                label="Spare Parts"
-                value={form.sparePartsAvailability}
-                onChange={(v) => set("sparePartsAvailability", v)}
-              />
-            </fieldset>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Spare Parts Availability
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
+                <TextAreaField
+                    label="Spare Parts"
+                    value={form.sparePartsAvailability}
+                    onChange={(v) => set("sparePartsAvailability", v)}
+                  />
+              </div>
+            </details>
 
             {/* HazardousSubstances */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Hazardous Substances
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Hazardous Substances
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <SubstanceArrayEditor
                 label="Hazardous Substances"
                 items={form.hazardousSubstances}
                 onChange={(v) => set("hazardousSubstances", v)}
               />
-            </fieldset>
+              </div>
+            </details>
 
             {/* SubstancesOfConcern */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Substances of Concern
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Substances of Concern
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <SubstanceArrayEditor
                 label="Substances of Concern"
                 items={form.substancesOfConcern}
                 onChange={(v) => set("substancesOfConcern", v)}
               />
-            </fieldset>
+              </div>
+            </details>
 
             {/* SectorRequiredInformation */}
             {renderExtensionSection("sectorRequiredInformation", form, setField)}
@@ -2728,39 +2822,77 @@ export default function AddProductPage() {
 
             {renderExtensionSection("sectorNonRequiredInformation", form, setField)}
 
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Related Objects
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Related Objects
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <TextAreaField
                 label="One related object URI/ID per line"
                 value={form.relatedObjectsRaw}
                 onChange={(v) => set("relatedObjectsRaw", v)}
                 rows={4}
               />
-            </fieldset>
+              </div>
+            </details>
 
             {/* TestReport */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Test Report
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Test Report
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <FormField
                 label="Test Report URL"
                 value={form.testReport}
                 onChange={(v) => set("testReport", v)}
                 type="url"
               />
-            </fieldset>
+              </div>
+            </details>
           </DataLayerGroup>
 
           {/* Commercial layer */}
           <DataLayerGroup layer="Commercial">
             {/* ProductCommercialInformation */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Product Commercial Information
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Product Commercial Information
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <div className="grid grid-cols-2 gap-4">
                 <FormField
                   label="Image URL"
@@ -2786,39 +2918,68 @@ export default function AddProductPage() {
                   onChange={(v) => set("takebackOption", v)}
                 />
               </div>
-            </fieldset>
+              </div>
+            </details>
 
             {/* QualityAssessment */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Quality Assessment
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Quality Assessment
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <TextAreaField
                 label="Quality Assessment"
                 value={form.qualityAssessment}
                 onChange={(v) => set("qualityAssessment", v)}
               />
-            </fieldset>
+              </div>
+            </details>
 
             {/* IdentifiedRisk */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Identified Risk
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Identified Risk
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <TextAreaField
                 label="Identified Risk"
                 value={form.identifiedRisk}
                 onChange={(v) => set("identifiedRisk", v)}
               />
-            </fieldset>
+              </div>
+            </details>
           </DataLayerGroup>
 
-          <CustomFieldsEditor
-            title="Product Information Custom Fields"
-            items={form.productInfoCustomFields}
-            onChange={(items) => setCustomGroupFields("productInfoCustomFields", items)}
-            canUseLeaf={canUseLeaf}
-          />
+          <DataLayerGroup layer="Custom Fields">
+            <CustomFieldsEditor
+              title="Product Information Custom Fields"
+              items={form.productInfoCustomFields}
+              onChange={(items) => setCustomGroupFields("productInfoCustomFields", items)}
+              canUseLeaf={canUseLeaf}
+            />
+          </DataLayerGroup>
         </CollapsibleSection>
         )}
 
@@ -2827,62 +2988,126 @@ export default function AddProductPage() {
         <CollapsibleSection title="Compliance" color="purple" defaultOpen>
           <DataLayerGroup layer="Regulatory">
             {/* Regulation */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Regulations
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Regulations
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <RegulationArrayEditor
                 items={form.regulations}
                 onChange={(v) => set("regulations", v)}
               />
-            </fieldset>
+              </div>
+            </details>
 
             {/* ComplianceLabel */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Product Labels
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Product Labels
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <LabelArrayEditor
                 items={form.productLabels}
                 onChange={(v) => set("productLabels", v)}
               />
-            </fieldset>
+              </div>
+            </details>
           </DataLayerGroup>
 
           <DataLayerGroup layer="Sectoral">
             {/* ProductStatusAssessment */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Product Status Assessment
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Product Status Assessment
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <FormField
                 label="Assessment URL"
                 value={form.productStatusAssessment}
                 onChange={(v) => set("productStatusAssessment", v)}
                 type="url"
               />
-            </fieldset>
+              </div>
+            </details>
           </DataLayerGroup>
 
           <DataLayerGroup layer="Commercial">
             {/* Certification */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Certifications
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Certifications
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <NameDescArrayEditor
                 label="Certifications"
                 items={form.certifications}
                 onChange={(v) => set("certifications", v)}
                 namePlaceholder="Certification name"
               />
-            </fieldset>
+              </div>
+            </details>
 
             {/* DataManagementMethod */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Data Management Method
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Data Management Method
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <div className="grid grid-cols-2 gap-4">
                 <FormField
                   label="Name"
@@ -2895,15 +3120,19 @@ export default function AddProductPage() {
                   onChange={(v) => set("dmmIdentifier", v)}
                 />
               </div>
-            </fieldset>
+              </div>
+            </details>
           </DataLayerGroup>
 
-          <CustomFieldsEditor
-            title="Compliance Custom Fields"
-            items={form.complianceCustomFields}
-            onChange={(items) => setCustomGroupFields("complianceCustomFields", items)}
-            canUseLeaf={canUseLeaf}
-          />
+          <DataLayerGroup layer="Custom Fields">
+            <CustomFieldsEditor
+              title="Compliance Custom Fields"
+              items={form.complianceCustomFields}
+              onChange={(items) => setCustomGroupFields("complianceCustomFields", items)}
+              canUseLeaf={canUseLeaf}
+            />
+          </DataLayerGroup>
+          
         </CollapsibleSection>
         )}
 
@@ -2912,10 +3141,22 @@ export default function AddProductPage() {
         <CollapsibleSection title="Sustainability" color="emerald" defaultOpen>
           <DataLayerGroup layer="Regulatory">
             {/* SustainabilityPerformance */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Sustainability Performance
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Sustainability Performance
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <EnvironmentalFootprintArrayEditor
                 items={form.environmentalFootprints}
                 onChange={(v) => set("environmentalFootprints", v)}
@@ -2930,50 +3171,102 @@ export default function AddProductPage() {
                 value={form.plasticsRelease}
                 onChange={(v) => set("plasticsRelease", v)}
               />
-            </fieldset>
+              </div>
+            </details>
           </DataLayerGroup>
 
           <DataLayerGroup layer="Sectoral">
             {/* Decomposability */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Decomposability
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Decomposability
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <TextAreaField
                 label="Decomposability"
                 value={form.decomposability}
                 onChange={(v) => set("decomposability", v)}
               />
-            </fieldset>
+              </div>
+            </details>
 
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Sector Sustainability Indicators
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Sector Sustainability Indicators
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <TextAreaField
                 label="Sector indicators"
                 value={form.sectorSustainabilityIndicatorsText}
                 onChange={(v) => set("sectorSustainabilityIndicatorsText", v)}
               />
-            </fieldset>
+              </div>
+            </details>
 
             {/* CriticalRawMaterial */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Critical Raw Materials
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Critical Raw Materials
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <ComponentArrayEditor
                 label="Critical Raw Components"
                 items={form.criticalRawMaterials}
                 onChange={(v) => set("criticalRawMaterials", v)}
               />
-            </fieldset>
+              </div>
+            </details>
 
             {/* LifeCycleAssessment */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Life Cycle Assessment
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Life Cycle Assessment
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <FormField
                 label="LCA Report URL"
                 value={form.lifeCycleAssessmentReport}
@@ -2984,49 +3277,101 @@ export default function AddProductPage() {
                 items={form.environmentalImpacts}
                 onChange={(v) => set("environmentalImpacts", v)}
               />
-            </fieldset>
+              </div>
+            </details>
           </DataLayerGroup>
 
           <DataLayerGroup layer="Commercial">
             {/* RenewableNonRenewableContent */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Renewable / Non-Renewable Content
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Renewable / Non-Renewable Content
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <ComponentArrayEditor
                 label="Components"
                 items={form.renewableNonRenewableContent}
                 onChange={(v) => set("renewableNonRenewableContent", v)}
               />
-            </fieldset>
+              </div>
+            </details>
 
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Circular Economy Indicator
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Circular Economy Indicator
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <TextAreaField
                 label="Circular economy indicator"
                 value={form.circularEconomyIndicatorText}
                 onChange={(v) => set("circularEconomyIndicatorText", v)}
               />
-            </fieldset>
+              </div>
+            </details>
 
             {/* SocialIndicator */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Social Indicator
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Social Indicator
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <TextAreaField
                 label="Labour Conditions"
                 value={form.labourConditions}
                 onChange={(v) => set("labourConditions", v)}
               />
-            </fieldset>
+              </div>
+            </details>
 
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Sustainability Attributes
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Sustainability Attributes
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <div className="space-y-4">
                 <ResourceConsumptionArrayEditor
                   label="Resource Consumption When Using"
@@ -3039,28 +3384,44 @@ export default function AddProductPage() {
                   onChange={(v) => set("recoveringResourceConsumptions", v)}
                 />
               </div>
-            </fieldset>
+              </div>
+            </details>
 
             {/* EnvironmentDeclaration */}
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Environment Declaration
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Environment Declaration
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <FormField
                 label="Declaration URL"
                 value={form.environmentDeclaration}
                 onChange={(v) => set("environmentDeclaration", v)}
                 type="url"
               />
-            </fieldset>
+              </div>
+            </details>
           </DataLayerGroup>
 
-          <CustomFieldsEditor
-            title="Sustainability Custom Fields"
-            items={form.sustainabilityCustomFields}
-            onChange={(items) => setCustomGroupFields("sustainabilityCustomFields", items)}
-            canUseLeaf={canUseLeaf}
-          />
+          <DataLayerGroup layer="Custom Fields">
+            <CustomFieldsEditor
+              title="Sustainability Custom Fields"
+              items={form.sustainabilityCustomFields}
+              onChange={(items) => setCustomGroupFields("sustainabilityCustomFields", items)}
+              canUseLeaf={canUseLeaf}
+            />
+          </DataLayerGroup>
         </CollapsibleSection>
         )}
 
@@ -3068,10 +3429,22 @@ export default function AddProductPage() {
         {currentSectionStep === 3 && (
         <CollapsibleSection title="End of Life" color="rose" defaultOpen>
           <DataLayerGroup layer="Regulatory">
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Recycling & Disposal
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Recycling & Disposal
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <TextAreaField
                 label="Recycling / Reuse Potential"
                 value={form.recyclingReusePotential}
@@ -3087,27 +3460,53 @@ export default function AddProductPage() {
                 value={form.unsoldProductsInformation}
                 onChange={(v) => set("unsoldProductsInformation", v)}
               />
-            </fieldset>
+              </div>
+            </details>
           </DataLayerGroup>
 
           <DataLayerGroup layer="Sectoral">
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Expected Waste
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Expected Waste
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <TextAreaField
                 label="Expected Waste"
                 value={form.expectedWaste}
                 onChange={(v) => set("expectedWaste", v)}
               />
-            </fieldset>
+              </div>
+            </details>
           </DataLayerGroup>
 
           <DataLayerGroup layer="Commercial">
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Circularity Options
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Circularity Options
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <div className="space-y-4">
                 <TextAreaField
                   label="Reusability"
@@ -3130,14 +3529,27 @@ export default function AddProductPage() {
                   onChange={(v) => set("upgradeOptions", v)}
                 />
               </div>
-            </fieldset>
+              </div>
+            </details>
           </DataLayerGroup>
 
           <DataLayerGroup layer="Downstream Data">
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                End-of-Life Lifecycle Data
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  End-of-Life Lifecycle Data
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <EventArrayEditor
                 label="End-of-Life History"
                 events={form.endOfLifeHistory}
@@ -3149,12 +3561,25 @@ export default function AddProductPage() {
                 onChange={(v) => set("numberOfLifecycles", v)}
                 type="number"
               />
-            </fieldset>
+              </div>
+            </details>
 
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                End-of-Life Information
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  End-of-Life Information
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <div className="space-y-4">
                 <TextAreaField
                   label="Waste Prevention"
@@ -3178,15 +3603,18 @@ export default function AddProductPage() {
                   type="url"
                 />
               </div>
-            </fieldset>
+              </div>
+            </details>
           </DataLayerGroup>
 
-          <CustomFieldsEditor
-            title="End of Life Custom Fields"
-            items={form.endOfLifeCustomFields}
-            onChange={(items) => setCustomGroupFields("endOfLifeCustomFields", items)}
-            canUseLeaf={canUseLeaf}
-          />
+          <DataLayerGroup layer="Custom Fields">
+            <CustomFieldsEditor
+              title="End of Life Custom Fields"
+              items={form.endOfLifeCustomFields}
+              onChange={(items) => setCustomGroupFields("endOfLifeCustomFields", items)}
+              canUseLeaf={canUseLeaf}
+            />
+          </DataLayerGroup>
         </CollapsibleSection>
         )}
 
@@ -3194,10 +3622,22 @@ export default function AddProductPage() {
         {currentSectionStep === 4 && (
         <CollapsibleSection title="Guidelines & Manuals" color="cyan" defaultOpen>
           <DataLayerGroup layer="Regulatory">
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Assembly & Disassembly Guides
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Assembly & Disassembly Guides
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <div className="grid grid-cols-2 gap-4">
                 <FormField
                   label="Assembly Guideline URL"
@@ -3212,40 +3652,79 @@ export default function AddProductPage() {
                   type="url"
                 />
               </div>
-            </fieldset>
+              </div>
+            </details>
 
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Product Manual
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Product Manual
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <FormField
                 label="Product Manual URL"
                 value={form.productManualUrl}
                 onChange={(v) => set("productManualUrl", v)}
                 type="url"
               />
-            </fieldset>
+              </div>
+            </details>
           </DataLayerGroup>
 
           <DataLayerGroup layer="Sectoral">
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Storage & Transport
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Storage & Transport
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <FormField
                 label="Storage & Transport Guideline URL"
                 value={form.storageGuidelineUrl}
                 onChange={(v) => set("storageGuidelineUrl", v)}
                 type="url"
               />
-            </fieldset>
+              </div>
+            </details>
           </DataLayerGroup>
 
           <DataLayerGroup layer="Commercial">
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Commercial Instructions
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Commercial Instructions
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <div className="grid grid-cols-3 gap-4">
                 <FormField
                   label="Safety Instruction URL"
@@ -3266,12 +3745,25 @@ export default function AddProductPage() {
                   type="url"
                 />
               </div>
-            </fieldset>
+              </div>
+            </details>
 
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Accessibility & Utilization
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Accessibility & Utilization
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <TextAreaField
                 label="Accessibility"
                 value={form.accessibility}
@@ -3282,15 +3774,18 @@ export default function AddProductPage() {
                 value={form.utilizationCharacteristic}
                 onChange={(v) => set("utilizationCharacteristic", v)}
               />
-            </fieldset>
+              </div>
+            </details>
           </DataLayerGroup>
 
-          <CustomFieldsEditor
-            title="Guidelines Custom Fields"
-            items={form.guidelinesCustomFields}
-            onChange={(items) => setCustomGroupFields("guidelinesCustomFields", items)}
-            canUseLeaf={canUseLeaf}
-          />
+          <DataLayerGroup layer="Custom Fields">
+            <CustomFieldsEditor
+              title="Guidelines Custom Fields"
+              items={form.guidelinesCustomFields}
+              onChange={(items) => setCustomGroupFields("guidelinesCustomFields", items)}
+              canUseLeaf={canUseLeaf}
+            />
+          </DataLayerGroup>
         </CollapsibleSection>
         )}
 
@@ -3298,38 +3793,77 @@ export default function AddProductPage() {
         {currentSectionStep === 5 && (
         <CollapsibleSection title="Usage & Maintenance" color="indigo" defaultOpen>
           <DataLayerGroup layer="Downstream Data">
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Maintenance Log
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Maintenance Log
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <EventArrayEditor
                 label="Maintenance Events"
                 events={form.maintenanceLog}
                 onChange={(v) => set("maintenanceLog", v)}
               />
-            </fieldset>
+              </div>
+            </details>
 
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Usage History
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Usage History
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <EventArrayEditor
                 label="Usage Events"
                 events={form.usageHistory}
                 onChange={(v) => set("usageHistory", v)}
               />
-            </fieldset>
+              </div>
+            </details>
 
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Incidents & Errors
-              </legend>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Incidents & Errors
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
               <EventArrayEditor
                 label="Incident Events"
                 events={form.incidentsAndErrors}
                 onChange={(v) => set("incidentsAndErrors", v)}
               />
-            </fieldset>
+              </div>
+            </details>
           </DataLayerGroup>
         </CollapsibleSection>
         )}
