@@ -877,17 +877,22 @@ interface ComponentEntry {
   componentCountValue: string;
   componentCountUnit: string;
   componentCountCustomUnit: string;
+  componentReference: string;
+  componentURI: string;
+  componentSupplierRef: string;
 }
 
 function ComponentArrayEditor({
   label,
   items,
   onChange,
+  organizations = [],
   showPercentage = true,
 }: Readonly<{
   label: string;
   items: ComponentEntry[];
   onChange: (items: ComponentEntry[]) => void;
+  organizations?: ManufacturerOption[];
   showPercentage?: boolean;
 }>) {
   return (
@@ -904,20 +909,58 @@ function ComponentArrayEditor({
             componentCountValue: "",
             componentCountUnit: "",
             componentCountCustomUnit: "",
+            componentReference: "",
+            componentURI: "",
+            componentSupplierRef: "",
           },
         ])} />  
       </div>
       {items.map((m, i) => (
-        <div key={m._key} className="grid grid-cols-6 gap-2 items-center">
-          <input
-            type="text"
-            placeholder="Component name"
-            value={m.componentName}
-            onChange={(e) => updateAt(items, i, "componentName", e.target.value, onChange)}
-            className={`col-span-2 ${INPUT_CLASS}`}
-          />
+        <div key={m._key} className="space-y-2 p-3 bg-white border border-gray-200 rounded-lg">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 items-center">
+            <input
+              type="text"
+              placeholder="Component name"
+              value={m.componentName}
+              onChange={(e) => updateAt(items, i, "componentName", e.target.value, onChange)}
+              className={INPUT_CLASS}
+            />
+            <input
+              type="text"
+              placeholder="Component reference"
+              value={m.componentReference}
+              onChange={(e) => updateAt(items, i, "componentReference", e.target.value, onChange)}
+              className={INPUT_CLASS}
+            />
+            <input
+              type="url"
+              placeholder="Component URI"
+              value={m.componentURI}
+              onChange={(e) => updateAt(items, i, "componentURI", e.target.value, onChange)}
+              className={INPUT_CLASS}
+            />
+            <div>
+              <select
+                id={`component-supplier-${m._key}`}
+                value={m.componentSupplierRef}
+                onChange={(e) => updateAt(items, i, "componentSupplierRef", e.target.value, onChange)}
+                className={INPUT_CLASS}
+              >
+                <option value="">Select a supplier...</option>
+                {organizations.map((org) => {
+                  const value = org.id ?? org.identifier ?? org.name ?? "";
+                  return (
+                    <option key={org.id ?? org.identifier ?? org.name} value={value}>
+                      {org.name ?? org.identifier ?? "Unknown organization"}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+          </div>
+
           {showPercentage && (
-            <>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-2 items-center">
               <select
                 value={m.mode}
                 onChange={(e) =>
@@ -990,15 +1033,18 @@ function ComponentArrayEditor({
                   className={INPUT_CLASS}
                 />
               )}
-            </>
+            </div>
           )}
-          <button
-            type="button"
-            onClick={() => removeAt(items, i, onChange)}
-            className="text-red-400 hover:text-red-600 px-2 py-2 hover:cursor-pointer"
-          >
-            ✕
-          </button>
+
+          <div className="flex justify-end">
+            <button
+              type="button"
+              onClick={() => removeAt(items, i, onChange)}
+              className="text-red-400 hover:text-red-600 px-2 py-2 hover:cursor-pointer"
+            >
+              ✕
+            </button>
+          </div>
         </div>
       ))}
     </div>
@@ -1673,7 +1719,10 @@ function renderExtensionSection(
 
 // ── Build payload ───────────────────────────────────────────────────────────
 
-function buildPayload(f: FormState): Record<string, unknown> {
+function buildPayload(
+  f: FormState,
+  organizations: ManufacturerOption[] = [],
+): Record<string, unknown> {
   const formatTime = (t: string) => (t ? t.replace("T", "T") + ":00Z" : "");
   const toBoolean = (value: string): boolean | "" =>
     value === "true" ? true : value === "false" ? false : "";
@@ -1681,8 +1730,33 @@ function buildPayload(f: FormState): Record<string, unknown> {
   const resolveUnit = (m: MeasurementValue) =>
     m.unit === "custom" ? m.customUnit : m.unit;
 
+  const resolveSupplier = (supplierRef: string): Record<string, unknown> => {
+    if (!supplierRef) return {};
+
+    const selected = organizations.find(
+      (org) =>
+        org.id === supplierRef ||
+        org.identifier === supplierRef ||
+        org.name === supplierRef,
+    );
+
+    if (!selected) {
+      return { id: supplierRef };
+    }
+
+    return {
+      ...(selected.id ? { id: selected.id } : {}),
+      ...(selected.name ? { name: selected.name } : {}),
+      ...(selected.url ? { url: selected.url } : {}),
+      ...(selected.identifier ? { identifier: selected.identifier } : {}),
+    };
+  };
+
   const toComponent = (m: ComponentEntry): Record<string, unknown> => ({
     componentName: m.componentName,
+    componentReference: m.componentReference,
+    componentURI: m.componentURI,
+    componentSupplier: resolveSupplier(m.componentSupplierRef),
     ...(m.mode === "percentage" && m.componentPercentage
       ? { componentPercentage: Number(m.componentPercentage) }
       : {}),
@@ -2382,7 +2456,7 @@ export default function AddProductPage() {
     setSuccess(false);
 
     try {
-      const payload = buildPayload(form);
+      const payload = buildPayload(form, manufacturers);
       const res = await fetch("/api/products", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

@@ -231,6 +231,7 @@ export function ProductInformationStep({ shared }: { shared: any }) {
                 label="Component Composition"
                 items={form.componentComposition}
                 onChange={(v: any) => set("componentComposition", v)}
+                organizations={manufacturers}
                 showPercentage
               />
               <FormField
@@ -243,6 +244,7 @@ export function ProductInformationStep({ shared }: { shared: any }) {
                 label="Recycled / Reused Content"
                 items={form.recycledReusedContent}
                 onChange={(v: any) => set("recycledReusedContent", v)}
+                organizations={manufacturers}
               />
               </div>
             </details>
