@@ -1,25 +1,30 @@
-import App from "@triply/triplydb";
 import { NextRequest, NextResponse } from "next/server";
-import { toJsonLdPayload, TriplyUploadError, uploadToTriplyDB } from "@/lib/triplydb-client";
+import { toJsonLdPayload, transformToJsonFromDescribeResult, TriplyUploadError, uploadToTriplyDB } from "@/lib/triplydb-client";
 import type { DPP } from "@/types/dpp-core";
-import { getContext, transformNestedObjects } from "@/lib/transforms/dpp";
+import { getContext, transformNestedObjects } from "@/lib/transforms-jsonld/dpp";
+import { describeSubjectFromTriplyDB } from "@/lib/api";
 
-export async function GET() {
-  const datasetName = process.env.DATASET_NAME;
-
-  if (!datasetName) {
+export async function GET(request: NextRequest) {
+  const dppId = request.nextUrl.searchParams.get("id");
+  if (dppId) {
+    try {
+      const describeResult = await describeSubjectFromTriplyDB(`urn:dpp:${dppId}`);
+      const dppData = await transformToJsonFromDescribeResult(describeResult);
+      return NextResponse.json(dppData);
+    } catch (error) {
+      console.error("Failed to fetch DPP by ID:", error);
+      return NextResponse.json(
+        { error: "Failed to fetch DPP data" },
+        { status: 500 },
+      );
+    }
+  } else {
     return NextResponse.json(
-      { error: "Missing environment variable DATASET_NAME." },
-      { status: 500 },
+      { error: "Missing DPP ID. Use /api/dpp/{dppId} or /api/dpp?id={dppId}." },
+      { status: 400 },
     );
   }
 
-  const triply = App.get({ token: process.env.TRIPLYDB_TOKEN });
-  const account = await triply.getAccount();
-  const dataset = await account.getDataset(datasetName);
-  const graphs = await dataset.getGraphs().toArray();
-
-  return Response.json({ graphs });
 }
 
 export async function POST(request: NextRequest) {
@@ -48,8 +53,8 @@ export async function POST(request: NextRequest) {
       );
     }
   dpp.dppRegistrationNumber = crypto.randomUUID();
-  dpp.id = `urn:dpp:${dpp.dppRegistrationNumber}`;
-  dpp.dataCarrier = `${process.env.URL}/dpp/${dpp.id}`;
+  dpp.id = `urn:dpp:generated:${dpp.dppRegistrationNumber}`;
+  dpp.dataCarrier = `dpp/${dpp.dppRegistrationNumber}`;
 
   try {
     const jsonLdPayload = await toJsonLdPayload(

@@ -6,7 +6,7 @@
       "ProductInformation": "dpp-product-info:ProductInformation",
       "ProductIdentificationInformation": "dpp-product-info:ProductIdentificationInformation",
       "Manufacturer": "dpp-product-info:Manufacturer",
-      "MaterialInformation": "dpp-product-info:MaterialInformation",
+      "ComponentInformation": "dpp-product-info:ComponentInformation",
       "SparePartsAvailability": "dpp-product-info:SparePartsAvailability",
       "HazardousSubstances": "dpp-product-info:HazardousSubstances",
       "SubstancesOfConcern": "dpp-product-info:SubstancesOfConcern",
@@ -35,8 +35,8 @@
         "@id": "dpp-product-info:manufacturer",
         "@type": "@id"
       },
-      "materialBills": {
-        "@id": "dpp-product-info:materialBills",
+      "componentBills": {
+        "@id": "dpp-product-info:componentBills",
         "@type": "xsd:anyURI"
       },
       "sparePartsAvailability": "dpp-product-info:sparePartsAvailability",
@@ -78,8 +78,8 @@
       "identifiedRisk": "dpp-product-info:identifiedRisk",
       "productName": "dpp-product-info:productName",
       "gtin": "dpp-product-info:gtin",
-      "materialComposition": {
-        "@id": "dpp-product-info:materialComposition",
+      "componentComposition": {
+        "@id": "dpp-product-info:componentComposition",
         "@type": "@id"
       },
       "recycledReusedContent": {

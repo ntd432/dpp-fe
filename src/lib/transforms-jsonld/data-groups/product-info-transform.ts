@@ -7,7 +7,7 @@ import {
   isRecord,
   transformCountry,
   transformImageObject,
-  transformMaterial,
+  transformComponent,
   transformOrganization,
   transformSubstance,
 } from "../shared";
@@ -26,8 +26,8 @@ export function transformProductInformation(
     mfr.manufacturer = transformOrganization(info.manufacturer);
     dataPoint.push(mfr);
   }
-  if (isRecord(info.material)) {
-    dataPoint.push(transformMaterialInformation(info.material));
+  if (isRecord(info.component)) {
+    dataPoint.push(transformComponentInformation(info.component));
   }
   if (info.sparePartsAvailability !== undefined) {
     const sp = createDataPoint({}, "SparePartsAvailability", "Spare Parts Availability", "spare-parts");
@@ -125,20 +125,20 @@ function transformProductIdentificationInformation(
   return result;
 }
 
-function transformMaterialInformation(material: Record<string, unknown>): Record<string, unknown> {
-  const result = createDataPoint(material, "MaterialInformation", "Material Information", "material-info");
+function transformComponentInformation(component: Record<string, unknown>): Record<string, unknown> {
+  const result = createDataPoint(component, "ComponentInformation", "Component Information", "component-info");
 
-  if (Array.isArray(material.materialComposition)) {
-    result.materialComposition = transformMaterial(material.materialComposition.filter(isRecord));
+  if (Array.isArray(component.componentComposition)) {
+    result.componentComposition = transformComponent(component.componentComposition.filter(isRecord));
   }
-  if (Array.isArray(material.recycledReusedContent)) {
-    result.recycledReusedContent = transformMaterial(material.recycledReusedContent.filter(isRecord));
+  if (Array.isArray(component.recycledReusedContent)) {
+    result.recycledReusedContent = transformComponent(component.recycledReusedContent.filter(isRecord));
   }
 
   copyUnhandledProperties(
-    material,
+    component,
     result,
-    new Set(["id", "@id", "@type", "materialComposition", "recycledReusedContent"]),
+    new Set(["id", "@id", "@type", "componentComposition", "recycledReusedContent"]),
   );
   return result;
 }

@@ -22,7 +22,7 @@ export interface EndOfLifeData {
   expectedWaste?: string;
   reusability?: string;
   repairability?: string;
-  refurbrishability?: string;
+  refurbishability?: string;
   upgradeOptions?: string;
   endOfLifeHistory?: Event[];
   numberOfLifecycles?: number;

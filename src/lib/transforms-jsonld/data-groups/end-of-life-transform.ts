@@ -52,10 +52,10 @@ const SCALAR_FIELDS: ScalarDataPointFieldConfig[] = [
     idPrefix: "repairability",
   },
   {
-    key: "refurbrishability",
-    type: "Refurbrishability",
-    label: "Refurbrishability",
-    idPrefix: "refurbrishability",
+    key: "refurbishability",
+    type: "Refurbishability",
+    label: "Refurbishability",
+    idPrefix: "refurbishability",
   },
   {
     key: "upgradeOptions",

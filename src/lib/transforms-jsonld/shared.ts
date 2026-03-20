@@ -33,7 +33,7 @@ export function createNode(
 ): Record<string, unknown> {
   return {
     "@type": type,
-    "@id": source.id ?? `urn:generated:${idPrefix}:${randomUUID()}`,
+    "@id": source.id ?? `urn:${idPrefix}:generated:${randomUUID()}`,
   };
 }
 
@@ -133,9 +133,9 @@ export function transformEnvironmentalFootprint(footprints: Record<string, unkno
   });
 }
 
-export function transformMaterial(material: Record<string, unknown>[]): Record<string, unknown>[] {
-  return material.map((item) => {
-    const result = createNode(item, "Material", "Material", "material");
+export function transformComponent(component: Record<string, unknown>[]): Record<string, unknown>[] {
+  return component.map((item) => {
+    const result = createNode(item, "Component", "Component", "component");
     copyUnhandledProperties(item, result, new Set(["id", "@id", "@type"]));
     return result;
   });

@@ -1438,7 +1438,7 @@ interface FormState {
   expectedWaste: string;
   reusability: string;
   repairability: string;
-  refurbrishability: string;
+  refurbishability: string;
   upgradeOptions: string;
   endOfLifeHistory: EventEntry[];
   numberOfLifecycles: string;
@@ -1562,7 +1562,7 @@ const initialState: FormState = {
   expectedWaste: "",
   reusability: "",
   repairability: "",
-  refurbrishability: "",
+  refurbishability: "",
   upgradeOptions: "",
   endOfLifeHistory: [],
   numberOfLifecycles: "",
@@ -1939,10 +1939,6 @@ function buildPayload(
           compatibleInterfaceStandard: f.specCompatibleInterfaceStandard,
           compatibilityLevel: f.specCompatibilityLevel,
         },
-        components: {
-          componentDescription: f.specComponentDescription,
-          componentCount: f.specComponentCount ? Number(f.specComponentCount) : "",
-        },
         installedSoftware: {
           installedSoftwareName: f.specInstalledSoftwareName,
           installedSoftwareVersion: f.specInstalledSoftwareVersion,
@@ -2017,7 +2013,7 @@ function buildPayload(
       expectedWaste: f.expectedWaste,
       reusability: f.reusability,
       repairability: f.repairability,
-      refurbrishability: f.refurbrishability,
+      refurbishability: f.refurbishability,
       upgradeOptions: f.upgradeOptions,
       endOfLifeHistory: buildEvents(f.endOfLifeHistory),
       numberOfLifecycles: f.numberOfLifecycles
@@ -2181,7 +2177,7 @@ export default function AddProductPage() {
       "expectedWaste",
       "reusability",
       "repairability",
-      "refurbrishability",
+      "refurbishability",
       "upgradeOptions",
       "endOfLifeHistory",
       "numberOfLifecycles",

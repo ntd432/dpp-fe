@@ -4,6 +4,17 @@ import { randomUUID } from "node:crypto";
 import { writeFile, unlink, mkdir } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
+import { describeSubjectFromTriplyDB } from "./api";
+
+const STRING_TYPE = "http://www.w3.org/2001/XMLSchema#string";
+const NUMBER_TYPE = "http://www.w3.org/2001/XMLSchema#double";
+const IGNORE_PREDICATES = new Set([
+  // "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+  "http://www.w3.org/2000/01/rdf-schema#label",
+  "http://www.w3.org/2000/01/rdf-schema#comment",
+  "https://ntd432.github.io/dpp/models/dpp-core.ttl#dpp",
+  // "https://ntd432.github.io/dpp/models/dpp-core.ttl#dataLayer"
+]);
 
 export interface TriplyDBConfig {
   token: string;
@@ -99,4 +110,35 @@ export async function toJsonLdPayload(
   transformNestedObjects(jsonLdPayload);
 
   return jsonLdPayload;
+}
+
+export async function transformToJsonFromDescribeResult(describeResult: Record<string, any>[][]): Promise<Record<string, unknown>> {
+  const result: Record<string, unknown> = {};
+  for (const triple of describeResult) {
+    const fieldName = triple[1]?.value.split("/").pop()?.split("#").pop() || triple[1]?.value;
+    const predicate = triple[1]?.value;
+    const objectTermType = triple[2]?.termType;
+    const object = triple[2]?.value;
+
+    if (IGNORE_PREDICATES.has(predicate)) {
+      continue;
+    }
+
+    if (objectTermType === "Literal" || fieldName === "type") {
+      result[fieldName] = object;
+    } else if (objectTermType === "NamedNode") {
+      const childDescribeResult = await describeSubjectFromTriplyDB(object);
+      const child = await transformToJsonFromDescribeResult(childDescribeResult);
+      if (fieldName in result) {
+        if (Array.isArray(result[fieldName])) {
+          (result[fieldName] as Record<string, unknown>[]).push(child);
+        } else {
+          result[fieldName] = [result[fieldName] as Record<string, unknown>, child];
+        }
+      } else {
+        result[fieldName] = child;
+      }
+    }
+  }
+  return result;
 }

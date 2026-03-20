@@ -5,7 +5,7 @@ import {
   handleAdditionalProperties,
   isRecord,
   transformEnvironmentalFootprint,
-  transformMaterial,
+  transformComponent,
   transformMeasurementEntry,
   transformResourceConsumption,
 } from "../shared";
@@ -29,7 +29,7 @@ export function transformSustainabilityInformation(sustainability: Record<string
   }
   if (Array.isArray(sustainability.criticalRawMaterial)) {
     const crm = createDataPoint({}, "CriticalRawMaterial", "Critical Raw Material", "critical-raw-material");
-    crm.criticalRawMaterial = transformMaterial(sustainability.criticalRawMaterial.filter(isRecord));
+    crm.criticalRawMaterial = transformComponent(sustainability.criticalRawMaterial.filter(isRecord));
     dataPoint.push(crm);
   }
   if (isRecord(sustainability.lifeCycleAssessment)) {
@@ -41,7 +41,7 @@ export function transformSustainabilityInformation(sustainability: Record<string
   }
   if (Array.isArray(sustainability.renewableNonRenewableContent)) {
     const rnrc = createDataPoint({}, "RenewableNonRenewableContent", "Renewable Non Renewable Content", "renewable-non-renewable-content");
-    rnrc.renewableNonRenewableContent = transformMaterial(sustainability.renewableNonRenewableContent.filter(isRecord));
+    rnrc.renewableNonRenewableContent = transformComponent(sustainability.renewableNonRenewableContent.filter(isRecord));
     dataPoint.push(rnrc);
   }
   if (isRecord(sustainability.circularEconomyIndicator)) {

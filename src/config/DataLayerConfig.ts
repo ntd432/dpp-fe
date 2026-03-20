@@ -56,7 +56,7 @@ const DATA_LAYER: Record<string, string[]> = {
     // End-of-life group 
     "Reusability",
     "Repairability",
-    "Refurbrishability",
+    "Refurbishability",
     "UpgradeOptions",
     // Supply chain group
      "RecyclingPartner",

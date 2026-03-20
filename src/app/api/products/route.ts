@@ -9,8 +9,9 @@ import {
   TriplyUploadError,
   uploadToTriplyDB,
 } from "@/lib/triplydb-client";
-import { getContext, transformNestedObjects } from "@/lib/transforms/product";
+import { getContext, transformNestedObjects } from "@/lib/transforms-jsonld/product";
 import { Product } from "@/types";
+import { getProductById } from "@/services/product.service";
 
 /** Raw flat row returned by the SPARQL query */
 interface ProductRow {
@@ -126,6 +127,7 @@ function aggregateRows(rows: ProductRow[]): Record<string, unknown> {
 export async function GET(request: NextRequest) {
   const manufacturerId = request.nextUrl.searchParams.get("manufacturerId");
   const gtin = request.nextUrl.searchParams.get("gtin");
+  const id = request.nextUrl.searchParams.get("id");
 
   // Query by GTIN — returns a single aggregated product
   if (gtin) {
@@ -161,6 +163,19 @@ export async function GET(request: NextRequest) {
       console.error("Failed to fetch products by manufacturer:", error);
       return NextResponse.json(
         { error: "Failed to fetch products" },
+        { status: 500 },
+      );
+    }
+  }
+
+  if (id) {
+    try {
+      const product = await getProductById(id);
+      return NextResponse.json(product);
+    } catch (error) {
+      console.error("Failed to fetch product by ID:", error);
+      return NextResponse.json(
+        { error: "Failed to fetch product" },
         { status: 500 },
       );
     }
@@ -206,6 +221,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   productData.label =
     productData.productInfo?.identification?.productName || "Unnamed Product";
+  productData.id = `urn:product:generated:${crypto.randomUUID()}`;
 
   try {
     const jsonLdPayload = await toJsonLdPayload(

@@ -117,9 +117,9 @@ export function EndOfLifeStep({ shared }: { shared: any }) {
                   onChange={(v) => set("repairability", v)}
                 />
                 <TextAreaField
-                  label="Refurbrishability"
-                  value={form.refurbrishability}
-                  onChange={(v) => set("refurbrishability", v)}
+                  label="Refurbishability"
+                  value={form.refurbishability}
+                  onChange={(v) => set("refurbishability", v)}
                 />
                 <TextAreaField
                   label="Upgrade Options"

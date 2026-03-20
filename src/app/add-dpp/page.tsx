@@ -154,7 +154,6 @@ interface FormState {
   traceabilityEvents: EventEntry[];
   recyclingPartnerName: string;
   customerReturnChannelName: string;
-  componentSupplierName: string;
 }
 
 // ── Main component ────────────────────────────────────────────────────────────
@@ -177,7 +176,6 @@ export default function AddDppPage() {
     traceabilityEvents: [],
     recyclingPartnerName: "",
     customerReturnChannelName: "",
-    componentSupplierName: "",
   });
 
   const [manufacturers, setManufacturers] = useState<ManufacturerOption[]>([]);
@@ -289,7 +287,6 @@ export default function AddDppPage() {
       },
       recyclingPartner: { name: form.recyclingPartnerName },
       customerReturnChannel: { name: form.customerReturnChannelName },
-      componentSupplier: { name: form.componentSupplierName },
     };
 
     return dpp;
@@ -500,24 +497,48 @@ export default function AddDppPage() {
 
         <CollapsibleSection title="Product Supply Chain Information" color="amber" defaultOpen>
           <DataLayerGroup layer="Regulatory">
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Product Traceability
-              </legend>
-              <EventArrayEditor
-                label="Traceability Events"
-                events={form.traceabilityEvents}
-                onChange={(v) => set("traceabilityEvents", v)}
-              />
-            </fieldset>
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Product Traceability
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="space-y-4 px-4 pb-4 pt-2">
+                <EventArrayEditor
+                  label="Traceability Events"
+                  events={form.traceabilityEvents}
+                  onChange={(v) => set("traceabilityEvents", v)}
+                />
+              </div>
+            </details>
           </DataLayerGroup>
 
           <DataLayerGroup layer="Commercial">
-            <fieldset className="space-y-4 p-4 bg-gray-50 rounded-lg">
-              <legend className="text-sm font-semibold text-gray-800">
-                Supply Chain Partners
-              </legend>
-              <div className="grid grid-cols-3 gap-4">
+            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center justify-between">
+                  Supply Chain Partners
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div className="grid grid-cols-2 gap-4 space-y-4 px-4 pb-4 pt-2">
                 <FormField
                   label="Recycling Partner"
                   value={form.recyclingPartnerName}
@@ -528,13 +549,8 @@ export default function AddDppPage() {
                   value={form.customerReturnChannelName}
                   onChange={(v) => set("customerReturnChannelName", v)}
                 />
-                <FormField
-                  label="Component Supplier"
-                  value={form.componentSupplierName}
-                  onChange={(v) => set("componentSupplierName", v)}
-                />
               </div>
-            </fieldset>
+            </details>
           </DataLayerGroup>
         </CollapsibleSection>
 
