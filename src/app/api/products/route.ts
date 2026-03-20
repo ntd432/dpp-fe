@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { queryFromTriplyDB, fetchFromAPI } from "@/lib/api";
 import {
   queryProductByCompanyQuery,
-  queryProductByGTINQuery,
 } from "@/query/products";
 import {
   toJsonLdPayload,
@@ -128,30 +127,6 @@ export async function GET(request: NextRequest) {
   const manufacturerId = request.nextUrl.searchParams.get("manufacturerId");
   const gtin = request.nextUrl.searchParams.get("gtin");
   const id = request.nextUrl.searchParams.get("id");
-
-  // Query by GTIN — returns a single aggregated product
-  if (gtin) {
-    try {
-      const query = queryProductByGTINQuery(gtin);
-      const rows = await queryFromTriplyDB<ProductRow>(query);
-
-      if (rows.length === 0) {
-        return NextResponse.json(
-          { error: "Product not found" },
-          { status: 404 },
-        );
-      }
-
-      const product = aggregateRows(rows);
-      return NextResponse.json(product);
-    } catch (error) {
-      console.error("Failed to fetch product by GTIN:", error);
-      return NextResponse.json(
-        { error: "Failed to fetch product" },
-        { status: 500 },
-      );
-    }
-  }
 
   // Query by manufacturer ID — returns a list of products
   if (manufacturerId) {
