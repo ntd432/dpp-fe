@@ -10,7 +10,7 @@
       "ExpectedWaste": "dpp-eol:ExpectedWaste",
       "Reusability": "dpp-eol:Reusability",
       "Repairability": "dpp-eol:Repairability",
-      "Refurbrishability": "dpp-eol:Refurbrishability",
+      "Refurbishability": "dpp-eol:Refurbishability",
       "UpgradeOptions": "dpp-eol:UpgradeOptions",
       "EndOfLifeHistory": "dpp-eol:EndOfLifeHistory",
       "NumberOfLifecycles": "dpp-eol:NumberOfLifecycles",
@@ -22,7 +22,7 @@
       "expectedWaste": "dpp-eol:expectedWaste",
       "reusability": "dpp-eol:reusability",
       "repairability": "dpp-eol:repairability",
-      "refurbrishability": "dpp-eol:refurbrishability",
+      "refurbishability": "dpp-eol:refurbishability",
       "upgradeOptions": "dpp-eol:upgradeOptions",
       "endOfLifeHistory": {
         "@id": "dpp-eol:endOfLifeHistory",
