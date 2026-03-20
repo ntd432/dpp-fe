@@ -7,6 +7,7 @@ const navItems = [
   { href: "/", label: "Dashboard" },
   { href: "/add-product", label: "Add Product" },
   { href: "/add-dpp", label: "Register DPP" },
+  { href: "/dpp", label: "View DPP" },
 ];
 
 export default function Navbar() {

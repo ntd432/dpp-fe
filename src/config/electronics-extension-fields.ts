@@ -123,18 +123,6 @@ export const ELECTRONIC_EXTENSION_FIELDS: ExtensionSectionGroups = {
         ],
       },
     ],
-    Components: [
-      {
-        key: "specComponentDescription",
-        label: "Component Description",
-        kind: "textarea",
-      },
-      {
-        key: "specComponentCount",
-        label: "Component Count",
-        kind: "number",
-      },
-    ],
     "Installed Software": [
       {
         key: "specInstalledSoftwareName",

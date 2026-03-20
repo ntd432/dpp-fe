@@ -1939,10 +1939,6 @@ function buildPayload(
           compatibleInterfaceStandard: f.specCompatibleInterfaceStandard,
           compatibilityLevel: f.specCompatibilityLevel,
         },
-        components: {
-          componentDescription: f.specComponentDescription,
-          componentCount: f.specComponentCount ? Number(f.specComponentCount) : "",
-        },
         installedSoftware: {
           installedSoftwareName: f.specInstalledSoftwareName,
           installedSoftwareVersion: f.specInstalledSoftwareVersion,
