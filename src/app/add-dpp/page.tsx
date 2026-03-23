@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FormField } from "@/components/form/FormField";
 import { CollapsibleSection, DataLayerGroup } from "@/components/form/CollapsibleSection";
-import { SECTORS } from "@/config/sectors";
 import { AddEntryButton } from "@/components/form/AddEntryButton";
 
 // ── Constants ────────────────────────────────────────────────────────────────

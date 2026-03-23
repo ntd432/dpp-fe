@@ -6,21 +6,8 @@ export function GuidelinesStep({ shared }: { shared: any }) {
   const {
     form,
     set,
-    setField,
-    manufacturers,
     canUseLeaf,
     setCustomGroupFields,
-    renderExtensionSection,
-    INPUT_CLASS,
-    ComponentArrayEditor,
-    SubstanceArrayEditor,
-    RegulationArrayEditor,
-    LabelArrayEditor,
-    NameDescArrayEditor,
-    EnvironmentalFootprintArrayEditor,
-    ResourceConsumptionArrayEditor,
-    EnvironmentalImpactArrayEditor,
-    EventArrayEditor,
     CustomFieldsEditor,
   } = shared;
 

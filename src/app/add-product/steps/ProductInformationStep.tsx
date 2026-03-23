@@ -16,13 +16,6 @@ export function ProductInformationStep({ shared }: { shared: any }) {
     INPUT_CLASS,
     ComponentArrayEditor,
     SubstanceArrayEditor,
-    RegulationArrayEditor,
-    LabelArrayEditor,
-    NameDescArrayEditor,
-    EnvironmentalFootprintArrayEditor,
-    ResourceConsumptionArrayEditor,
-    EnvironmentalImpactArrayEditor,
-    EventArrayEditor,
     CustomFieldsEditor,
   } = shared;
 

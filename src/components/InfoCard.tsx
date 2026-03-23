@@ -1,6 +1,7 @@
 interface InfoCardProps {
   label: string;
   value: string;
+  link?: string;
 }
 
 export default function InfoCard({ label, value }: Readonly<InfoCardProps>) {
@@ -24,6 +25,24 @@ export default function InfoCard({ label, value }: Readonly<InfoCardProps>) {
       ) : (
         <span className="text-gray-900 text-sm leading-relaxed">{value}</span>
       )}
+    </div>
+  );
+}
+
+export function InfoCardWithLink({ label, value, link }: Readonly<InfoCardProps>) {
+  return (
+    <div className="flex flex-col gap-1 p-4 bg-gray-50 rounded-lg border border-gray-100">
+      <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+        {formatLabel(label)}
+      </span>
+        <a
+          href={link}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[var(--color-brand-pink)] hover:text-[var(--color-brand-pink-dark)] underline break-all text-sm"
+        >
+          {value}
+        </a>
     </div>
   );
 }

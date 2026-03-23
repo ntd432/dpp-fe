@@ -7,6 +7,7 @@ import ErrorMessage from "@/components/ErrorMessage";
 import InfoCard from "@/components/InfoCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { CollapsibleSection, DataLayerGroup } from "@/components/form/CollapsibleSection";
+import { DPPInformation } from "../groups/DPPInformation";
 
 const IGNORE_LIST = [ "type" ]; // Keys to ignore in the display tree, can be extended as needed.
 
@@ -33,7 +34,7 @@ function isObject(value: JsonValue | undefined): value is JsonObject {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-function ValueTree({ label, value }: Readonly<{ label: string; value: JsonValue | undefined }>) {
+export function ValueTree({ label, value }: Readonly<{ label: string; value: JsonValue | undefined }>) {
   if (value === undefined) return null;
 
   if (IGNORE_LIST.includes(label.toLowerCase())) return null;
@@ -162,16 +163,6 @@ export default function DppDetailPage() {
     );
   }
 
-  const corePairs: Array<{ label: string; value: JsonValue | undefined }> = [
-    { label: "dppRegistrationNumber", value: data.dppRegistrationNumber },
-    { label: "granularity", value: data.granularity },
-    { label: "productBatchNumber", value: data.productBatchNumber },
-    { label: "productSerialNumber", value: data.productSerialNumber },
-    { label: "dataCarrier", value: data.dataCarrier },
-    { label: "dataCarrierFormat", value: data.dataCarrierFormat },
-  ];
-
-  const issuer = data.issuer;
   const supplyChain = data.supplyChain;
   const usage = data.usage;
   const product = data.product;
@@ -181,7 +172,6 @@ export default function DppDetailPage() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Digital Product Passport</h1>
-          <p className="mt-1 text-sm text-gray-600">DPP ID: {dppId}</p>
         </div>
         <Link
           href="/dpp"
@@ -191,14 +181,7 @@ export default function DppDetailPage() {
         </Link>
       </div>
 
-      <CollapsibleSection title="DPP Core Information" color="indigo" defaultOpen>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        {corePairs.map((pair) => (
-            <ValueTree key={pair.label} label={pair.label} value={pair.value} />
-        ))}
-        </div>
-        <ValueTree label="issuer" value={issuer} />
-      </CollapsibleSection>
+      <DPPInformation {...(data as any)} />
 
       <CollapsibleSection title="Supply Chain and Usage" color="amber" showCollapseButton defaultOpen={false}>
         <DataLayerGroup layer="Regulatory">
