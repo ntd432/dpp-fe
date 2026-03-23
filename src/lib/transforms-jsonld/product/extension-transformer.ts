@@ -5,6 +5,7 @@ type ExtensionTransformer = (
   extension: Record<string, unknown>,
   label: string,
   idPrefix: string,
+  previousPredicate: string
 ) => Record<string, unknown>;
 
 const extensionTransformers: Record<string, ExtensionTransformer> = {
@@ -22,13 +23,14 @@ export function transformExtension(
   extension: Record<string, unknown>,
   label: string,
   idPrefix: string,
+  previousPredicate: string,
 ): Record<string, unknown> {
   const extensionType =
     typeof extension.extensionType === "string" ? extension.extensionType : "";
 
   const transformer = extensionTransformers[extensionType];
   if (transformer) {
-    return transformer(extension, label, idPrefix);
+    return transformer(extension, label, idPrefix, previousPredicate);
   }
 
   return createDataPoint(extension, "Extension", label, idPrefix);

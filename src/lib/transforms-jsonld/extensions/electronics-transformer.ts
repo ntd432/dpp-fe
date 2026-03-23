@@ -71,8 +71,10 @@ export function transformElectronicExtension(
   electronics: Record<string, unknown>,
   label: string,
   idPrefix: string,
+  previousPredicate: string,
 ): Record<string, unknown> {
   const result = createNode(electronics, "ElectronicExtension", label, idPrefix);
+  result.previousPredicate = previousPredicate;
 
   for (const [field, config] of Object.entries(SIMPLE_OBJECT_FIELDS)) {
     const value = electronics[field];

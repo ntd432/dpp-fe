@@ -125,7 +125,6 @@ function aggregateRows(rows: ProductRow[]): Record<string, unknown> {
 
 export async function GET(request: NextRequest) {
   const manufacturerId = request.nextUrl.searchParams.get("manufacturerId");
-  const gtin = request.nextUrl.searchParams.get("gtin");
   const id = request.nextUrl.searchParams.get("id");
 
   // Query by manufacturer ID — returns a list of products

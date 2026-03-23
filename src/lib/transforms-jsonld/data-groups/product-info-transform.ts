@@ -54,6 +54,7 @@ export function transformProductInformation(
         info.sectorRequiredInformation,
         "Sector Required Information",
         "sector-required-info",
+        "sectorRequiredInformation"
       ),
     );
   }
@@ -63,6 +64,7 @@ export function transformProductInformation(
         info.productSpecification,
         "Product Specification",
         "product-specification",
+        "productSpecification"
       ),
     );
   }
@@ -72,6 +74,7 @@ export function transformProductInformation(
         info.sectorNonRequiredInformation,
         "Sector Non-Required Information",
         "sector-non-required-info",
+        "sectorNonRequiredInformation"
       ),
     );
   }
