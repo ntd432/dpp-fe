@@ -61,7 +61,6 @@ const DATA_LAYER: Record<string, string[]> = {
     // Supply chain group
      "RecyclingPartner",
     "CustomerReturnChannel",
-    "ComponentSupplier",
     // Guidelines group
     "CommercialInstruction",
     "Accessibility",

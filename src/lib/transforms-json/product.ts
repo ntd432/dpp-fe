@@ -1,7 +1,7 @@
-import { Product } from "@/types";
 import { describeSubjectFromTriplyDB } from "../api";
 import { transformToJsonFromDescribeResult } from "../triplydb-client";
-import { transformDataGroupJson } from "./data-groups/compliance";
+import { transformDataGroupJson } from "./data-groups";
+import { PRODUCT_INFO_PREFIX, SUSTAINABILITY_PREFIX, EOL_PREFIX, GUIDELINES_PREFIX, COMPLIANCE_PREFIX, DATA_GROUP_PREDICATE } from "../../../next.config";
 
 const IGNORE_PREDICATES: Set<string> = new Set([
   "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
@@ -12,14 +12,12 @@ const IGNORE_PREDICATES: Set<string> = new Set([
 ]);
 
 const PREDICATE_TO_FIELDNAME: Record<string, string> = {
-  "https://ntd432.github.io/dpp/models/dpp-product-info.ttl#ProductInformation": "productInfo",
-  "https://ntd432.github.io/dpp/models/dpp-compliance.ttl#Compliance": "compliance",
-  "https://ntd432.github.io/dpp/models/dpp-sustainability.ttl#SustainabilityInformation": "sustainability",
-  "https://ntd432.github.io/dpp/models/dpp-eol.ttl#EndOfLifeData": "endOfLife",
-  "https://ntd432.github.io/dpp/models/dpp-guidelines.ttl#GuidelinesAndManuals": "guidelines",
+  [`${PRODUCT_INFO_PREFIX}ProductInformation`]: "productInfo",
+  [`${COMPLIANCE_PREFIX}Compliance`]: "compliance",
+  [`${SUSTAINABILITY_PREFIX}SustainabilityInformation`]: "sustainability",
+  [`${EOL_PREFIX}EndOfLifeData`]: "endOfLife",
+  [`${GUIDELINES_PREFIX}GuidelinesAndManuals`]: "guidelines",
 };
-
-const DATA_GROUP_PREDICATE = "https://ntd432.github.io/dpp/models/dpp-core.ttl#dataGroup";
 
 async function handleDataGroupNode(
   child: Record<string, unknown>,

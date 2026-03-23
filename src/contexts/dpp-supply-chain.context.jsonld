@@ -7,7 +7,6 @@
       "ProductTraceability": "dpp-supply-chain:ProductTraceability",
       "RecyclingPartner": "dpp-supply-chain:RecyclingPartner",
       "CustomerReturnChannel": "dpp-supply-chain:CustomerReturnChannel",
-      "ComponentSupplier": "dpp-supply-chain:ComponentSupplier",
 
       "traceabilityEvent": {
         "@id": "dpp-supply-chain:traceabilityEvent",
@@ -23,10 +22,6 @@
       },
       "customerReturnChannel": {
         "@id": "dpp-supply-chain:customerReturnChannel",
-        "@type": "@id"
-      },
-      "componentSupplier": {
-        "@id": "dpp-supply-chain:componentSupplier",
         "@type": "@id"
       }
     }

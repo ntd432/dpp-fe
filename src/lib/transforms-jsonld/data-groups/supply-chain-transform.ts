@@ -25,11 +25,6 @@ export function transformSupplyChain(supplyChain: Record<string, unknown>): Reco
     crc.customerReturnChannel = transformOrganization(supplyChain.customerReturnChannel);
     dataPoint.push(crc);
   }
-  if (isRecord(supplyChain.componentSupplier)) {
-    const cs = createDataPoint({}, "ComponentSupplier", "Component Supplier", "component-supplier");
-    cs.componentSupplier = transformOrganization(supplyChain.componentSupplier);
-    dataPoint.push(cs);
-  }
   if (isRecord(supplyChain.additionalProperties)) {
     handleAdditionalProperties(result, supplyChain.additionalProperties, "dpp-supply-chain");
   }
