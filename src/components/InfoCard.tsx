@@ -3,7 +3,7 @@ interface InfoCardProps {
   value: string;
 }
 
-export default function InfoCard({ label, value }: InfoCardProps) {
+export default function InfoCard({ label, value }: Readonly<InfoCardProps>) {
   const isUrl =
     value.startsWith("http://") || value.startsWith("https://");
 
