@@ -17,5 +17,4 @@ export interface SupplyChain {
   productTraceability?: ProductTraceability;
   recyclingPartner?: Organization | Person;
   customerReturnChannel?: Organization | Person;
-  componentSupplier?: Organization | Person;
 }

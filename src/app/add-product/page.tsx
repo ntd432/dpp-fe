@@ -496,13 +496,6 @@ function CustomFieldsEditor({
           </div>
         ))}
       </div>
-      {/* <button
-        type="button"
-        onClick={() => onChange([...items, { _key: uid(), key: "", value: "", sourcePath: undefined }])}
-        className="text-xs px-2 py-1 bg-[var(--color-brand-blue-super-light)] text-[var(--color-brand-blue-super-dark)] rounded hover:bg-[var(--color-brand-blue-light)] hover:cursor-pointer"
-      >
-        + Add Custom Field
-      </button> */}
       <AddEntryButton label="+ Add Custom Field" onClick={() => onChange([...items, { _key: uid(), key: "", value: "", sourcePath: undefined }])} />
       </div>
     </details>
@@ -1415,7 +1408,6 @@ interface FormState {
   traceabilityEvents: EventEntry[];
   recyclingPartnerName: string;
   customerReturnChannelName: string;
-  componentSupplierName: string;
   // Sustainability
   environmentalFootprints: EnvironmentalFootprintEntry[];
   resourceConsumptions: ResourceConsumptionEntry[];
@@ -1541,7 +1533,6 @@ const initialState: FormState = {
   traceabilityEvents: [],
   recyclingPartnerName: "",
   customerReturnChannelName: "",
-  componentSupplierName: "",
   environmentalFootprints: [],
   resourceConsumptions: [],
   plasticsRelease: "",
@@ -1973,7 +1964,6 @@ function buildPayload(
       },
       recyclingPartner: { name: f.recyclingPartnerName },
       customerReturnChannel: { name: f.customerReturnChannelName },
-      componentSupplier: { name: f.componentSupplierName },
     },
     sustainability: {
       sustainabilityPerformance: {

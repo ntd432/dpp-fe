@@ -1,8 +1,4 @@
-const PRODUCT_INFO_PREFIX = "https://ntd432.github.io/dpp/models/dpp-product-info.ttl#";
-const SUSTAINABILITY_PREFIX = "https://ntd432.github.io/dpp/models/dpp-sustainability.ttl#";
-const EOL_PREFIX = "https://ntd432.github.io/dpp/models/dpp-eol.ttl#";
-const GUIDELINES_PREFIX = "https://ntd432.github.io/dpp/models/dpp-guidelines.ttl#";
-const COMPLIANCE_PREFIX = "https://ntd432.github.io/dpp/models/dpp-compliance.ttl#";
+import { PRODUCT_INFO_PREFIX, SUSTAINABILITY_PREFIX, EOL_PREFIX, GUIDELINES_PREFIX, COMPLIANCE_PREFIX, SUPPLY_CHAIN_PREFIX, USAGE_PREFIX, EXTENSION_TYPES, ARRAY_TYPES } from "../../../next.config";
 
 const TYPES_TO_FIELDNAMES: Record<string, string> = {
     [`${PRODUCT_INFO_PREFIX}ProductIdentificationInformation`]: "identification",
@@ -52,23 +48,28 @@ const TYPES_TO_FIELDNAMES: Record<string, string> = {
     [`${GUIDELINES_PREFIX}CommercialInstruction`]: "commercialInstruction",
     [`${GUIDELINES_PREFIX}Accessibility`]: "accessibility",
     [`${GUIDELINES_PREFIX}UtilizationCharacteristic`]: "utilizationCharacteristic",
+    [`${SUPPLY_CHAIN_PREFIX}ProductTraceability`]: "productTraceability",
+    [`${SUPPLY_CHAIN_PREFIX}RecyclingPartner`]: "recyclingPartner",
+    [`${SUPPLY_CHAIN_PREFIX}CustomerReturnChannel`]: "customerReturnChannel",
+    [`${USAGE_PREFIX}MaintenanceLog`]: "maintenanceLog",
+    [`${USAGE_PREFIX}UsageHistory`]: "usageHistory",
+    [`${USAGE_PREFIX}IncidentsAndErrors`]: "incidentsAndErrors",
 };
-
-const ARRAY_TYPES = new Set([
-    "endOfLifeHistory",
-    "hazardousSubstances",
-    "substancesOfConcern",
-    "relatedObjects",
-    "criticalRawMaterial",
-    "renewableNonRenewableContent",
-    "regulation", "productLabel", "certification"
-]);
 
 export async function transformDataGroupJson(describeResult: Record<string, any>): Promise<Record<string, any>> {
     let result: Record<string, any> = {};
     const dataPoints = describeResult.dataPoint || [];
     for (const dataPoint of dataPoints) {
         const type = dataPoint.type;
+
+        if (EXTENSION_TYPES.has(type)) {
+            const previousPredicate = dataPoint.previousPredicate || "extension";
+            delete dataPoint["type"];
+            delete dataPoint["previousPredicate"];
+            result[previousPredicate] = dataPoint;
+            continue;
+        }
+
         const fieldName = TYPES_TO_FIELDNAMES[type];
         if (!fieldName) {
             console.warn(`Unknown data point type: ${type}. Skipping transformation for this data point.`);

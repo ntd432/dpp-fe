@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { transformToJsonFromDescribeResult } from "@/lib/triplydb-client";
-import { describeSubjectFromTriplyDB } from "@/lib/api";
+import { getDPPById } from "@/services/dpp.service";
 
 export async function GET(
   _request: NextRequest,
@@ -13,10 +12,7 @@ export async function GET(
   }
 
   try {
-    const describeResult = await describeSubjectFromTriplyDB(
-      `urn:dpp:${dppId}`,
-    );
-    const dppData = await transformToJsonFromDescribeResult(describeResult);
+    const dppData = await getDPPById(dppId);
     return NextResponse.json(dppData);
   } catch (error) {
     console.error("Failed to fetch DPP by ID:", error);
