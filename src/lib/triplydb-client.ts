@@ -5,6 +5,7 @@ import { writeFile, unlink, mkdir } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { describeSubjectFromTriplyDB } from "./api";
+import { ARRAY_TYPES } from "../../next.config";
 
 const STRING_TYPE = "http://www.w3.org/2001/XMLSchema#string";
 const NUMBER_TYPE = "http://www.w3.org/2001/XMLSchema#double";
@@ -135,6 +136,8 @@ export async function transformToJsonFromDescribeResult(describeResult: Record<s
         } else {
           result[fieldName] = [result[fieldName] as Record<string, unknown>, child];
         }
+      } else if (ARRAY_TYPES.has(fieldName)) {
+        result[fieldName] = [child];
       } else {
         result[fieldName] = child;
       }

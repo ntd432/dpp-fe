@@ -1,13 +1,113 @@
 import { CollapsibleSection, DataLayerGroup } from "@/components/form/CollapsibleSection";
 import DataPointComponent from "@/components/DataPointComponent";
-import { ValueTree } from "../[dppId]/page";
-import { SustainabilityInformation } from "@/types";
+import { ComponentListCard, KeyValuePair, ListCards, ValueTree } from "./CommonComponents";
+import { EnvironmentalFootprint, EnvironmentalImpact, ResourceConsumption, SustainabilityInformation } from "@/types";
+import { InfoCardWithLink } from "@/components/InfoCard";
+
+function EnvironmentalFootprintListCard({ list }: Readonly<{
+  list: Readonly<ReadonlyArray<EnvironmentalFootprint>>;
+}>) {
+  return (
+    <ListCards
+      list={list}
+      label="Environmental Footprint"
+      getKey={(footprint, index) =>
+        `footprint-${footprint.environmentalFootprintType || index}`
+      }
+      renderCard={(footprint) => EnvironmentalFootprintCard(footprint)}
+    />
+  );
+}
+
+function EnvironmentalFootprintCard(
+  footprint: Readonly<EnvironmentalFootprint>,
+) {
+  const pairs = [
+    { label: "Footprint type", value: footprint.environmentalFootprintType },
+    {
+      label: "Value",
+      value: `${footprint.environmentalFootprintValue}${footprint.environmentalFootprintUnit}`,
+    },
+    {
+      label: "Measuring method",
+      value: footprint.environmentalFootprintMeasuringMethod,
+    },
+  ];
+  return <KeyValuePair numberOfColumn={3} pairs={pairs} />;
+}
+
+function ResourceConsumptionListCard({
+  label,
+  list,
+}: Readonly<{
+  label?: string;
+  list: Readonly<ReadonlyArray<ResourceConsumption>>;
+}>) {
+  return (
+    <ListCards
+      list={list}
+      label={label || "Resource Consumption"}
+      getKey={(consumption, index) =>
+        `consumption-${consumption.resource || index}`
+      }
+      renderCard={(consumption) => ResourceConsumptionCard(consumption)}
+    />
+  );
+}
+
+function ResourceConsumptionCard(consumption: Readonly<ResourceConsumption>) {
+  const pairs = [
+    { label: "Resource", value: consumption.resource },
+    {
+      label: "Value",
+      value: `${consumption.resourceConsumptionValue}${consumption.resourceConsumptionUnit}`,
+    },
+  ];
+  return <KeyValuePair numberOfColumn={3} pairs={pairs} />;
+}
+
+function EnvironmentalImpactListCard({
+  list,
+}: Readonly<{
+  list: Readonly<ReadonlyArray<EnvironmentalImpact>>;
+}>) {
+  return (
+    <ListCards
+      list={list}
+      label="Environmental Impact"
+      getKey={(impact, index) =>
+        `impact-${impact.impactCategory || index}-${impact.impactIndicator ? impact.impactIndicator : ""}`
+      }
+      renderCard={(impact) => EnvironmentalImpactCard(impact)}
+    />
+  );
+}
+
+function EnvironmentalImpactCard(impact: Readonly<EnvironmentalImpact>) {
+  const pairs = [
+    { label: "Impact category", value: impact.impactCategory },
+    { label: "Method", value: impact.method },
+    { label: "Characterization Factor", value: impact.characterizationFactor },
+    { label: "Characterization Model", value: impact.characterizationModel },
+    {
+      label: "Impact indicator",
+      value: `${impact.impactIndicator.measurementValue}${impact.impactIndicator.measurementUnit}`,
+    },
+  ];
+  return <KeyValuePair numberOfColumn={3} pairs={pairs} />;
+}
 
 type SustainabilityComponentProps = Readonly<{
   sustainability?: SustainabilityInformation;
 }>;
 
-export function SustainabilityComponent({ sustainability }: SustainabilityComponentProps) {
+export function SustainabilityComponent({
+  sustainability,
+}: SustainabilityComponentProps) {
+  const socialIndicator = sustainability?.socialIndicator;
+  const socialIndicatorPairs = [
+    { label: "Labour Conditions", value: socialIndicator?.labourConditions },
+  ];
   return (
     <CollapsibleSection
       title="Sustainability"
@@ -17,62 +117,100 @@ export function SustainabilityComponent({ sustainability }: SustainabilityCompon
     >
       <DataLayerGroup layer="Regulatory">
         <DataPointComponent label="Sustainability Performance">
-          <ValueTree
-            label="Environmental Footprint"
-            value={sustainability?.sustainabilityPerformance?.environmentalFootprint}
+          <EnvironmentalFootprintListCard
+            list={
+              sustainability?.sustainabilityPerformance
+                ?.environmentalFootprint || []
+            }
           />
-          <ValueTree
-            label="Resource Consumption"
-            value={sustainability?.sustainabilityPerformance?.resourceConsumption}
+          <ResourceConsumptionListCard
+            list={
+              sustainability?.sustainabilityPerformance?.resourceConsumption ||
+              []
+            }
           />
           <ValueTree
             label="Plastics Release"
             value={sustainability?.sustainabilityPerformance?.plasticsRelease}
           />
         </DataPointComponent>
-
-        <DataPointComponent label="Life Cycle Assessment">
-          <ValueTree
-            label="Life Cycle Assessment Report"
-            value={sustainability?.lifeCycleAssessment?.lifeCycleAssessmentReport}
-          />
-          <ValueTree
-            label="Environmental Impact"
-            value={sustainability?.lifeCycleAssessment?.environmentalImpact}
-          />
-        </DataPointComponent>
-
-        <DataPointComponent label="Environment Declaration">
-          <ValueTree label="Environment Declaration" value={sustainability?.environmentDeclaration} />
-        </DataPointComponent>
       </DataLayerGroup>
 
       <DataLayerGroup layer="Sectoral">
-        <DataPointComponent label="Materials and Circularity">
-          <ValueTree label="Critical Raw Material" value={sustainability?.criticalRawMaterial} />
-          <ValueTree
-            label="Renewable and Non-Renewable Content"
-            value={sustainability?.renewableNonRenewableContent}
+        <DataPointComponent label="Decomposability">
+          <ValueTree label="" value={sustainability?.decomposability} />
+        </DataPointComponent>
+
+        {/* TODO: CHANGE THE EXTENSION
+        <DataPointComponent label="Sector Sustainability Indicator">
+            <ValueTree label="" value={sustainability?.decomposability}/>
+        </DataPointComponent> */}
+
+        <DataPointComponent label="Critical Raw Material">
+          <ComponentListCard
+            label=""
+            componentList={sustainability?.criticalRawMaterial || []}
           />
-          <ValueTree label="Decomposability" value={sustainability?.decomposability} />
-          <ValueTree
-            label="Circular Economy Indicator"
-            value={sustainability?.circularEconomyIndicator}
+        </DataPointComponent>
+
+        <DataPointComponent label="Life Cycle Assessment">
+          <InfoCardWithLink
+            label=""
+            value="Life Cycle Assessment Report"
+            link={
+              sustainability?.lifeCycleAssessment?.lifeCycleAssessmentReport
+            }
+          />
+          {/* <ValueTree label="Life Cycle Assessment Report" value={sustainability?.lifeCycleAssessment?.lifeCycleAssessmentReport}/> */}
+          <EnvironmentalImpactListCard
+            list={
+              sustainability?.lifeCycleAssessment?.environmentalImpact || []
+            }
           />
         </DataPointComponent>
       </DataLayerGroup>
 
       <DataLayerGroup layer="Commercial">
-        <DataPointComponent label="Social and Usage Attributes">
-          <ValueTree label="Labour Conditions" value={sustainability?.socialIndicator?.labourConditions} />
-          <ValueTree
+        <DataPointComponent label="Renewable/Non-Renewable Content">
+          <ComponentListCard
+            label=""
+            componentList={sustainability?.renewableNonRenewableContent || []}
+          />
+        </DataPointComponent>
+
+        {/* TODO: CHANGE THE EXTENSION
+        <DataPointComponent label="Circular Economy Indicator">
+            <ValueTree label="" value={sustainability?.decomposability}/>
+        </DataPointComponent> */}
+
+        <DataPointComponent label="Social Indicator">
+          <KeyValuePair numberOfColumn={1} pairs={socialIndicatorPairs} />
+        </DataPointComponent>
+
+        <DataPointComponent label="Sustainability Attributes">
+          <ResourceConsumptionListCard
             label="Resource Consumption When Using"
-            value={sustainability?.sustainabilityAttributes?.resourceConsumptionWhenUsing}
+            list={
+              sustainability?.sustainabilityAttributes
+                ?.resourceConsumptionWhenUsing || []
+            }
           />
-          <ValueTree
+          <ResourceConsumptionListCard
             label="Resource Consumption When Recovering"
-            value={sustainability?.sustainabilityAttributes?.resourceConsumptionWhenRecovering}
+            list={
+              sustainability?.sustainabilityAttributes
+                ?.resourceConsumptionWhenRecovering || []
+            }
           />
+        </DataPointComponent>
+
+        <DataPointComponent label="Environmental Declaration">
+          <InfoCardWithLink
+            label=""
+            value="Environmental Declaration"
+            link={sustainability?.environmentDeclaration}
+          />
+          {/* <ValueTree label="" value={sustainability?.environmentDeclaration}/> */}
         </DataPointComponent>
       </DataLayerGroup>
     </CollapsibleSection>

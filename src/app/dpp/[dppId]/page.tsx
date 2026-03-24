@@ -4,7 +4,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import ErrorMessage from "@/components/ErrorMessage";
-import InfoCard from "@/components/InfoCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { CollapsibleSection, DataLayerGroup } from "@/components/form/CollapsibleSection";
 import { DPPInformation } from "../groups/DPPInformationComponent";
@@ -17,7 +16,6 @@ import { GuidelinesAndManualsComponent } from "../groups/GuidelinesAndManualsCom
 import { SupplyChainComponent } from "../groups/SupplyChainComponent";
 import { UsageComponent } from "../groups/UsageComponent";
 
-const IGNORE_LIST = new Set(["type"]); // Keys to ignore in the display tree, can be extended as needed.
 
 type JsonValue = string | number | boolean | null | JsonObject | JsonValue[];
 
@@ -25,75 +23,8 @@ type JsonObject = {
   [key: string]: JsonValue | undefined;
 };
 
-function prettyLabel(key: string): string {
-  return key
-    .replaceAll(/([A-Z])/g, " $1")
-    .replaceAll(/[_-]+/g, " ")
-    .replace(/^./, (s) => s.toUpperCase())
-    .trim();
-}
-
-function toDisplayString(value: string | number | boolean | null): string {
-  if (value === null) return "null";
-  return String(value);
-}
-
 function isObject(value: unknown): value is JsonObject {
   return typeof value === "object" && value !== null && !Array.isArray(value);
-}
-
-export function ValueTree({ label, value }: Readonly<{ label: string; value: unknown }>) {
-  if (value === undefined) return null;
-
-  if (IGNORE_LIST.has(label.toLowerCase())) return null;
-
-  if (value === null || typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
-    return <InfoCard label={label} value={toDisplayString(value)} />;
-  }
-
-  if (Array.isArray(value)) {
-    if (value.length === 0) return <InfoCard label={prettyLabel(label)} value="No data" />;
-
-    return (
-      <div className="space-y-3">
-        <p className="text-sm font-semibold text-gray-700">{prettyLabel(label)}</p>
-        <div className="space-y-3 border border-gray-200 rounded-lg">
-        {value.map((item, index) => (
-          <div key={`${label}-${index}`} className="rounded-lg bg-white p-3">
-            <ValueTree label={`${label} ${index + 1}`} value={item} />
-          </div>
-        ))}
-        </div>
-      </div>
-    );
-  }
-
-  const entries = Object.entries(value).filter(([, nestedValue]) => nestedValue !== undefined);
-  if (entries.length === 0) return <InfoCard label={label} value="No data" />;
-
-  return (
-    <details open className="rounded-lg border border-gray-200 bg-white overflow-hidden">
-      <summary className="list-none cursor-pointer px-4 py-3 text-sm font-semibold text-gray-800 bg-gray-50 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
-        <span className="flex items-center justify-between">
-          {label}
-          <svg
-            className="w-4 h-4 text-gray-500"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            aria-hidden="true"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
-        </span>
-      </summary>
-      <div className="space-y-3 px-4 py-3">
-        {entries.map(([childKey, childValue]) => (
-          <ValueTree key={`${label}-${childKey}`} label={childKey} value={childValue} />
-        ))}
-      </div>
-    </details>
-  );
 }
 
 export default function DppDetailPage() {
@@ -204,23 +135,17 @@ export default function DppDetailPage() {
         />
       )}
 
-      <ComplianceComponent compliance={compliance} />
-
       <SustainabilityComponent sustainability={sustainability} />
-
-      <EndOfLifeComponent endOfLife={endOfLife} />
-
-      <GuidelinesAndManualsComponent guidelines={guidelines} />
-
-      <SupplyChainComponent supplyChain={supplyChain} />
 
       <UsageComponent usage={usage} />
 
-      <CollapsibleSection title="Product Data" color="emerald" showCollapseButton defaultOpen={false}>
-        <DataLayerGroup layer="Regulatory">
-          <ValueTree label="product" value={data.product} />
-        </DataLayerGroup>
-      </CollapsibleSection>
+      <EndOfLifeComponent endOfLife={endOfLife} />
+
+      <SupplyChainComponent supplyChain={supplyChain} />
+
+      <GuidelinesAndManualsComponent guidelines={guidelines} />
+
+      <ComplianceComponent compliance={compliance} />
 
       <CollapsibleSection title="Raw JSON" color="cyan" showCollapseButton defaultOpen={false}>
         <DataLayerGroup layer="Commercial">
