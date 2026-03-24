@@ -8,10 +8,16 @@ import InfoCard from "@/components/InfoCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { CollapsibleSection, DataLayerGroup } from "@/components/form/CollapsibleSection";
 import { DPPInformation } from "../groups/DPPInformationComponent";
-import { Product, ProductInformation } from "@/types";
+import { DPP } from "@/types";
 import { ProductInformationComponent } from "../groups/ProductInformationComponent";
+import { ComplianceComponent } from "../groups/ComplianceComponent";
+import { SustainabilityComponent } from "../groups/SustainabilityComponent";
+import { EndOfLifeComponent } from "../groups/EndOfLifeComponent";
+import { GuidelinesAndManualsComponent } from "../groups/GuidelinesAndManualsComponent";
+import { SupplyChainComponent } from "../groups/SupplyChainComponent";
+import { UsageComponent } from "../groups/UsageComponent";
 
-const IGNORE_LIST = [ "type" ]; // Keys to ignore in the display tree, can be extended as needed.
+const IGNORE_LIST = new Set(["type"]); // Keys to ignore in the display tree, can be extended as needed.
 
 type JsonValue = string | number | boolean | null | JsonObject | JsonValue[];
 
@@ -21,8 +27,8 @@ type JsonObject = {
 
 function prettyLabel(key: string): string {
   return key
-    .replace(/([A-Z])/g, " $1")
-    .replace(/[_-]+/g, " ")
+    .replaceAll(/([A-Z])/g, " $1")
+    .replaceAll(/[_-]+/g, " ")
     .replace(/^./, (s) => s.toUpperCase())
     .trim();
 }
@@ -32,14 +38,14 @@ function toDisplayString(value: string | number | boolean | null): string {
   return String(value);
 }
 
-function isObject(value: JsonValue | undefined): value is JsonObject {
+function isObject(value: unknown): value is JsonObject {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-export function ValueTree({ label, value }: Readonly<{ label: string; value: JsonValue | undefined }>) {
+export function ValueTree({ label, value }: Readonly<{ label: string; value: unknown }>) {
   if (value === undefined) return null;
 
-  if (IGNORE_LIST.includes(label.toLowerCase())) return null;
+  if (IGNORE_LIST.has(label.toLowerCase())) return null;
 
   if (value === null || typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
     return <InfoCard label={label} value={toDisplayString(value)} />;
@@ -165,10 +171,15 @@ export default function DppDetailPage() {
     );
   }
 
-  const supplyChain = data.supplyChain;
-  const usage = data.usage;
-  const product = data.product as Product;
-  const productInfo = product?.productInfo as ProductInformation;
+  const dppData = data as unknown as DPP;
+  const supplyChain = dppData.supplyChain;
+  const usage = dppData.usage;
+  const product = dppData.product;
+  const productInfo = product?.productInfo;
+  const compliance = product?.compliance;
+  const sustainability = product?.sustainability;
+  const endOfLife = product?.endOfLife;
+  const guidelines = product?.guidelines;
 
   return (
     <main className="max-w-6xl mx-auto px-4 py-8 space-y-6">
@@ -184,18 +195,26 @@ export default function DppDetailPage() {
         </Link>
       </div>
 
-      <DPPInformation {...(data as any)} />
+      <DPPInformation {...dppData} />
 
-      <ProductInformationComponent productInfo={productInfo} productSector={product.productSector}/>
+      {productInfo && (
+        <ProductInformationComponent
+          productInfo={productInfo}
+          productSector={product?.productSector}
+        />
+      )}
 
-      <CollapsibleSection title="Supply Chain and Usage" color="amber" showCollapseButton defaultOpen={false}>
-        <DataLayerGroup layer="Regulatory">
-          <ValueTree label="supplyChain" value={supplyChain} />
-        </DataLayerGroup>
-        <DataLayerGroup layer="Downstream Data">
-          <ValueTree label="usage" value={usage} />
-        </DataLayerGroup>
-      </CollapsibleSection>
+      <ComplianceComponent compliance={compliance} />
+
+      <SustainabilityComponent sustainability={sustainability} />
+
+      <EndOfLifeComponent endOfLife={endOfLife} />
+
+      <GuidelinesAndManualsComponent guidelines={guidelines} />
+
+      <SupplyChainComponent supplyChain={supplyChain} />
+
+      <UsageComponent usage={usage} />
 
       <CollapsibleSection title="Product Data" color="emerald" showCollapseButton defaultOpen={false}>
         <DataLayerGroup layer="Regulatory">
