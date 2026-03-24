@@ -27,6 +27,8 @@ export interface Country {
 }
 
 export interface Substance {
+  substanceName?: string;
+  substanceDescription?: string;
   iupacName?: string;
   ecNumber?: string;
   casNumber?: string;

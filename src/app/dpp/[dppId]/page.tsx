@@ -7,7 +7,9 @@ import ErrorMessage from "@/components/ErrorMessage";
 import InfoCard from "@/components/InfoCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { CollapsibleSection, DataLayerGroup } from "@/components/form/CollapsibleSection";
-import { DPPInformation } from "../groups/DPPInformation";
+import { DPPInformation } from "../groups/DPPInformationComponent";
+import { Product, ProductInformation } from "@/types";
+import { ProductInformationComponent } from "../groups/ProductInformationComponent";
 
 const IGNORE_LIST = [ "type" ]; // Keys to ignore in the display tree, can be extended as needed.
 
@@ -40,7 +42,7 @@ export function ValueTree({ label, value }: Readonly<{ label: string; value: Jso
   if (IGNORE_LIST.includes(label.toLowerCase())) return null;
 
   if (value === null || typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
-    return <InfoCard label={prettyLabel(label)} value={toDisplayString(value)} />;
+    return <InfoCard label={label} value={toDisplayString(value)} />;
   }
 
   if (Array.isArray(value)) {
@@ -61,13 +63,13 @@ export function ValueTree({ label, value }: Readonly<{ label: string; value: Jso
   }
 
   const entries = Object.entries(value).filter(([, nestedValue]) => nestedValue !== undefined);
-  if (entries.length === 0) return <InfoCard label={prettyLabel(label)} value="No data" />;
+  if (entries.length === 0) return <InfoCard label={label} value="No data" />;
 
   return (
     <details open className="rounded-lg border border-gray-200 bg-white overflow-hidden">
       <summary className="list-none cursor-pointer px-4 py-3 text-sm font-semibold text-gray-800 bg-gray-50 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
         <span className="flex items-center justify-between">
-          {prettyLabel(label)}
+          {label}
           <svg
             className="w-4 h-4 text-gray-500"
             fill="none"
@@ -165,7 +167,8 @@ export default function DppDetailPage() {
 
   const supplyChain = data.supplyChain;
   const usage = data.usage;
-  const product = data.product;
+  const product = data.product as Product;
+  const productInfo = product?.productInfo as ProductInformation;
 
   return (
     <main className="max-w-6xl mx-auto px-4 py-8 space-y-6">
@@ -183,6 +186,8 @@ export default function DppDetailPage() {
 
       <DPPInformation {...(data as any)} />
 
+      <ProductInformationComponent productInfo={productInfo} productSector={product.productSector}/>
+
       <CollapsibleSection title="Supply Chain and Usage" color="amber" showCollapseButton defaultOpen={false}>
         <DataLayerGroup layer="Regulatory">
           <ValueTree label="supplyChain" value={supplyChain} />
@@ -194,7 +199,7 @@ export default function DppDetailPage() {
 
       <CollapsibleSection title="Product Data" color="emerald" showCollapseButton defaultOpen={false}>
         <DataLayerGroup layer="Regulatory">
-          <ValueTree label="product" value={product} />
+          <ValueTree label="product" value={data.product} />
         </DataLayerGroup>
       </CollapsibleSection>
 

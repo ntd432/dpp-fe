@@ -1,5 +1,5 @@
 interface InfoCardProps {
-  label: string;
+  label?: string;
   value: string;
   link?: string;
 }
@@ -9,10 +9,12 @@ export default function InfoCard({ label, value }: Readonly<InfoCardProps>) {
     value.startsWith("http://") || value.startsWith("https://");
 
   return (
-    <div className="flex flex-col gap-1 p-4 bg-gray-50 rounded-lg border border-gray-100">
-      <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-        {formatLabel(label)}
-      </span>
+    <div className="flex flex-col gap-1 rounded-lg">
+      {label && (
+        <span className="text-sm font-semibold">
+          {label}
+        </span>
+      )}
       {isUrl ? (
         <a
           href={value}
@@ -31,10 +33,12 @@ export default function InfoCard({ label, value }: Readonly<InfoCardProps>) {
 
 export function InfoCardWithLink({ label, value, link }: Readonly<InfoCardProps>) {
   return (
-    <div className="flex flex-col gap-1 p-4 bg-gray-50 rounded-lg border border-gray-100">
-      <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-        {formatLabel(label)}
-      </span>
+    <div className="flex flex-col gap-1 rounded-lg">
+      {label && (
+        <span className="text-sm font-semibold">
+          {label}
+        </span>
+      )}
         <a
           href={link}
           target="_blank"
@@ -43,6 +47,19 @@ export function InfoCardWithLink({ label, value, link }: Readonly<InfoCardProps>
         >
           {value}
         </a>
+    </div>
+  );
+}
+
+export function ImageInfoCard({ label, value }: Readonly<InfoCardProps>) {
+  return (
+    <div className="flex flex-col gap-1 rounded-lg">
+      {label && (
+        <span className="text-sm font-semibold">
+          {label}
+        </span>
+      )}
+      <img src={value} alt={label} className="max-w-full h-auto rounded-md border border-gray-200" />
     </div>
   );
 }

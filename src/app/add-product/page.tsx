@@ -98,6 +98,8 @@ function removeAt<T>(items: T[], index: number, onChange: (items: T[]) => void) 
 const INPUT_CLASS =
   "px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-blue-light)] focus:border-[var(--color-brand-blue-light)]";
 
+const INPUT_LARGE_CLASS = "md:col-span-2 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-blue-light)] focus:border-[var(--color-brand-blue-light)]"
+
 const MASS_UNITS = ["g", "kg", "mg", "lb", "oz"];
 const FOOTPRINT_UNITS = ["kg CO2e", "g CO2e", "t CO2e"];
 const CONSUMPTION_UNITS = ["kWh", "Wh", "MJ", "L", "m3", "index"];
@@ -1046,6 +1048,8 @@ function ComponentArrayEditor({
 
 interface SubstanceEntry {
   _key: string;
+  substanceName: string;
+  substanceDescription: string;
   iupacName: string;
   ecNumber: string;
   casNumber: string;
@@ -1072,6 +1076,8 @@ function SubstanceArrayEditor({
           ...items,
           {
             _key: uid(),
+            substanceName: "",
+            substanceDescription: "",
             iupacName: "",
             ecNumber: "",
             casNumber: "",
@@ -1084,6 +1090,13 @@ function SubstanceArrayEditor({
       </div>
       {items.map((item, i) => (
         <div key={item._key} className="grid grid-cols-1 md:grid-cols-2 gap-2 p-3 bg-white border border-gray-200 rounded-lg">
+          <input
+            type="text"
+            placeholder="Substance name"
+            value={item.substanceName}
+            onChange={(e) => updateAt(items, i, "substanceName", e.target.value, onChange)}
+            className={INPUT_CLASS}
+          />
           <input
             type="text"
             placeholder="IUPAC name"
@@ -1121,17 +1134,24 @@ function SubstanceArrayEditor({
           />
           <input
             type="text"
+            placeholder="Substance description"
+            value={item.substanceDescription}
+            onChange={(e) => updateAt(items, i, "substanceDescription", e.target.value, onChange)}
+            className={INPUT_LARGE_CLASS}
+          />    
+          <input
+            type="text"
             placeholder="Safe usage instruction"
             value={item.safeUsageInstruction}
             onChange={(e) => updateAt(items, i, "safeUsageInstruction", e.target.value, onChange)}
-            className={INPUT_CLASS}
+            className={INPUT_LARGE_CLASS}
           />
           <input
             type="text"
             placeholder="Disassembly instruction"
             value={item.disassemblyInstruction}
             onChange={(e) => updateAt(items, i, "disassemblyInstruction", e.target.value, onChange)}
-            className="md:col-span-2 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-blue-light)] focus:border-[var(--color-brand-blue-light)]"
+            className={INPUT_LARGE_CLASS}
           />
           <div className="md:col-span-2 flex justify-end">
             <button
@@ -1763,6 +1783,8 @@ function buildPayload(
   });
 
   const toSubstance = (s: SubstanceEntry): Record<string, unknown> => ({
+    name: s.substanceName,
+    description: s.substanceDescription,
     iupacName: s.iupacName,
     ecNumber: s.ecNumber,
     casNumber: s.casNumber,
