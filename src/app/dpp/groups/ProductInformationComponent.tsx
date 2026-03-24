@@ -2,7 +2,7 @@ import {
   CollapsibleSection,
   DataLayerGroup,
 } from "@/components/form/CollapsibleSection";
-import { ValueTree } from "../[dppId]/page";
+import { ComponentListCard, KeyValuePair, ListCards, ValueTree } from "./CommonComponents";
 import { Component, ProductInformation, Substance } from "@/types";
 import { ImageInfoCard, InfoCardWithLink } from "@/components/InfoCard";
 import DataPointComponent from "@/components/DataPointComponent";
@@ -35,20 +35,17 @@ function formatIsoDuration(isoDuration?: string): string {
   return parts.length > 0 ? parts.join(", ") : value;
 }
 
-function SubstanceListCard({label, substanceList}: Readonly<{ label: string; substanceList: ReadonlyArray<Substance> }>) {
-  if (substanceList.length === 0) {
-    return (
-      <ValueTree label={label} value="No data" />
-    )
-  }
+function SubstanceListCard({list}: Readonly<{ list: ReadonlyArray<Substance> }>) {
   return (
-    <div className="space-y-3">
-      {label && <p className="text-sm font-semibold text-gray-700">{label}</p>}
-      {substanceList.map((substance, index) => (
-        <div key={`substance-${substance.iupacName || index}`}>{SubstanceCard(substance)}</div>
-      ))}
-    </div>
-  );
+      <ListCards
+        list={list}
+        label="Substances"
+        getKey={(substance, index) =>
+          `substance-${substance.substanceName || index}`
+        }
+        renderCard={(substance) => SubstanceCard(substance)}
+      />
+    );
 }
 
 function SubstanceCard(substance: Readonly<Substance>) {
@@ -64,61 +61,7 @@ function SubstanceCard(substance: Readonly<Substance>) {
     { label: "Disassembly Instruction", value: substance.disassemblyInstruction },
   ];
   return (
-    <div className="ml-5 rounded-lg bg-white p-3 border border-gray-200">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        {pairs.map((pair) => (
-          <ValueTree key={pair.label} label={pair.label} value={pair.value} />
-        ))}
-      </div>
-    </div>
-
-  );
-}
-
-function ComponentListCard({label, componentList}: Readonly<{ label: string; componentList: ReadonlyArray<Component> }>) {
-  if (componentList.length === 0) {
-    return (
-      <ValueTree label={label} value="No data" />
-    )
-  }
-  return (
-    <div className="space-y-3">
-      <p className="text-sm font-semibold text-gray-700">{label}</p>
-      {componentList.map((component, index) => (
-        <div key={`component-${component.componentName || index}`}>{ComponentCard(component)}</div>
-      ))}
-    </div>
-  );
-}
-
-function ComponentCard(component: Readonly<Component>) {
-  let componentName = component.componentName || "Unnamed Component";
-  if (component.componentPercentage !== undefined) {
-    componentName = `${componentName} (${component.componentPercentage}%)`;
-  } else if (component.componentCountValue !== undefined) {
-    componentName = `${componentName} (${component.componentCountValue} ${component.componentCountUnit || "units"})`;
-  }
-  const componentPairs = [
-    { label: "Component", value: componentName },
-    { label: "Component Reference", value: component.componentReference },
-    { label: "Component URI", value: component.componentURI },
-  ];
-  return (
-    <div className="ml-5 rounded-lg bg-white p-3 border border-gray-200">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-        {componentPairs.map((pair) => (
-          <ValueTree key={pair.label} label={pair.label} value={pair.value} />
-        ))}
-        {component.componentSupplier && (
-          <InfoCardWithLink
-            label="Component Supplier"
-            value={component.componentSupplier?.name || "N/A"}
-            link={component.componentSupplier?.url}
-          />
-        )}
-      </div>
-    </div>
-
+    <KeyValuePair numberOfColumn={2} pairs={pairs} />
   );
 }
 
@@ -199,10 +142,10 @@ export function ProductInformationComponent({
           <ValueTree label="Spare Parts" value={spareParts} />
         </DataPointComponent>
         <DataPointComponent label="Hazardous Substances">
-          <SubstanceListCard label="Substances" substanceList={hazardousSubstances || []} />
+          <SubstanceListCard list={hazardousSubstances || []} />
         </DataPointComponent>
         <DataPointComponent label="Substances of Concern">
-          <SubstanceListCard label="Substances" substanceList={substancesOfConcern || []} />
+          <SubstanceListCard list={substancesOfConcern || []} />
         </DataPointComponent>
         {/* TODO: Add remaining data points (sector required/non-required information, related objects, test report, commercial information, quality assessment, identified risk) */}
         {/* <DataPointComponent label="Sector Required Information">

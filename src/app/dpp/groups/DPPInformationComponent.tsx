@@ -1,5 +1,5 @@
 import { CollapsibleSection } from "@/components/form/CollapsibleSection";
-import { ValueTree } from "../[dppId]/page";
+import { ValueTree } from "./CommonComponents";
 import { DPP } from "@/types";
 import { InfoCardWithLink } from "@/components/InfoCard";
 
@@ -29,7 +29,7 @@ export function DPPInformation(dppInfo: Readonly<DPP>) {
           <ValueTree key={pair.label} label={pair.label} value={pair.value} />
         ))}
         <InfoCardWithLink
-          label="issuer"
+          label="Issuer"
           value={dppInfo.issuer?.name || "N/A"}
           link={dppInfo.issuer?.url}
         />

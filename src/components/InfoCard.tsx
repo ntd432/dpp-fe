@@ -20,7 +20,7 @@ export default function InfoCard({ label, value }: Readonly<InfoCardProps>) {
           href={value}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-emerald-600 hover:text-emerald-700 underline break-all text-sm"
+          className="text-[var(--color-brand-pink)] hover:text-[var(--color-brand-pink-dark)] underline break-all text-sm"
         >
           {value}
         </a>
