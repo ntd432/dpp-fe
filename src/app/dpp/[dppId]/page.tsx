@@ -7,6 +7,9 @@ import ErrorMessage from "@/components/ErrorMessage";
 import InfoCard from "@/components/InfoCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { CollapsibleSection, DataLayerGroup } from "@/components/form/CollapsibleSection";
+import { DPPInformation } from "../groups/DPPInformationComponent";
+import { Product, ProductInformation } from "@/types";
+import { ProductInformationComponent } from "../groups/ProductInformationComponent";
 
 const IGNORE_LIST = [ "type" ]; // Keys to ignore in the display tree, can be extended as needed.
 
@@ -33,13 +36,13 @@ function isObject(value: JsonValue | undefined): value is JsonObject {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-function ValueTree({ label, value }: Readonly<{ label: string; value: JsonValue | undefined }>) {
+export function ValueTree({ label, value }: Readonly<{ label: string; value: JsonValue | undefined }>) {
   if (value === undefined) return null;
 
   if (IGNORE_LIST.includes(label.toLowerCase())) return null;
 
   if (value === null || typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
-    return <InfoCard label={prettyLabel(label)} value={toDisplayString(value)} />;
+    return <InfoCard label={label} value={toDisplayString(value)} />;
   }
 
   if (Array.isArray(value)) {
@@ -60,13 +63,13 @@ function ValueTree({ label, value }: Readonly<{ label: string; value: JsonValue 
   }
 
   const entries = Object.entries(value).filter(([, nestedValue]) => nestedValue !== undefined);
-  if (entries.length === 0) return <InfoCard label={prettyLabel(label)} value="No data" />;
+  if (entries.length === 0) return <InfoCard label={label} value="No data" />;
 
   return (
     <details open className="rounded-lg border border-gray-200 bg-white overflow-hidden">
       <summary className="list-none cursor-pointer px-4 py-3 text-sm font-semibold text-gray-800 bg-gray-50 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
         <span className="flex items-center justify-between">
-          {prettyLabel(label)}
+          {label}
           <svg
             className="w-4 h-4 text-gray-500"
             fill="none"
@@ -162,26 +165,16 @@ export default function DppDetailPage() {
     );
   }
 
-  const corePairs: Array<{ label: string; value: JsonValue | undefined }> = [
-    { label: "dppRegistrationNumber", value: data.dppRegistrationNumber },
-    { label: "granularity", value: data.granularity },
-    { label: "productBatchNumber", value: data.productBatchNumber },
-    { label: "productSerialNumber", value: data.productSerialNumber },
-    { label: "dataCarrier", value: data.dataCarrier },
-    { label: "dataCarrierFormat", value: data.dataCarrierFormat },
-  ];
-
-  const issuer = data.issuer;
   const supplyChain = data.supplyChain;
   const usage = data.usage;
-  const product = data.product;
+  const product = data.product as Product;
+  const productInfo = product?.productInfo as ProductInformation;
 
   return (
     <main className="max-w-6xl mx-auto px-4 py-8 space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Digital Product Passport</h1>
-          <p className="mt-1 text-sm text-gray-600">DPP ID: {dppId}</p>
         </div>
         <Link
           href="/dpp"
@@ -191,14 +184,9 @@ export default function DppDetailPage() {
         </Link>
       </div>
 
-      <CollapsibleSection title="DPP Core Information" color="indigo" defaultOpen>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        {corePairs.map((pair) => (
-            <ValueTree key={pair.label} label={pair.label} value={pair.value} />
-        ))}
-        </div>
-        <ValueTree label="issuer" value={issuer} />
-      </CollapsibleSection>
+      <DPPInformation {...(data as any)} />
+
+      <ProductInformationComponent productInfo={productInfo} productSector={product.productSector}/>
 
       <CollapsibleSection title="Supply Chain and Usage" color="amber" showCollapseButton defaultOpen={false}>
         <DataLayerGroup layer="Regulatory">
@@ -211,7 +199,7 @@ export default function DppDetailPage() {
 
       <CollapsibleSection title="Product Data" color="emerald" showCollapseButton defaultOpen={false}>
         <DataLayerGroup layer="Regulatory">
-          <ValueTree label="product" value={product} />
+          <ValueTree label="product" value={data.product} />
         </DataLayerGroup>
       </CollapsibleSection>
 

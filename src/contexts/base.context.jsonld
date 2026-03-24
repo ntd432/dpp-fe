@@ -26,7 +26,6 @@
     "Person": "schema:Person",
     "Place": "schema:Place",
     "Country": "schema:Country",
-    "Substance": "schema:Substance",
     "Legislation": "schema:Legislation",
     "Certification": "schema:Certification",
     "Guide": "schema:Guide",
