@@ -22,7 +22,6 @@ export function ProductInformationStep({ shared }: { shared: any }) {
   return (
         <CollapsibleSection
           title="Product Information"
-          color="blue"
           defaultOpen
         >
           <div>

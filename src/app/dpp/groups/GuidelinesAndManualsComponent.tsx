@@ -1,7 +1,7 @@
 import { CollapsibleSection, DataLayerGroup } from "@/components/form/CollapsibleSection";
 import DataPointComponent from "@/components/DataPointComponent";
-import { ListCards, ValueTree } from "./CommonComponents";
-import { CommercialInstruction, Guide, GuidelinesAndManuals } from "@/types";
+import { ValueTree } from "./CommonComponents";
+import { Guide, GuidelinesAndManuals } from "@/types";
 import InfoCard, { InfoCardWithLink } from "@/components/InfoCard";
 
 type GuidelinesAndManualsComponentProps = Readonly<{
@@ -20,7 +20,6 @@ export function GuidelinesAndManualsComponent({ guidelines }: GuidelinesAndManua
   return (
     <CollapsibleSection
       title="Guidelines and Manuals"
-      color="blue"
       showCollapseButton
       defaultOpen={false}
     >

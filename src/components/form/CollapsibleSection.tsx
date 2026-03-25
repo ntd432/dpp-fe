@@ -5,7 +5,6 @@ import { DataLayerBadge } from "./DataLayerBadge";
 
 interface CollapsibleSectionProps {
   title: string;
-  color: string;
   children: React.ReactNode;
   showCollapseButton?: boolean;
   defaultOpen?: boolean;
@@ -13,7 +12,6 @@ interface CollapsibleSectionProps {
 
 export function CollapsibleSection({
   title,
-  color,
   children,
   showCollapseButton = false,
   defaultOpen = true,

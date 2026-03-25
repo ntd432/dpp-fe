@@ -104,7 +104,6 @@ export function ProductInformationComponent({
   return (
     <CollapsibleSection
       title="Product Information"
-      color="emerald"
       showCollapseButton
       defaultOpen={false}
     >

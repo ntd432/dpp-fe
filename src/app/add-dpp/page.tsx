@@ -430,7 +430,7 @@ export default function AddDppPage() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <CollapsibleSection title="Digital Product Passport Information" color="indigo" defaultOpen>
+        <CollapsibleSection title="Digital Product Passport Information" defaultOpen>
             <div className="grid grid-cols-2 gap-4">
                 <FormField
                     label="Batch Number"
@@ -562,7 +562,7 @@ export default function AddDppPage() {
                 </div>
         </CollapsibleSection>  
 
-        <CollapsibleSection title="Product Supply Chain Information" color="amber" defaultOpen>
+        <CollapsibleSection title="Product Supply Chain Information" defaultOpen>
           <DataLayerGroup layer="Regulatory">
             <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
               <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">

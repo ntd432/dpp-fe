@@ -16,7 +16,7 @@ export function SustainabilityStep({ shared }: { shared: any }) {
   } = shared;
 
   return (
-        <CollapsibleSection title="Sustainability" color="emerald" defaultOpen>
+        <CollapsibleSection title="Sustainability" defaultOpen>
           <DataLayerGroup layer="Regulatory">
             {/* SustainabilityPerformance */}
             <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">

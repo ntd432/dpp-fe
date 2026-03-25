@@ -11,7 +11,6 @@ export function EndOfLifeComponent({ endOfLife }: EndOfLifeComponentProps) {
   return (
     <CollapsibleSection
       title="End of Life"
-      color="amber"
       showCollapseButton
       defaultOpen={false}
     >

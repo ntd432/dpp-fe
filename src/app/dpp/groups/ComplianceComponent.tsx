@@ -1,7 +1,7 @@
 import { CollapsibleSection, DataLayerGroup } from "@/components/form/CollapsibleSection";
 import DataPointComponent from "@/components/DataPointComponent";
 import { KeyValuePair, ListCards, ValueTree } from "./CommonComponents";
-import { Certification, Compliance, Label, Legislation, Product } from "@/types";
+import { Certification, Compliance, Label, Legislation } from "@/types";
 import InfoCard from "@/components/InfoCard";
 
 type ComplianceComponentProps = Readonly<{
@@ -82,7 +82,6 @@ export function ComplianceComponent({ compliance }: ComplianceComponentProps) {
   return (
     <CollapsibleSection
       title="Compliance"
-      color="rose"
       showCollapseButton
       defaultOpen={false}
     >

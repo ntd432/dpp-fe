@@ -111,7 +111,6 @@ export function SustainabilityComponent({
   return (
     <CollapsibleSection
       title="Sustainability"
-      color="emerald"
       showCollapseButton
       defaultOpen={false}
     >

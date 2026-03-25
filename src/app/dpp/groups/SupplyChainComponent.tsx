@@ -11,7 +11,6 @@ export function SupplyChainComponent({ supplyChain }: SupplyChainComponentProps)
   return (
     <CollapsibleSection
       title="Supply Chain"
-      color="amber"
       showCollapseButton
       defaultOpen={false}
     >

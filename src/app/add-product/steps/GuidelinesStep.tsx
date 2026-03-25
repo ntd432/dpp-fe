@@ -12,7 +12,7 @@ export function GuidelinesStep({ shared }: { shared: any }) {
   } = shared;
 
   return (
-        <CollapsibleSection title="Guidelines & Manuals" color="cyan" defaultOpen>
+        <CollapsibleSection title="Guidelines & Manuals" defaultOpen>
           <DataLayerGroup layer="Regulatory">
             <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
               <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">

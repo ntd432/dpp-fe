@@ -21,17 +21,18 @@ export const ARRAY_TYPES = new Set([
     "renewableNonRenewableContent",
     "regulation", "productLabel", "certification",
     "environmentalImpact", "environmentalFootprint", "resourceConsumption", "resourceConsumptionWhenUsing", "resourceConsumptionWhenRecovering",
-    "incidentsAndErrors", "maintenanceLog", "usageHistory"
+    "incidentsAndErrors", "maintenanceLog", "usageHistory",
+    "recyclingPartner", "customerReturnChannel",
 ]);
 
 export const TEST_DPP = {
     "dataCarrier": "dpp/f9d15150-50c8-4ae3-b1f6-3c283e1d89fa",
     "dataCarrierFormat": "QR code",
     "supplyChain": {
-        "customerReturnChannel": {
+        "customerReturnChannel": [{
             "type": "https://schema.org/Organization",
             "name": "Apple Trade In"
-        },
+        }],
         "productTraceability": {
             "traceabilityEvent": [
                 {
@@ -56,27 +57,33 @@ export const TEST_DPP = {
                 }
             ]
         },
-        "recyclingPartner": {
+        "recyclingPartner": [{
             "type": "https://schema.org/Organization",
-            "name": "TES-AMM"
-        }
+            "name": "TES-AMM",
+            "url": "https://tes-amm.com"
+        },
+    {
+            "type": "https://schema.org/Organization",
+            "name": "TES-AMM-2"
+        }],
+        
     },
     "usage": {
-        "incidentsAndErrors": {
+        "incidentsAndErrors": [{
             "type": "https://ntd432.github.io/dpp/models/dpp-core.ttl#Event",
             "actionName": "No incidents recorded",
             "time": "2026-03-01T00:00:00Z"
-        },
-        "maintenanceLog": {
+        }],
+        "maintenanceLog": [{
             "type": "https://ntd432.github.io/dpp/models/dpp-core.ttl#Event",
             "actionName": "Battery health diagnostic",
             "time": "2026-02-10T09:00:00Z"
-        },
-        "usageHistory": {
+        }],
+        "usageHistory": [{
             "type": "https://ntd432.github.io/dpp/models/dpp-core.ttl#Event",
             "actionName": "First activation",
             "time": "2025-09-22T10:15:00Z"
-        }
+        }]
     },
     "dppRegistrationNumber": "f9d15150-50c8-4ae3-b1f6-3c283e1d89fa",
     "granularity": "item",
@@ -107,6 +114,13 @@ export const TEST_DPP = {
                     "labelDocumentation": "https://example.com/eu-energy-label/iphone-17-pro",
                     "labelName": "EU Energy Label",
                     "labelValue": "Class A"
+                },
+                {
+                    "type": "https://ntd432.github.io/dpp/models/dpp-compliance.ttl#Label",
+                    "labelDescription": "2- Declared energy efficiency class.",
+                    "labelDocumentation": "https://example.com/eu-energy-label/iphone-17-pro",
+                    "labelName": "EU Energy Label 2",
+                    "labelValue": "Class A"
                 }
             ],
             "productStatusAssessment": "https://apple.com/assessment/iphone-17",
@@ -115,6 +129,11 @@ export const TEST_DPP = {
                     "type": "https://schema.org/Legislation",
                     "identifier": "EU 2024/1781",
                     "name": "EU Ecodesign for Sustainable Products Regulation (ESPR)"
+                },
+                {
+                    "type": "https://schema.org/Legislation",
+                    "identifier": "EU 2024/1781",
+                    "name": "2- EU Ecodesign for Sustainable Products Regulation (ESPR)"
                 }
             ]
         },
@@ -132,7 +151,14 @@ export const TEST_DPP = {
             "refurbishability": "Certified refurbishment available with full diagnostic and component replacement workflow.",
             "repairability": "Battery and display service supported through authorized channels and self-service repair program in eligible regions.",
             "reusability": "Suitable for refurbishment and second-life deployment when core modules pass diagnostics.",
-            "upgradeOptions": "Long-term iOS software updates; hardware upgrades are limited."
+            "upgradeOptions": "Long-term iOS software updates; hardware upgrades are limited.",
+            "endOfLifeHistory": [
+                {
+                    "type": "https://ntd432.github.io/dpp/models/dpp-core.ttl#Event",
+                    "actionName": "Moved to recycling facility",
+                    "time": "2026-03-01T00:00:00Z"
+                }
+            ]
         },
         "guidelines": {
             "accessibility": "VoiceOver, AssistiveTouch, Live Captions, Sound Recognition, and hearing device compatibility.",
