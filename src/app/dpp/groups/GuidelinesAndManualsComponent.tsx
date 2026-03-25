@@ -1,11 +1,20 @@
 import { CollapsibleSection, DataLayerGroup } from "@/components/form/CollapsibleSection";
 import DataPointComponent from "@/components/DataPointComponent";
-import { ValueTree } from "./CommonComponents";
-import { GuidelinesAndManuals } from "@/types";
+import { ListCards, ValueTree } from "./CommonComponents";
+import { CommercialInstruction, Guide, GuidelinesAndManuals } from "@/types";
+import InfoCard, { InfoCardWithLink } from "@/components/InfoCard";
 
 type GuidelinesAndManualsComponentProps = Readonly<{
   guidelines?: GuidelinesAndManuals;
 }>;
+
+function GuideCard({label, guide}: Readonly<{label: string, guide: Readonly<Guide>}>) {
+  return (
+    (guide.url ? 
+    <InfoCardWithLink label={label} value={guide.name || guide.url} link={guide.url} /> 
+    : <InfoCard label={label} value={guide.name || "N/A"} />)
+  );
+}
 
 export function GuidelinesAndManualsComponent({ guidelines }: GuidelinesAndManualsComponentProps) {
   return (
@@ -17,19 +26,31 @@ export function GuidelinesAndManualsComponent({ guidelines }: GuidelinesAndManua
     >
       <DataLayerGroup layer="Regulatory">
         <DataPointComponent
-          label="Technical Guides"
-          isEmpty={!guidelines}
+          label="Assembly Guideline"
+          isEmpty={!guidelines?.assemblyGuideline}
         >
-          <ValueTree label="Assembly Guideline" value={guidelines?.assemblyGuideline} />
-          <ValueTree
-            label="Non-Destructive Disassembly Guideline"
-            value={guidelines?.nonDestructiveDisassemblyGuideline}
-          />
-          <ValueTree label="Product Manual" value={guidelines?.productManual} />
-          <ValueTree
-            label="Storage and Transport Guideline"
-            value={guidelines?.storageAndTransportGuideline?.storageAndTransportGuideline}
-          />
+            <GuideCard label="" guide={guidelines?.assemblyGuideline || {}} />
+        </DataPointComponent>
+        <DataPointComponent
+          label="Non-Destructive Disassembly Guideline"
+          isEmpty={!guidelines?.nonDestructiveDisassemblyGuideline}
+        >
+            <GuideCard label="" guide={guidelines?.nonDestructiveDisassemblyGuideline || {}} />
+        </DataPointComponent>
+        <DataPointComponent
+          label="Product Manual"
+          isEmpty={!guidelines?.productManual}
+        >
+          <GuideCard label="" guide={guidelines?.productManual || {}} />
+        </DataPointComponent>
+      </DataLayerGroup>
+
+      <DataLayerGroup layer="Sectoral">
+        <DataPointComponent
+          label="Storage & Transport Guideline"
+          isEmpty={!guidelines?.storageAndTransportGuideline}
+        >
+          <InfoCardWithLink value={guidelines?.storageAndTransportGuideline?.name || guidelines?.storageAndTransportGuideline?.url || "N/A"} link={guidelines?.storageAndTransportGuideline?.url} />
         </DataPointComponent>
       </DataLayerGroup>
 
@@ -38,28 +59,21 @@ export function GuidelinesAndManualsComponent({ guidelines }: GuidelinesAndManua
           label="Commercial Instructions"
           isEmpty={!guidelines?.commercialInstruction}
         >
-          <ValueTree
-            label="Safety Instruction"
-            value={guidelines?.commercialInstruction?.safetyInstruction}
-          />
-          <ValueTree
-            label="Maintenance Instruction"
-            value={guidelines?.commercialInstruction?.maintenanceInstruction}
-          />
-          <ValueTree
-            label="Waste Sorting Instruction"
-            value={guidelines?.commercialInstruction?.wasteSortingInstruction}
-          />
+            <GuideCard label="Safety Instruction" guide={guidelines?.commercialInstruction?.safetyInstruction || {}} />
+            <GuideCard label="Maintenance Instruction" guide={guidelines?.commercialInstruction?.maintenanceInstruction || {}} />
+            <GuideCard label="Waste Sorting Instruction" guide={guidelines?.commercialInstruction?.wasteSortingInstruction || {}} />
         </DataPointComponent>
-      </DataLayerGroup>
-
-      <DataLayerGroup layer="Downstream Data">
         <DataPointComponent
-          label="Accessibility and Utilization"
-          isEmpty={!guidelines}
+          label="Accessibility"
+          isEmpty={!guidelines?.accessibility}
         >
-          <ValueTree label="Accessibility" value={guidelines?.accessibility} />
-          <ValueTree label="Utilization Characteristic" value={guidelines?.utilizationCharacteristic} />
+          <ValueTree label="" value={guidelines?.accessibility} />
+        </DataPointComponent>
+        <DataPointComponent
+          label="Utilization Characteristic"
+          isEmpty={!guidelines?.utilizationCharacteristic}
+        >
+          <ValueTree label="" value={guidelines?.utilizationCharacteristic} />
         </DataPointComponent>
       </DataLayerGroup>
     </CollapsibleSection>

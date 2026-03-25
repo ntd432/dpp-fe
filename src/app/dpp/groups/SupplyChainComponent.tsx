@@ -1,6 +1,6 @@
 import { CollapsibleSection, DataLayerGroup } from "@/components/form/CollapsibleSection";
 import DataPointComponent from "@/components/DataPointComponent";
-import { EventListCard, ParticipantListCard, ValueTree } from "./CommonComponents";
+import { EventListCard, ParticipantListCard } from "./CommonComponents";
 import { SupplyChain } from "@/types";
 
 type SupplyChainComponentProps = Readonly<{

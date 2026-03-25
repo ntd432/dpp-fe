@@ -2029,9 +2029,7 @@ function buildPayload(
       assemblyGuideline: { url: f.assemblyGuidelineUrl },
       nonDestructiveDisassemblyGuideline: { url: f.disassemblyGuidelineUrl },
       productManual: { url: f.productManualUrl },
-      storageAndTransportGuideline: {
-        storageAndTransportGuideline: { url: f.storageGuidelineUrl },
-      },
+      storageAndTransportGuideline: { url: f.storageGuidelineUrl },
       commercialInstruction: {
         safetyInstruction: { url: f.safetyInstructionUrl },
         maintenanceInstruction: { url: f.maintenanceInstructionUrl },
