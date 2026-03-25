@@ -2071,8 +2071,8 @@ export default function AddProductPage() {
   ] as const;
   const [currentSectionStep, setCurrentSectionStep] = useState(0);
 
-  const fieldsByStep: Array<Array<keyof FormState>> = [
-    [
+  const fieldsByStep: Record<string, Array<keyof FormState>> = {
+    "Product Information": [
       "sector",
       "sectorType",
       "gtin",
@@ -2139,7 +2139,7 @@ export default function AddProductPage() {
       "identifiedRisk",
       "productInfoCustomFields",
     ],
-    [
+    "Compliance": [
       "regulations",
       "productLabels",
       "productStatusAssessment",
@@ -2148,7 +2148,7 @@ export default function AddProductPage() {
       "dmmIdentifier",
       "complianceCustomFields",
     ],
-    [
+    "Sustainability": [
       "environmentalFootprints",
       "resourceConsumptions",
       "plasticsRelease",
@@ -2165,7 +2165,7 @@ export default function AddProductPage() {
       "environmentDeclaration",
       "sustainabilityCustomFields",
     ],
-    [
+    "End of Life": [
       "recyclingReusePotential",
       "disposalOptions",
       "unsoldProductsInformation",
@@ -2182,7 +2182,7 @@ export default function AddProductPage() {
       "endOfLifeReport",
       "endOfLifeCustomFields",
     ],
-    [
+    "Guidelines & Manuals": [
       "assemblyGuidelineUrl",
       "disassemblyGuidelineUrl",
       "productManualUrl",
@@ -2194,7 +2194,7 @@ export default function AddProductPage() {
       "utilizationCharacteristic",
       "guidelinesCustomFields",
     ],
-  ];
+  };
 
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -2401,7 +2401,7 @@ export default function AddProductPage() {
   };
 
   const clearCurrentStep = () => {
-    const fields = fieldsByStep[currentSectionStep] ?? [];
+    const fields = fieldsByStep[sectionSteps[currentSectionStep]] ?? [];
     setForm((prev) => {
       const next = { ...prev } as FormState;
       for (const field of fields) {

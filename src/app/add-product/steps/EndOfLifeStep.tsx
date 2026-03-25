@@ -1,6 +1,7 @@
 import React from "react";
 import { FormField, TextAreaField } from "@/components/form/FormField";
 import { CollapsibleSection, DataLayerGroup } from "@/components/form/CollapsibleSection";
+import DataPointComponent from "@/components/DataPointComponent";
 
 export function EndOfLifeStep({ shared }: { shared: any }) {
   const {
@@ -15,158 +16,87 @@ export function EndOfLifeStep({ shared }: { shared: any }) {
   return (
         <CollapsibleSection title="End of Life" defaultOpen>
           <DataLayerGroup layer="Regulatory">
-            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
-              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
-                <span className="flex items-center justify-between">
-                  Recycling & Disposal
-                  <svg
-                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </span>
-              </summary>
-              <div className="space-y-4 px-4 pb-4 pt-2">
+            <DataPointComponent label="Recycling and Reuse Potential">
               <TextAreaField
-                label="Recycling / Reuse Potential"
+                label=""
                 value={form.recyclingReusePotential}
                 onChange={(v) => set("recyclingReusePotential", v)}
               />
+            </DataPointComponent>
+            <DataPointComponent label="Disposal Options">
               <TextAreaField
-                label="Disposal Options"
+                label=""
                 value={form.disposalOptions}
                 onChange={(v) => set("disposalOptions", v)}
               />
+            </DataPointComponent>
+            <DataPointComponent label="Unsold Products Information">
               <TextAreaField
-                label="Unsold Products Information"
+                label=""
                 value={form.unsoldProductsInformation}
                 onChange={(v) => set("unsoldProductsInformation", v)}
               />
-              </div>
-            </details>
+            </DataPointComponent>
           </DataLayerGroup>
 
           <DataLayerGroup layer="Sectoral">
-            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
-              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
-                <span className="flex items-center justify-between">
-                  Expected Waste
-                  <svg
-                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </span>
-              </summary>
-              <div className="space-y-4 px-4 pb-4 pt-2">
-              <TextAreaField
-                label="Expected Waste"
+              <DataPointComponent label="Expected Waste">
+                <TextAreaField
+                label=""
                 value={form.expectedWaste}
                 onChange={(v) => set("expectedWaste", v)}
               />
-              </div>
-            </details>
+              </DataPointComponent>
           </DataLayerGroup>
 
           <DataLayerGroup layer="Commercial">
-            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
-              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
-                <span className="flex items-center justify-between">
-                  Circularity Options
-                  <svg
-                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </span>
-              </summary>
-              <div className="space-y-4 px-4 pb-4 pt-2">
-              <div className="space-y-4">
-                <TextAreaField
-                  label="Reusability"
+            <DataPointComponent label="Reusability and Repurposability">
+              <TextAreaField
+                  label=""
                   value={form.reusability}
                   onChange={(v) => set("reusability", v)}
                 />
-                <TextAreaField
-                  label="Repairability"
+            </DataPointComponent>
+            <DataPointComponent label="Repairability and Maintainability">
+              <TextAreaField
+                  label=""
                   value={form.repairability}
                   onChange={(v) => set("repairability", v)}
                 />
-                <TextAreaField
-                  label="Refurbishability"
+            </DataPointComponent>
+            <DataPointComponent label="Refurbishability and Remanufacturability">
+              <TextAreaField
+                  label=""
                   value={form.refurbishability}
                   onChange={(v) => set("refurbishability", v)}
                 />
-                <TextAreaField
-                  label="Upgrade Options"
+            </DataPointComponent>
+            <DataPointComponent label="Upgrade Options">
+              <TextAreaField
+                  label=""
                   value={form.upgradeOptions}
                   onChange={(v) => set("upgradeOptions", v)}
                 />
-              </div>
-              </div>
-            </details>
+            </DataPointComponent>
           </DataLayerGroup>
 
           <DataLayerGroup layer="Downstream Data">
-            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
-              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
-                <span className="flex items-center justify-between">
-                  End-of-Life Lifecycle Data
-                  <svg
-                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </span>
-              </summary>
-              <div className="space-y-4 px-4 pb-4 pt-2">
-              <EventArrayEditor
-                label="End-of-Life History"
-                events={form.endOfLifeHistory}
-                onChange={(v: any) => set("endOfLifeHistory", v)}
-              />
-              <FormField
-                label="Number of Lifecycles"
-                value={form.numberOfLifecycles}
-                onChange={(v) => set("numberOfLifecycles", v)}
-                type="number"
-              />
-              </div>
-            </details>
-
-            <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
-              <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
-                <span className="flex items-center justify-between">
-                  End-of-Life Information
-                  <svg
-                    className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </span>
-              </summary>
-              <div className="space-y-4 px-4 pb-4 pt-2">
-              <div className="space-y-4">
+              <DataPointComponent label="End-of-Life History">
+                <EventArrayEditor
+                  label="End-of-Life History Events"
+                  events={form.endOfLifeHistory}
+                  onChange={(v: any) => set("endOfLifeHistory", v)}
+                />
+              </DataPointComponent>
+              <DataPointComponent label="Number of Lifecycles">
+                <FormField
+                  label=""
+                  value={form.numberOfLifecycles}
+                  onChange={(v) => set("numberOfLifecycles", v)}
+                  type="number"
+                />
+              </DataPointComponent>
+              <DataPointComponent label="End-of-Life Information">
                 <TextAreaField
                   label="Waste Prevention"
                   value={form.wastePrevention}
@@ -188,9 +118,7 @@ export function EndOfLifeStep({ shared }: { shared: any }) {
                   onChange={(v) => set("endOfLifeReport", v)}
                   type="url"
                 />
-              </div>
-              </div>
-            </details>
+              </DataPointComponent>
           </DataLayerGroup>
 
           <DataLayerGroup layer="Custom Fields">
