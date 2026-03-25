@@ -1,6 +1,6 @@
 import { CollapsibleSection, DataLayerGroup } from "@/components/form/CollapsibleSection";
 import DataPointComponent from "@/components/DataPointComponent";
-import { ValueTree } from "./CommonComponents";
+import { EventListCard } from "./CommonComponents";
 import { UsageInformation } from "@/types";
 
 type UsageComponentProps = Readonly<{
@@ -17,15 +17,15 @@ export function UsageComponent({ usage }: UsageComponentProps) {
     >
       <DataLayerGroup layer="Downstream Data">
         <DataPointComponent label="Maintenance Log">
-          <ValueTree label="Maintenance Log" value={usage?.maintenanceLog} />
+            <EventListCard list={usage?.maintenanceLog || []} label=""/>
         </DataPointComponent>
 
         <DataPointComponent label="Usage History">
-          <ValueTree label="Usage History" value={usage?.usageHistory} />
+            <EventListCard list={usage?.usageHistory || []} label=""/>
         </DataPointComponent>
 
         <DataPointComponent label="Incidents and Errors">
-          <ValueTree label="Incidents and Errors" value={usage?.incidentsAndErrors} />
+            <EventListCard list={usage?.incidentsAndErrors || []} label=""/>
         </DataPointComponent>
       </DataLayerGroup>
     </CollapsibleSection>

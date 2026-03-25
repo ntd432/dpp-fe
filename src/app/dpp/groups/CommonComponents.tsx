@@ -1,5 +1,5 @@
 import InfoCard, { InfoCardWithLink } from "@/components/InfoCard";
-import { Component } from "@/types/dpp-core";
+import { Component, Event } from "@/types/dpp-core";
 
 const IGNORE_LIST = new Set(["type"]); // Keys to ignore in the display tree, can be extended as needed.
 
@@ -14,6 +14,22 @@ function prettyLabel(key: string): string {
 function toDisplayString(value: string | number | boolean | null): string {
   if (value === null) return "null";
   return String(value);
+}
+
+export function beautifyTimeString(time?: string): string {
+  if (!time) return "N/A";
+
+  const parsed = new Date(time);
+  if (Number.isNaN(parsed.getTime())) return time;
+
+  return new Intl.DateTimeFormat(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZoneName: "short",
+  }).format(parsed);
 }
 
 export function ListCards<T>({
@@ -153,4 +169,32 @@ function ComponentCard(component: Readonly<Component>) {
     </div>
 
   );
+}
+
+export function EventListCard({ list, label }: Readonly<{
+  label: string;
+  list: Readonly<ReadonlyArray<Event>>;
+}>) {
+  return (
+    <ListCards
+      list={list}
+      label={label}
+      getKey={(event, index) =>
+        `event-${event.actionName || index}`
+      }
+      renderCard={(event) => EventCard(event)}
+    />
+  );
+}
+
+function EventCard(event: Readonly<Event>) {
+  const pairs = [
+    { label: "Event type", value: event.actionType },
+    { label: "Action name", value: event.actionName },
+    { label: "Time", value: beautifyTimeString(event.time) },
+    { label: "Location", value: event.location?.name },
+    { label: "Address", value: event.location?.address },
+    { label: "Actor", value: "name" in (event.actor || {}) ? event.actor?.name : undefined },
+  ];
+  return <KeyValuePair numberOfColumn={3} pairs={pairs} />;
 }

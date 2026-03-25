@@ -20,7 +20,8 @@ export const ARRAY_TYPES = new Set([
     "criticalRawMaterial",
     "renewableNonRenewableContent",
     "regulation", "productLabel", "certification",
-    "environmentalImpact", "environmentalFootprint", "resourceConsumption", "resourceConsumptionWhenUsing", "resourceConsumptionWhenRecovering" 
+    "environmentalImpact", "environmentalFootprint", "resourceConsumption", "resourceConsumptionWhenUsing", "resourceConsumptionWhenRecovering",
+    "incidentsAndErrors", "maintenanceLog", "usageHistory"
 ]);
 
 export const TEST_DPP = {
