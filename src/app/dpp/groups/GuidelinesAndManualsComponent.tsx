@@ -16,7 +16,10 @@ export function GuidelinesAndManualsComponent({ guidelines }: GuidelinesAndManua
       defaultOpen={false}
     >
       <DataLayerGroup layer="Regulatory">
-        <DataPointComponent label="Technical Guides">
+        <DataPointComponent
+          label="Technical Guides"
+          isEmpty={!guidelines}
+        >
           <ValueTree label="Assembly Guideline" value={guidelines?.assemblyGuideline} />
           <ValueTree
             label="Non-Destructive Disassembly Guideline"
@@ -31,7 +34,10 @@ export function GuidelinesAndManualsComponent({ guidelines }: GuidelinesAndManua
       </DataLayerGroup>
 
       <DataLayerGroup layer="Commercial">
-        <DataPointComponent label="Commercial Instructions">
+        <DataPointComponent
+          label="Commercial Instructions"
+          isEmpty={!guidelines?.commercialInstruction}
+        >
           <ValueTree
             label="Safety Instruction"
             value={guidelines?.commercialInstruction?.safetyInstruction}
@@ -48,7 +54,10 @@ export function GuidelinesAndManualsComponent({ guidelines }: GuidelinesAndManua
       </DataLayerGroup>
 
       <DataLayerGroup layer="Downstream Data">
-        <DataPointComponent label="Accessibility and Utilization">
+        <DataPointComponent
+          label="Accessibility and Utilization"
+          isEmpty={!guidelines}
+        >
           <ValueTree label="Accessibility" value={guidelines?.accessibility} />
           <ValueTree label="Utilization Characteristic" value={guidelines?.utilizationCharacteristic} />
         </DataPointComponent>

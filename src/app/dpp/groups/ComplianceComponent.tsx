@@ -16,25 +16,28 @@ export function ComplianceComponent({ compliance }: ComplianceComponentProps) {
       defaultOpen={false}
     >
       <DataLayerGroup layer="Regulatory">
-        <DataPointComponent label="Regulations">
+        <DataPointComponent label="Regulations" isEmpty={(compliance?.regulation?.length || 0) === 0}>
           <ValueTree label="Regulation" value={compliance?.regulation} />
         </DataPointComponent>
 
-        <DataPointComponent label="Product Labels">
+        <DataPointComponent label="Product Labels" isEmpty={(compliance?.productLabel?.length || 0) === 0}>
           <ValueTree label="Product Label" value={compliance?.productLabel} />
         </DataPointComponent>
 
-        <DataPointComponent label="Certifications">
+        <DataPointComponent label="Certifications" isEmpty={(compliance?.certification?.length || 0) === 0}>
           <ValueTree label="Certification" value={compliance?.certification} />
         </DataPointComponent>
       </DataLayerGroup>
 
       <DataLayerGroup layer="Commercial">
-        <DataPointComponent label="Product Status Assessment">
+        <DataPointComponent label="Product Status Assessment" isEmpty={!compliance?.productStatusAssessment}>
           <ValueTree label="Product Status Assessment" value={compliance?.productStatusAssessment} />
         </DataPointComponent>
 
-        <DataPointComponent label="Data Management Method">
+        <DataPointComponent
+          label="Data Management Method"
+          isEmpty={!compliance?.dataManagementMethod}
+        >
           <ValueTree label="Data Management Method" value={compliance?.dataManagementMethod} />
         </DataPointComponent>
       </DataLayerGroup>

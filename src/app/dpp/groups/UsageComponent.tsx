@@ -16,15 +16,15 @@ export function UsageComponent({ usage }: UsageComponentProps) {
       defaultOpen={false}
     >
       <DataLayerGroup layer="Downstream Data">
-        <DataPointComponent label="Maintenance Log">
+        <DataPointComponent label="Maintenance Log" isEmpty={(usage?.maintenanceLog?.length || 0) === 0}>
             <EventListCard list={usage?.maintenanceLog || []} label=""/>
         </DataPointComponent>
 
-        <DataPointComponent label="Usage History">
+        <DataPointComponent label="Usage History" isEmpty={(usage?.usageHistory?.length || 0) === 0}>
             <EventListCard list={usage?.usageHistory || []} label=""/>
         </DataPointComponent>
 
-        <DataPointComponent label="Incidents and Errors">
+        <DataPointComponent label="Incidents and Errors" isEmpty={(usage?.incidentsAndErrors?.length || 0) === 0}>
             <EventListCard list={usage?.incidentsAndErrors || []} label=""/>
         </DataPointComponent>
       </DataLayerGroup>

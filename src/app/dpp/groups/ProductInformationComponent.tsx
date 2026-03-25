@@ -112,7 +112,10 @@ export function ProductInformationComponent({
         Product Sector: {productSector || "N/A"}
       </div>
       <DataLayerGroup layer="Regulatory">
-        <DataPointComponent label="Product Identification Information">
+        <DataPointComponent
+          label="Product Identification Information"
+          isEmpty={!pii}
+        >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {piiPairs.map((pair) => (
               <ValueTree
@@ -123,13 +126,19 @@ export function ProductInformationComponent({
             ))}
           </div>
         </DataPointComponent>
-        <DataPointComponent label="Manufacturer">
+        <DataPointComponent
+          label="Manufacturer"
+          isEmpty={!manufacturer}
+        >
           <InfoCardWithLink
             value={manufacturer?.name || "N/A"}
             link={manufacturer?.url}
           />
         </DataPointComponent>
-        <DataPointComponent label="Component Information">
+        <DataPointComponent
+          label="Component Information"
+          isEmpty={!componentInfo}
+        >
           <ComponentListCard label="Component Composition" componentList={componentInfo?.componentComposition || []} />
           <InfoCardWithLink
             label="Component Bills"
@@ -138,13 +147,13 @@ export function ProductInformationComponent({
           />
           <ComponentListCard label="Recycled/Reused Content" componentList={componentInfo?.recycledReusedContent || []} />
         </DataPointComponent>
-        <DataPointComponent label="Spare Parts Availability">
+        <DataPointComponent label="Spare Parts Availability" isEmpty={!spareParts}>
           <ValueTree label="Spare Parts" value={spareParts} />
         </DataPointComponent>
-        <DataPointComponent label="Hazardous Substances">
+        <DataPointComponent label="Hazardous Substances" isEmpty={(hazardousSubstances?.length || 0) === 0}>
           <SubstanceListCard list={hazardousSubstances || []} />
         </DataPointComponent>
-        <DataPointComponent label="Substances of Concern">
+        <DataPointComponent label="Substances of Concern" isEmpty={(substancesOfConcern?.length || 0) === 0}>
           <SubstanceListCard list={substancesOfConcern || []} />
         </DataPointComponent>
         {/* TODO: Add remaining data points (sector required/non-required information, related objects, test report, commercial information, quality assessment, identified risk) */}
@@ -163,12 +172,15 @@ export function ProductInformationComponent({
         <DataPointComponent label="Related Objects">
           <ValueTree label="Related Objects" value={relatedObjects} />
         </DataPointComponent>*/}
-        <DataPointComponent label="Test Report">
+        <DataPointComponent label="Test Report" isEmpty={!testReport}>
           <ValueTree label="" value={testReport} />
         </DataPointComponent>
       </DataLayerGroup>
       <DataLayerGroup layer="Commercial">
-        <DataPointComponent label="Commercial Information">
+        <DataPointComponent
+          label="Commercial Information"
+          isEmpty={!commercialInfo}
+        >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {commercialInfoPairs.map((pair) => (
               <ValueTree key={pair.label} label={pair.label} value={pair.value} />
@@ -176,10 +188,10 @@ export function ProductInformationComponent({
             <ImageInfoCard label="Product Image" value={commercialInfo?.image?.url || ""} />
           </div>
         </DataPointComponent>
-        <DataPointComponent label="Quality Assessment">
+        <DataPointComponent label="Quality Assessment" isEmpty={!qualityAssessment}>
           <ValueTree label="" value={qualityAssessment} />
         </DataPointComponent>
-        <DataPointComponent label="Identified Risk">
+        <DataPointComponent label="Identified Risk" isEmpty={!identifiedRisk}>
           <ValueTree label="" value={identifiedRisk} />
         </DataPointComponent>
       </DataLayerGroup>
