@@ -2,7 +2,7 @@ import { CollapsibleSection, DataLayerGroup } from "@/components/form/Collapsibl
 import DataPointComponent from "@/components/DataPointComponent";
 import { ComponentListCard, KeyValuePair, ListCards, ValueTree } from "./CommonComponents";
 import { EnvironmentalFootprint, EnvironmentalImpact, ResourceConsumption, SustainabilityInformation } from "@/types";
-import { InfoCardWithLink } from "@/components/InfoCard";
+import InfoCard, { InfoCardWithLink } from "@/components/InfoCard";
 
 function EnvironmentalFootprintListCard({ list }: Readonly<{
   list: Readonly<ReadonlyArray<EnvironmentalFootprint>>;
@@ -159,14 +159,7 @@ export function SustainabilityComponent({
           label="Life Cycle Assessment"
           isEmpty={!sustainability?.lifeCycleAssessment}
         >
-          <InfoCardWithLink
-            label=""
-            value="Life Cycle Assessment Report"
-            link={
-              sustainability?.lifeCycleAssessment?.lifeCycleAssessmentReport
-            }
-          />
-          {/* <ValueTree label="Life Cycle Assessment Report" value={sustainability?.lifeCycleAssessment?.lifeCycleAssessmentReport}/> */}
+            <InfoCard label="Life Cycle Assessment Report" value={sustainability?.lifeCycleAssessment?.lifeCycleAssessmentReport || "N/A"} />
           <EnvironmentalImpactListCard
             list={
               sustainability?.lifeCycleAssessment?.environmentalImpact || []
