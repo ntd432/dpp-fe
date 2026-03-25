@@ -61,9 +61,9 @@ export function ListCards<T>({
   );
 }
 
-export function KeyValuePair({ numberOfColumn, pairs }: Readonly<{ numberOfColumn: number; pairs: ReadonlyArray<{ label: string; value: string | undefined }> }>) {
+export function KeyValuePair({ indent=false, numberOfColumn, pairs }: Readonly<{ indent?: boolean; numberOfColumn: number; pairs: ReadonlyArray<{ label: string; value: string | undefined }> }>) {
   return (
-    <div className="ml-5 rounded-lg bg-white p-3 border border-gray-200">
+    <div className={`${indent ? "ml-5" : ""} rounded-lg bg-white p-3 border border-gray-200`}>
       <div className={`grid grid-cols-1 md:grid-cols-${numberOfColumn} gap-3`}>
         {pairs.map((pair) => (
           <ValueTree key={pair.label} label={pair.label} value={pair.value} />

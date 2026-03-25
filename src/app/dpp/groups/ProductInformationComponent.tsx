@@ -39,7 +39,7 @@ function SubstanceListCard({list}: Readonly<{ list: ReadonlyArray<Substance> }>)
   return (
       <ListCards
         list={list}
-        label="Substances"
+        label=""
         getKey={(substance, index) =>
           `substance-${substance.substanceName || index}`
         }
