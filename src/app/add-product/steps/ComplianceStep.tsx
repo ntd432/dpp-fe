@@ -15,7 +15,7 @@ export function ComplianceStep({ shared }: Readonly<{ shared: any }>) {
   } = shared;
 
   return (
-        <CollapsibleSection title="Compliance" color="purple" defaultOpen>
+        <CollapsibleSection title="Compliance" defaultOpen>
           <DataLayerGroup layer="Regulatory">
             {/* Regulation */}
             <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">

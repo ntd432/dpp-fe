@@ -23,7 +23,7 @@ export function DPPInformation(dppInfo: Readonly<DPP>) {
   ];
 
   return (
-    <CollapsibleSection title="DPP Information" color="indigo" defaultOpen>
+    <CollapsibleSection title="DPP Information" defaultOpen>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         {corePairs.map((pair) => (
           <ValueTree key={pair.label} label={pair.label} value={pair.value} />

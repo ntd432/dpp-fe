@@ -11,7 +11,6 @@ export function UsageComponent({ usage }: UsageComponentProps) {
   return (
     <CollapsibleSection
       title="Usage"
-      color="cyan"
       showCollapseButton
       defaultOpen={false}
     >

@@ -185,7 +185,7 @@ export default function ViewDppPage() {
         </div>
       )}
 
-      <CollapsibleSection title="Find DPP" color="indigo" defaultOpen>
+      <CollapsibleSection title="Find DPP" defaultOpen>
         <DataLayerGroup layer="Regulatory">
           <div className="space-y-4 rounded-lg border border-gray-200 bg-gray-50 p-4">
             <FormField
@@ -228,7 +228,7 @@ export default function ViewDppPage() {
       </CollapsibleSection>
 
       {isScanning && (
-        <CollapsibleSection title="Camera Scanner" color="amber" defaultOpen>
+        <CollapsibleSection title="Camera Scanner" defaultOpen>
           <DataLayerGroup layer="Commercial">
             <div className="rounded-lg border border-gray-200 bg-black p-2">
               <video

@@ -147,7 +147,7 @@ export default function DppDetailPage() {
 
       <ComplianceComponent compliance={compliance} />
 
-      <CollapsibleSection title="Raw JSON" color="cyan" showCollapseButton defaultOpen={false}>
+      <CollapsibleSection title="Raw JSON" showCollapseButton defaultOpen={false}>
         <DataLayerGroup layer="Commercial">
           <pre className="text-xs leading-5 overflow-x-auto rounded-lg border border-gray-200 bg-gray-900 text-gray-100 p-4">
             {JSON.stringify(data, null, 2)}
