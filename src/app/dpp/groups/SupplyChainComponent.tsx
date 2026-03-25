@@ -16,7 +16,10 @@ export function SupplyChainComponent({ supplyChain }: SupplyChainComponentProps)
       defaultOpen={false}
     >
       <DataLayerGroup layer="Regulatory">
-        <DataPointComponent label="Product Traceability">
+        <DataPointComponent
+          label="Product Traceability"
+          isEmpty={(supplyChain?.productTraceability?.traceabilityEvent?.length || 0) === 0}
+        >
           <ValueTree
             label="Traceability Event"
             value={supplyChain?.productTraceability?.traceabilityEvent}
@@ -25,7 +28,13 @@ export function SupplyChainComponent({ supplyChain }: SupplyChainComponentProps)
       </DataLayerGroup>
 
       <DataLayerGroup layer="Commercial">
-        <DataPointComponent label="Partners">
+        <DataPointComponent
+          label="Partners"
+          isEmpty={
+            !supplyChain?.recyclingPartner?.name &&
+            !supplyChain?.customerReturnChannel?.name
+          }
+        >
           <ValueTree label="Recycling Partner" value={supplyChain?.recyclingPartner} />
           <ValueTree label="Customer Return Channel" value={supplyChain?.customerReturnChannel} />
         </DataPointComponent>

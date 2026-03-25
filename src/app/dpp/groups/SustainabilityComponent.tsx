@@ -116,7 +116,10 @@ export function SustainabilityComponent({
       defaultOpen={false}
     >
       <DataLayerGroup layer="Regulatory">
-        <DataPointComponent label="Sustainability Performance">
+        <DataPointComponent
+          label="Sustainability Performance"
+          isEmpty={!sustainability?.sustainabilityPerformance}
+        >
           <EnvironmentalFootprintListCard
             list={
               sustainability?.sustainabilityPerformance
@@ -137,7 +140,7 @@ export function SustainabilityComponent({
       </DataLayerGroup>
 
       <DataLayerGroup layer="Sectoral">
-        <DataPointComponent label="Decomposability">
+        <DataPointComponent label="Decomposability" isEmpty={!sustainability?.decomposability}>
           <ValueTree label="" value={sustainability?.decomposability} />
         </DataPointComponent>
 
@@ -146,14 +149,17 @@ export function SustainabilityComponent({
             <ValueTree label="" value={sustainability?.decomposability}/>
         </DataPointComponent> */}
 
-        <DataPointComponent label="Critical Raw Material">
+        <DataPointComponent label="Critical Raw Material" isEmpty={(sustainability?.criticalRawMaterial?.length || 0) === 0}>
           <ComponentListCard
             label=""
             componentList={sustainability?.criticalRawMaterial || []}
           />
         </DataPointComponent>
 
-        <DataPointComponent label="Life Cycle Assessment">
+        <DataPointComponent
+          label="Life Cycle Assessment"
+          isEmpty={!sustainability?.lifeCycleAssessment}
+        >
           <InfoCardWithLink
             label=""
             value="Life Cycle Assessment Report"
@@ -171,7 +177,7 @@ export function SustainabilityComponent({
       </DataLayerGroup>
 
       <DataLayerGroup layer="Commercial">
-        <DataPointComponent label="Renewable/Non-Renewable Content">
+        <DataPointComponent label="Renewable/Non-Renewable Content" isEmpty={(sustainability?.renewableNonRenewableContent?.length || 0) === 0}>
           <ComponentListCard
             label=""
             componentList={sustainability?.renewableNonRenewableContent || []}
@@ -183,11 +189,14 @@ export function SustainabilityComponent({
             <ValueTree label="" value={sustainability?.decomposability}/>
         </DataPointComponent> */}
 
-        <DataPointComponent label="Social Indicator">
+        <DataPointComponent label="Social Indicator" isEmpty={!socialIndicator}>
           <KeyValuePair numberOfColumn={1} pairs={socialIndicatorPairs} />
         </DataPointComponent>
 
-        <DataPointComponent label="Sustainability Attributes">
+        <DataPointComponent
+          label="Sustainability Attributes"
+          isEmpty={!sustainability?.sustainabilityAttributes}
+        >
           <ResourceConsumptionListCard
             label="Resource Consumption When Using"
             list={
@@ -204,7 +213,7 @@ export function SustainabilityComponent({
           />
         </DataPointComponent>
 
-        <DataPointComponent label="Environmental Declaration">
+        <DataPointComponent label="Environmental Declaration" isEmpty={!sustainability?.environmentDeclaration}>
           <InfoCardWithLink
             label=""
             value="Environmental Declaration"

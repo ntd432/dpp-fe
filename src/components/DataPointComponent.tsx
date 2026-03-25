@@ -1,7 +1,10 @@
 export default function DataPointComponent({
   label,
   children,
-}: Readonly<{ label: string; children: React.ReactNode }>) {
+  isEmpty = false,
+}: Readonly<{ label: string; children: React.ReactNode; isEmpty?: boolean }>) {
+  const hasRenderableChildren = children !== null && children !== undefined;
+
   return (
     <details
       open
@@ -27,7 +30,7 @@ export default function DataPointComponent({
         </span>
       </summary>
       <div className="space-y-4 px-4 pb-4 pt-2">
-        {children}
+        {!isEmpty && hasRenderableChildren ? children : <p className="text-sm text-gray-500">No data</p>}
       </div>
     </details>
   );
