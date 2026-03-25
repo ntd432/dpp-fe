@@ -1424,10 +1424,6 @@ interface FormState {
   certifications: NameDescEntry[];
   dmmName: string;
   dmmIdentifier: string;
-  // Supply Chain
-  traceabilityEvents: EventEntry[];
-  recyclingPartnerName: string;
-  customerReturnChannelName: string;
   // Sustainability
   environmentalFootprints: EnvironmentalFootprintEntry[];
   resourceConsumptions: ResourceConsumptionEntry[];
@@ -1550,9 +1546,6 @@ const initialState: FormState = {
   certifications: [],
   dmmName: "",
   dmmIdentifier: "",
-  traceabilityEvents: [],
-  recyclingPartnerName: "",
-  customerReturnChannelName: "",
   environmentalFootprints: [],
   resourceConsumptions: [],
   plasticsRelease: "",
@@ -1980,13 +1973,6 @@ function buildPayload(
       dataManagementMethod: { name: f.dmmName, identifier: f.dmmIdentifier },
       additionalProperties: toCustomFieldObject(f.complianceCustomFields),
     },
-    supplyChain: {
-      productTraceability: {
-        traceabilityEvent: buildEvents(f.traceabilityEvents),
-      },
-      recyclingPartner: { name: f.recyclingPartnerName },
-      customerReturnChannel: { name: f.customerReturnChannelName },
-    },
     sustainability: {
       sustainabilityPerformance: {
         environmentalFootprint: f.environmentalFootprints.map(toEnvironmentalFootprint),
@@ -2043,9 +2029,7 @@ function buildPayload(
       assemblyGuideline: { url: f.assemblyGuidelineUrl },
       nonDestructiveDisassemblyGuideline: { url: f.disassemblyGuidelineUrl },
       productManual: { url: f.productManualUrl },
-      storageAndTransportGuideline: {
-        storageAndTransportGuideline: { url: f.storageGuidelineUrl },
-      },
+      storageAndTransportGuideline: { url: f.storageGuidelineUrl },
       commercialInstruction: {
         safetyInstruction: { url: f.safetyInstructionUrl },
         maintenanceInstruction: { url: f.maintenanceInstructionUrl },

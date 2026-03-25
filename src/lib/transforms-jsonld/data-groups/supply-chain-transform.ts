@@ -16,14 +16,10 @@ export function transformSupplyChain(supplyChain: Record<string, unknown>): Reco
     dataPoint.push(transformProductTraceability(supplyChain.productTraceability));
   }
   if (isRecord(supplyChain.recyclingPartner)) {
-    const rp = createDataPoint({}, "RecyclingPartner", "Recycling Partner", "recycling-partner");
-    rp.recyclingPartner = transformOrganization(supplyChain.recyclingPartner);
-    dataPoint.push(rp);
+    dataPoint.push(transformRecyclingPartner(supplyChain.recyclingPartner));
   }
   if (isRecord(supplyChain.customerReturnChannel)) {
-    const crc = createDataPoint({}, "CustomerReturnChannel", "Customer Return Channel", "customer-return-channel");
-    crc.customerReturnChannel = transformOrganization(supplyChain.customerReturnChannel);
-    dataPoint.push(crc);
+    dataPoint.push(transformCustomerReturnChannel(supplyChain.customerReturnChannel));
   }
   if (isRecord(supplyChain.additionalProperties)) {
     handleAdditionalProperties(result, supplyChain.additionalProperties, "dpp-supply-chain");
@@ -39,5 +35,23 @@ function transformProductTraceability(value: Record<string, unknown>): Record<st
     result.traceabilityEvent = value.traceabilityEvent.filter(isRecord).map((event) => transformEvent(event));
   }
   copyUnhandledProperties(value, result, new Set(["id", "@id", "@type", "traceabilityEvent"]));
+  return result;
+}
+
+function transformRecyclingPartner(value: Record<string, unknown>): Record<string, unknown> {
+  const result = createDataPoint(value, "RecyclingPartner", "Recycling Partner", "recycling-partner");
+  if (Array.isArray(value.recyclingPartner)) {
+    result.recyclingPartner = value.recyclingPartner.filter(isRecord).map((partner) => transformOrganization(partner));
+  }
+  copyUnhandledProperties(value, result, new Set(["id", "@id", "@type"]), "recyclingPartner");
+  return result;
+}
+
+function transformCustomerReturnChannel(value: Record<string, unknown>): Record<string, unknown> {
+  const result = createDataPoint(value, "CustomerReturnChannel", "Customer Return Channel", "customer-return-channel");
+  if (Array.isArray(value.customerReturnChannel)) {
+    result.customerReturnChannel = value.customerReturnChannel.filter(isRecord).map((channel) => transformOrganization(channel));
+  }
+  copyUnhandledProperties(value, result, new Set(["id", "@id", "@type"]), "customerReturnChannel");
   return result;
 }

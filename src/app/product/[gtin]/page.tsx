@@ -57,11 +57,6 @@ interface ProductData {
   certDesc?: string;
   dmmName?: string;
   dmmDesc?: string;
-  // Supply chain (aggregated arrays)
-  traceabilityEvents?: EventItem[];
-  recyclingPartnerName?: string;
-  returnChannelName?: string;
-  componentSupplierName?: string;
   // Sustainability
   envFootprint?: string;
   resourceConsumption?: string;
@@ -360,35 +355,6 @@ export default function ProductDetailPage() {
               <Field label="Certification Details" value={p.certDesc} />
               <Field label="Data Management Method" value={p.dmmName} />
               <Field label="DMM Details" value={p.dmmDesc} />
-            </div>
-          </Section>
-        )}
-
-        {/* 5. Supply Chain */}
-        {(p.traceabilityEvents || p.recyclingPartnerName || p.componentSupplierName) && (
-          <Section title="Supply Chain" color="amber">
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <Field label="Recycling Partner" value={p.recyclingPartnerName} />
-                <Field label="Return Channel" value={p.returnChannelName} />
-                <Field label="Component Supplier" value={p.componentSupplierName} />
-              </div>
-              {p.traceabilityEvents && p.traceabilityEvents.length > 0 && (
-                <div>
-                  <h3 className="text-sm font-semibold text-gray-700 mb-2">
-                    Traceability Events
-                  </h3>
-                  <EventTable
-                    events={p.traceabilityEvents}
-                    columns={[
-                      { key: "traceActionName", label: "Action" },
-                      { key: "traceActionType", label: "Type" },
-                      { key: "traceTime", label: "Time" },
-                      { key: "traceLocation", label: "Location" },
-                    ]}
-                  />
-                </div>
-              )}
             </div>
           </Section>
         )}

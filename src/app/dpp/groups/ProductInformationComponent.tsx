@@ -3,7 +3,7 @@ import {
   DataLayerGroup,
 } from "@/components/form/CollapsibleSection";
 import { ComponentListCard, KeyValuePair, ListCards, ValueTree } from "./CommonComponents";
-import { Component, ProductInformation, Substance } from "@/types";
+import { ProductInformation, Substance } from "@/types";
 import { ImageInfoCard, InfoCardWithLink } from "@/components/InfoCard";
 import DataPointComponent from "@/components/DataPointComponent";
 

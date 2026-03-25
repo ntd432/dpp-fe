@@ -15,6 +15,6 @@ export interface ProductTraceability {
 
 export interface SupplyChain {
   productTraceability?: ProductTraceability;
-  recyclingPartner?: Organization | Person;
-  customerReturnChannel?: Organization | Person;
+  recyclingPartner?: Organization[] | Person[];
+  customerReturnChannel?: Organization[] | Person[];
 }

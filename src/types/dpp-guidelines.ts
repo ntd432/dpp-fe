@@ -5,10 +5,6 @@
 
 import type { Guide } from "./dpp-core";
 
-export interface StorageAndTransportGuideline {
-  storageAndTransportGuideline?: Guide;
-}
-
 export interface CommercialInstruction {
   safetyInstruction?: Guide;
   maintenanceInstruction?: Guide;
@@ -21,7 +17,7 @@ export interface GuidelinesAndManuals {
   assemblyGuideline?: Guide;
   nonDestructiveDisassemblyGuideline?: Guide;
   productManual?: Guide;
-  storageAndTransportGuideline?: StorageAndTransportGuideline;
+  storageAndTransportGuideline?: Guide;
   commercialInstruction?: CommercialInstruction;
   accessibility?: string;
   utilizationCharacteristic?: string;

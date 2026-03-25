@@ -76,7 +76,7 @@ function EnvironmentalImpactListCard({
       list={list}
       label="Environmental Impact"
       getKey={(impact, index) =>
-        `impact-${impact.impactCategory || index}-${impact.impactIndicator ? impact.impactIndicator : ""}`
+        `impact-${impact.impactCategory || index}-${impact.method || ""}`
       }
       renderCard={(impact) => EnvironmentalImpactCard(impact)}
     />
@@ -219,7 +219,6 @@ export function SustainabilityComponent({
             value="Environmental Declaration"
             link={sustainability?.environmentDeclaration}
           />
-          {/* <ValueTree label="" value={sustainability?.environmentDeclaration}/> */}
         </DataPointComponent>
       </DataLayerGroup>
     </CollapsibleSection>

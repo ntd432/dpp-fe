@@ -60,6 +60,12 @@ interface EventEntry {
   actorName: string;
 }
 
+interface ParticipantEntry {
+  _key: string;
+  name: string;
+  url: string;
+}
+
 const emptyEvent = (): EventEntry => ({
   _key: uid(),
   actionName: "",
@@ -67,6 +73,12 @@ const emptyEvent = (): EventEntry => ({
   time: "",
   locationName: "",
   actorName: "",
+});
+
+const emptyParticipant = (): ParticipantEntry => ({
+  _key: uid(),
+  name: "",
+  url: "",
 });
 
 function EventArrayEditor({
@@ -135,6 +147,52 @@ function EventArrayEditor({
   );
 }
 
+function ParticipantArrayEditor({
+  label,
+  participants,
+  onChange,
+}: Readonly<{
+  label: string;
+  participants: ParticipantEntry[];
+  onChange: (participants: ParticipantEntry[]) => void;
+}>) {
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <span className="block text-sm font-medium text-gray-700">{label}</span>
+        <AddEntryButton label="+ Add Entry" onClick={() => onChange([...participants, emptyParticipant()])} />
+      </div>
+      {participants.map((participant, i) => (
+        <div key={participant._key} className="flex gap-2 items-start">
+          <div className="flex-1 grid grid-cols-2 gap-2">
+            <input
+              type="text"
+              placeholder="Name"
+              value={participant.name}
+              onChange={(e) => updateAt(participants, i, "name", e.target.value, onChange)}
+              className={INPUT_CLASS}
+            />
+            <input
+              type="url"
+              placeholder="URL"
+              value={participant.url}
+              onChange={(e) => updateAt(participants, i, "url", e.target.value, onChange)}
+              className={INPUT_CLASS}
+            />
+          </div>
+          <button
+            type="button"
+            onClick={() => removeAt(participants, i, onChange)}
+            className="text-red-400 hover:text-red-600 px-2 py-2 hover:cursor-pointer"
+          >
+            x
+          </button>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 interface FormState {
   dppRegistrationNumber: string;
   productBatchNumber: string;
@@ -151,8 +209,8 @@ interface FormState {
   productId: string;
   // Supply chain
   traceabilityEvents: EventEntry[];
-  recyclingPartnerName: string;
-  customerReturnChannelName: string;
+  recyclingPartners: ParticipantEntry[];
+  customerReturnChannels: ParticipantEntry[];
 }
 
 // ── Main component ────────────────────────────────────────────────────────────
@@ -173,8 +231,8 @@ export default function AddDppPage() {
     issuerUrl: "",
     productId: "",
     traceabilityEvents: [],
-    recyclingPartnerName: "",
-    customerReturnChannelName: "",
+    recyclingPartners: [],
+    customerReturnChannels: [],
   });
 
   const [manufacturers, setManufacturers] = useState<ManufacturerOption[]>([]);
@@ -266,6 +324,16 @@ export default function AddDppPage() {
         return ev;
       });
 
+    const buildParticipants = (participants: ParticipantEntry[]) =>
+      participants
+        .filter((p) => p.name) // Only include if name is provided
+        .map((p) => {
+          const participant: Record<string, unknown> = {};
+          if (p.name) participant.name = p.name;
+          if (p.url) participant.url = p.url;
+          return participant;
+        });
+
     const dpp: Record<string, unknown> = {
       dppRegistrationNumber: form.dppRegistrationNumber,
     };
@@ -284,8 +352,8 @@ export default function AddDppPage() {
       productTraceability: {
         traceabilityEvent: buildEvents(form.traceabilityEvents),
       },
-      recyclingPartner: { name: form.recyclingPartnerName },
-      customerReturnChannel: { name: form.customerReturnChannelName },
+      recyclingPartner: buildParticipants(form.recyclingPartners),
+      customerReturnChannel: buildParticipants(form.customerReturnChannels),
     };
 
     return dpp;
@@ -537,16 +605,16 @@ export default function AddDppPage() {
                   </svg>
                 </span>
               </summary>
-              <div className="grid grid-cols-2 gap-4 space-y-4 px-4 pb-4 pt-2">
-                <FormField
+              <div className="space-y-4 px-4 pb-4 pt-2">
+                <ParticipantArrayEditor
                   label="Recycling Partner"
-                  value={form.recyclingPartnerName}
-                  onChange={(v) => set("recyclingPartnerName", v)}
+                  participants={form.recyclingPartners}
+                  onChange={(v) => set("recyclingPartners", v)}
                 />
-                <FormField
+                <ParticipantArrayEditor
                   label="Customer Return Channel"
-                  value={form.customerReturnChannelName}
-                  onChange={(v) => set("customerReturnChannelName", v)}
+                  participants={form.customerReturnChannels}
+                  onChange={(v) => set("customerReturnChannels", v)}
                 />
               </div>
             </details>
