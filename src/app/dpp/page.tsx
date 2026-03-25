@@ -172,6 +172,12 @@ export default function ViewDppPage() {
 
   return (
     <main className="max-w-4xl mx-auto px-4 py-8 space-y-6">
+      <button
+        onClick={() => router.push("/")}
+        className="text-sm text-gray-500 hover:text-gray-700 mb-4 inline-flex items-center gap-1 hover:cursor-pointer"
+      >
+        ← Back to Dashboard
+      </button>
       <div>
         <h1 className="text-2xl font-bold text-gray-900">View Digital Product Passport</h1>
         <p className="mt-1 text-sm text-gray-600">
