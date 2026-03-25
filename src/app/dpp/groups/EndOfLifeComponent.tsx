@@ -35,15 +35,15 @@ export function EndOfLifeComponent({ endOfLife }: EndOfLifeComponentProps) {
       </DataLayerGroup>
 
       <DataLayerGroup layer="Commercial">
-        <DataPointComponent label="Reusability/Repurposability" isEmpty={!endOfLife?.reusability}>
+        <DataPointComponent label="Reusability and Repurposability" isEmpty={!endOfLife?.reusability}>
           <ValueTree label="" value={endOfLife?.reusability} />
         </DataPointComponent>
 
-        <DataPointComponent label="Repairability/Maintainability" isEmpty={!endOfLife?.repairability}>
+        <DataPointComponent label="Repairability and Maintainability" isEmpty={!endOfLife?.repairability}>
           <ValueTree label="" value={endOfLife?.repairability} />
         </DataPointComponent>
 
-        <DataPointComponent label="Refurbishability/Remanufacturability" isEmpty={!endOfLife?.refurbishability}>
+        <DataPointComponent label="Refurbishability and Remanufacturability" isEmpty={!endOfLife?.refurbishability}>
           <ValueTree label="" value={endOfLife?.refurbishability} />
         </DataPointComponent>
 
