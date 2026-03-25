@@ -53,7 +53,7 @@ export function ListCards<T>({
 
   return (
     <div className="space-y-3">
-      {label && <p className="text-sm font-semibold text-gray-700">{label}</p>}
+      {label && <p className="text-sm font-semibold">{label}</p>}
       {list.map((item, index) => (
         <div key={getKey(item, index)}>{renderCard(item)}</div>
       ))}

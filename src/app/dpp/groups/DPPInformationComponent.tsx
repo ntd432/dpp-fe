@@ -4,6 +4,7 @@ import { DPP } from "@/types";
 import { InfoCardWithLink } from "@/components/InfoCard";
 
 function formatString(key: string): string {
+  if (!key) return "N/A";
   return key
     .replaceAll(/([A-Z])/g, " $1")
     .replace(/^./, (s) => s.toUpperCase())

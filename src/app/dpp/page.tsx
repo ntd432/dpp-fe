@@ -186,45 +186,41 @@ export default function ViewDppPage() {
       )}
 
       <CollapsibleSection title="Find DPP" defaultOpen>
-        <DataLayerGroup layer="Regulatory">
-          <div className="space-y-4 rounded-lg border border-gray-200 bg-gray-50 p-4">
-            <FormField
-              label="DPP ID or Data Carrier"
-              value={inputValue}
-              onChange={setInputValue}
-              placeholder="e.g. f9d15150-50c8-4ae3-b1f6-3c283e1d89fa or dpp/<id>"
-              required
-            />
-            <div className="flex flex-wrap gap-3">
-              <button
-                type="button"
-                onClick={() => goToDpp(inputValue)}
-                className="px-5 py-2 rounded-lg bg-[var(--color-brand-pink)] text-white text-sm font-semibold hover:brightness-110 hover:cursor-pointer"
-              >
-                View DPP
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  if (isScanning) {
-                    stopScan();
-                    return;
-                  }
-                  void handleScan();
-                }}
-                className="px-5 py-2 rounded-lg border border-gray-300 text-sm font-semibold text-gray-700 hover:bg-gray-100 hover:cursor-pointer"
-                disabled={!isScannerAvailable && !isScanning}
-              >
-                {isScanning ? "Stop Scanning" : "Scan QR Code"}
-              </button>
-            </div>
-            {!isScannerAvailable && (
-              <p className="text-xs text-gray-500">
-                QR scanning is unavailable in this browser. Manual input still works.
-              </p>
-            )}
-          </div>
-        </DataLayerGroup>
+        <FormField
+          label="DPP ID or Data Carrier"
+          value={inputValue}
+          onChange={setInputValue}
+          placeholder="e.g. p9dp0510-89c8-4ae3-l0a8-lo012e1d89fa"
+          required
+        />
+        <div className="flex flex-wrap gap-3">
+          <button
+            type="button"
+            onClick={() => goToDpp(inputValue)}
+            className="px-5 py-2 rounded-lg bg-[var(--color-brand-pink)] text-white text-sm font-semibold hover:brightness-110 hover:cursor-pointer"
+          >
+            View DPP
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              if (isScanning) {
+                stopScan();
+                return;
+              }
+              void handleScan();
+            }}
+            className="px-5 py-2 rounded-lg border border-gray-300 text-sm font-semibold text-gray-700 hover:bg-gray-100 hover:cursor-pointer"
+            disabled={!isScannerAvailable && !isScanning}
+          >
+            {isScanning ? "Stop Scanning" : "Scan QR Code"}
+          </button>
+        </div>
+        {!isScannerAvailable && (
+          <p className="text-xs text-gray-500">
+            QR scanning is unavailable in this browser. Manual input still works.
+          </p>
+        )}
       </CollapsibleSection>
 
       {isScanning && (

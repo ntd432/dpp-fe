@@ -1,9 +1,12 @@
+import type { ReactNode } from "react";
+
 interface ErrorMessageProps {
   message: string;
   onRetry?: () => void;
+  action?: ReactNode;
 }
 
-export default function ErrorMessage({ message, onRetry }: ErrorMessageProps) {
+export default function ErrorMessage({ message, onRetry, action }: ErrorMessageProps) {
   return (
     <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
       <div className="text-red-600 mb-2">
@@ -22,14 +25,16 @@ export default function ErrorMessage({ message, onRetry }: ErrorMessageProps) {
         </svg>
       </div>
       <p className="text-red-800 font-medium">{message}</p>
-      {onRetry && (
+      {action ? (
+        <div className="mt-3">{action}</div>
+      ) : onRetry ? (
         <button
           onClick={onRetry}
           className="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700 transition-colors hover:cursor-pointer"
         >
           Try Again
         </button>
-      )}
+      ) : null}
     </div>
   );
 }
