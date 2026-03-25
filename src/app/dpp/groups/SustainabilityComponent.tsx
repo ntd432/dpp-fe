@@ -219,7 +219,6 @@ export function SustainabilityComponent({
             value="Environmental Declaration"
             link={sustainability?.environmentDeclaration}
           />
-          {/* <ValueTree label="" value={sustainability?.environmentDeclaration}/> */}
         </DataPointComponent>
       </DataLayerGroup>
     </CollapsibleSection>

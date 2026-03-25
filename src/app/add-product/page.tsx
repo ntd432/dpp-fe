@@ -1424,10 +1424,6 @@ interface FormState {
   certifications: NameDescEntry[];
   dmmName: string;
   dmmIdentifier: string;
-  // Supply Chain
-  traceabilityEvents: EventEntry[];
-  recyclingPartnerName: string;
-  customerReturnChannelName: string;
   // Sustainability
   environmentalFootprints: EnvironmentalFootprintEntry[];
   resourceConsumptions: ResourceConsumptionEntry[];
@@ -1550,9 +1546,6 @@ const initialState: FormState = {
   certifications: [],
   dmmName: "",
   dmmIdentifier: "",
-  traceabilityEvents: [],
-  recyclingPartnerName: "",
-  customerReturnChannelName: "",
   environmentalFootprints: [],
   resourceConsumptions: [],
   plasticsRelease: "",
@@ -1979,13 +1972,6 @@ function buildPayload(
       certification: f.certifications,
       dataManagementMethod: { name: f.dmmName, identifier: f.dmmIdentifier },
       additionalProperties: toCustomFieldObject(f.complianceCustomFields),
-    },
-    supplyChain: {
-      productTraceability: {
-        traceabilityEvent: buildEvents(f.traceabilityEvents),
-      },
-      recyclingPartner: { name: f.recyclingPartnerName },
-      customerReturnChannel: { name: f.customerReturnChannelName },
     },
     sustainability: {
       sustainabilityPerformance: {

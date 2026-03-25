@@ -1,6 +1,6 @@
 import { CollapsibleSection, DataLayerGroup } from "@/components/form/CollapsibleSection";
 import DataPointComponent from "@/components/DataPointComponent";
-import { ValueTree } from "./CommonComponents";
+import { EventListCard, ParticipantListCard, ValueTree } from "./CommonComponents";
 import { SupplyChain } from "@/types";
 
 type SupplyChainComponentProps = Readonly<{
@@ -20,23 +20,17 @@ export function SupplyChainComponent({ supplyChain }: SupplyChainComponentProps)
           label="Product Traceability"
           isEmpty={(supplyChain?.productTraceability?.traceabilityEvent?.length || 0) === 0}
         >
-          <ValueTree
-            label="Traceability Event"
-            value={supplyChain?.productTraceability?.traceabilityEvent}
-          />
+          <EventListCard list={supplyChain?.productTraceability?.traceabilityEvent || []} label="" />
         </DataPointComponent>
       </DataLayerGroup>
 
       <DataLayerGroup layer="Commercial">
-        <DataPointComponent
-          label="Partners"
-          isEmpty={
-            !supplyChain?.recyclingPartner?.name &&
-            !supplyChain?.customerReturnChannel?.name
-          }
-        >
-          <ValueTree label="Recycling Partner" value={supplyChain?.recyclingPartner} />
-          <ValueTree label="Customer Return Channel" value={supplyChain?.customerReturnChannel} />
+        <DataPointComponent label="Recycling Partner" isEmpty={ !supplyChain?.recyclingPartner }>
+            <ParticipantListCard list={supplyChain?.recyclingPartner || []} label="" />
+        </DataPointComponent>
+
+        <DataPointComponent label="Customer Return Channel" isEmpty={ !supplyChain?.customerReturnChannel }>
+            <ParticipantListCard list={supplyChain?.customerReturnChannel || []} label="" />
         </DataPointComponent>
       </DataLayerGroup>
     </CollapsibleSection>

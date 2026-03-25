@@ -1,5 +1,5 @@
 import InfoCard, { InfoCardWithLink } from "@/components/InfoCard";
-import { Component, Event } from "@/types/dpp-core";
+import { Component, Event, Organization, Person } from "@/types/dpp-core";
 
 const IGNORE_LIST = new Set(["type"]); // Keys to ignore in the display tree, can be extended as needed.
 
@@ -197,4 +197,28 @@ function EventCard(event: Readonly<Event>) {
     { label: "Actor", value: "name" in (event.actor || {}) ? event.actor?.name : undefined },
   ];
   return <KeyValuePair numberOfColumn={3} pairs={pairs} />;
+}
+
+export function ParticipantListCard({ list, label }: Readonly<{
+  label: string;
+  list: Readonly<ReadonlyArray<Organization | Person>>;
+}>) {
+  return (
+    <ListCards
+      list={list}
+      label={label}
+      getKey={(participant, index) =>
+        `participant-${participant.name || index}`
+      }
+      renderCard={(participant) => ParticipantCard(participant)}
+    />
+  );
+}
+
+function ParticipantCard(participant: Readonly<Organization | Person>) {
+  return (
+    (participant.url ? 
+    <InfoCardWithLink label="" value={participant.name || "N/A"} link={participant.url} /> 
+    : <InfoCard label="" value={participant.name || "N/A"} />)
+  );
 }
