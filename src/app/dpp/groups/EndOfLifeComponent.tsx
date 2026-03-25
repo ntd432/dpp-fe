@@ -1,6 +1,6 @@
 import { CollapsibleSection, DataLayerGroup } from "@/components/form/CollapsibleSection";
 import DataPointComponent from "@/components/DataPointComponent";
-import { ValueTree } from "./CommonComponents";
+import { EventListCard, ValueTree } from "./CommonComponents";
 import { EndOfLifeData } from "@/types";
 
 type EndOfLifeComponentProps = Readonly<{
@@ -16,34 +16,57 @@ export function EndOfLifeComponent({ endOfLife }: EndOfLifeComponentProps) {
       defaultOpen={false}
     >
       <DataLayerGroup layer="Regulatory">
-        <DataPointComponent label="Disposal and Recovery">
-          <ValueTree label="Recycling and Reuse Potential" value={endOfLife?.recyclingReusePotential} />
-          <ValueTree label="Disposal Options" value={endOfLife?.disposalOptions} />
-          <ValueTree label="Expected Waste" value={endOfLife?.expectedWaste} />
-          <ValueTree label="Unsold Products Information" value={endOfLife?.unsoldProductsInformation} />
+        <DataPointComponent label="Recycling and Reuse Potential">
+          <ValueTree label="" value={endOfLife?.recyclingReusePotential} />
         </DataPointComponent>
 
-        <DataPointComponent label="Circularity Properties">
-          <ValueTree label="Reusability" value={endOfLife?.reusability} />
-          <ValueTree label="Repairability" value={endOfLife?.repairability} />
-          <ValueTree label="Refurbishability" value={endOfLife?.refurbishability} />
-          <ValueTree label="Upgrade Options" value={endOfLife?.upgradeOptions} />
-          <ValueTree label="Number of Lifecycles" value={endOfLife?.numberOfLifecycles} />
+        <DataPointComponent label="Disposal Options">
+          <ValueTree label="" value={endOfLife?.disposalOptions} />
+        </DataPointComponent>
+
+        <DataPointComponent label="Unsold Products Information">
+          <ValueTree label="" value={endOfLife?.unsoldProductsInformation} />
         </DataPointComponent>
       </DataLayerGroup>
 
       <DataLayerGroup layer="Sectoral">
-        <DataPointComponent label="End-of-Life Information">
-          <ValueTree label="Waste Prevention" value={endOfLife?.endOfLifeInformation?.wastePrevention} />
-          <ValueTree label="Separate Collection" value={endOfLife?.endOfLifeInformation?.separateCollection} />
-          <ValueTree label="Collection Information" value={endOfLife?.endOfLifeInformation?.collectionInformation} />
-          <ValueTree label="End-of-Life Report" value={endOfLife?.endOfLifeInformation?.endOfLifeReport} />
+        <DataPointComponent label="Expected Waste">
+          <ValueTree label="" value={endOfLife?.expectedWaste} />
+        </DataPointComponent>
+      </DataLayerGroup>
+
+      <DataLayerGroup layer="Commercial">
+        <DataPointComponent label="Reusability/Repurposability">
+          <ValueTree label="" value={endOfLife?.reusability} />
+        </DataPointComponent>
+
+        <DataPointComponent label="Repairability/Maintainability">
+          <ValueTree label="" value={endOfLife?.repairability} />
+        </DataPointComponent>
+
+        <DataPointComponent label="Refurbishability/Remanufacturability">
+          <ValueTree label="" value={endOfLife?.refurbishability} />
+        </DataPointComponent>
+
+        <DataPointComponent label="Upgrade Options">
+          <ValueTree label="" value={endOfLife?.upgradeOptions} />
         </DataPointComponent>
       </DataLayerGroup>
 
       <DataLayerGroup layer="Downstream Data">
         <DataPointComponent label="End-of-Life History">
-          <ValueTree label="End-of-Life History" value={endOfLife?.endOfLifeHistory} />
+            <EventListCard list={endOfLife?.endOfLifeHistory || []} label=""/>
+        </DataPointComponent>
+
+        <DataPointComponent label="Number of Lifecycles">
+          <ValueTree label="" value={endOfLife?.numberOfLifecycles} />
+        </DataPointComponent>
+
+        <DataPointComponent label="End-of-Life Information">
+          <ValueTree label="Waste Prevention" value={endOfLife?.endOfLifeInformation?.wastePrevention} />
+          <ValueTree label="Separate Collection" value={endOfLife?.endOfLifeInformation?.separateCollection} />
+          <ValueTree label="Collection Information" value={endOfLife?.endOfLifeInformation?.collectionInformation} />
+          <ValueTree label="End-of-Life Report" value={endOfLife?.endOfLifeInformation?.endOfLifeReport} />
         </DataPointComponent>
       </DataLayerGroup>
     </CollapsibleSection>
