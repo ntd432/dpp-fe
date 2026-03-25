@@ -2064,11 +2064,10 @@ export default function AddProductPage() {
   const [mappings, setMappings] = useState<FieldMapping[]>([]);
   const sectionSteps = [
     "Product Information",
-    "Compliance",
     "Sustainability",
     "End of Life",
     "Guidelines & Manuals",
-    // "Usage & Maintenance",
+    "Compliance",
   ] as const;
   const [currentSectionStep, setCurrentSectionStep] = useState(0);
 
@@ -2608,24 +2607,22 @@ export default function AddProductPage() {
         <ProductInformationStep shared={stepShared} />
         )}
 
-{/* ── COMPLIANCE ───────────────────────────────────────────────── */}
+        {/* ── SUSTAINABILITY ───────────────────────────────────────────── */}
         {currentSectionStep === 1 && (
-        <ComplianceStep shared={stepShared} />
-        )}
-
-{/* ── SUSTAINABILITY ───────────────────────────────────────────── */}
-        {currentSectionStep === 2 && (
         <SustainabilityStep shared={stepShared} />
         )}
-
-{/* ── END OF LIFE ──────────────────────────────────────────────── */}
-        {currentSectionStep === 3 && (
+        {/* ── END OF LIFE ──────────────────────────────────────────────── */}
+        {currentSectionStep === 2 && (
         <EndOfLifeStep shared={stepShared} />
         )}
-
 {/* ── GUIDELINES & MANUALS ─────────────────────────────────────── */}
-        {currentSectionStep === 4 && (
+        {currentSectionStep === 3 && (
         <GuidelinesStep shared={stepShared} />
+        )}
+
+{/* ── COMPLIANCE ───────────────────────────────────────────────── */}
+        {currentSectionStep === 4 && (
+        <ComplianceStep shared={stepShared} />
         )}
 
 {/* ── USAGE & MAINTENANCE ──────────────────────────────────────── */}
