@@ -61,7 +61,7 @@ export async function uploadToTriplyDB(
       mergeGraphs: true,
     });
 
-    await dataset.ensureService("sparql", { type: "virtuoso" });
+    await dataset.ensureService("sparql");
 
     return { graphName: config.graphName, tripleCount };
   } catch (error: unknown) {

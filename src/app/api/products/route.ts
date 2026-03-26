@@ -183,9 +183,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     );
   }
 
-  let productData: Product;
+  let requestBody: unknown;
   try {
-    productData = (await request.json()) as Product;
+    requestBody = await request.json();
   } catch {
     return NextResponse.json(
       { error: "Invalid JSON request body." },
@@ -193,17 +193,54 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     );
   }
 
-  productData.label =
-    productData.productInfo?.identification?.productName || "Unnamed Product";
-  productData.id = `urn:product:generated:${crypto.randomUUID()}`;
+  if (!requestBody || (typeof requestBody !== "object" && !Array.isArray(requestBody))) {
+    return NextResponse.json(
+      { error: "Request body must be a Product object or an array of Product objects." },
+      { status: 400 },
+    );
+  }
+
+  const inputProducts = Array.isArray(requestBody)
+    ? (requestBody as Product[])
+    : [requestBody as Product];
+
+  if (inputProducts.length === 0) {
+    return NextResponse.json(
+      { error: "Product array cannot be empty." },
+      { status: 400 },
+    );
+  }
+
+  const products = inputProducts.map((item) => ({ ...item })) as Product[];
+  for (const product of products) {
+    product.label =
+      product.productInfo?.identification?.productName || "Unnamed Product";
+    product.id = `urn:product:generated:${crypto.randomUUID()}`;
+  }
 
   try {
-    const jsonLdPayload = await toJsonLdPayload(
-      productData as Record<string, unknown>,
-      "dpp-core:Product",
-      getContext,
-      transformNestedObjects,
+    const transformedProducts = await Promise.all(
+      products.map((product) =>
+        toJsonLdPayload(
+          product as Record<string, unknown>,
+          "dpp-core:Product",
+          getContext,
+          transformNestedObjects,
+        ),
+      ),
     );
+
+    const jsonLdPayload =
+      transformedProducts.length === 1
+        ? transformedProducts[0]
+        : {
+            "@context": transformedProducts[0]["@context"],
+            "@graph": transformedProducts.map((product) => {
+              const graphItem = { ...product };
+              delete graphItem["@context"];
+              return graphItem;
+            }),
+          };
 
     const uploadResult = await uploadToTriplyDB(jsonLdPayload, {
       token,
@@ -211,10 +248,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       graphName,
     });
 
+    const isBatch = products.length > 1;
+
     return NextResponse.json({
-      message:
-        "Product created, transformed to JSON-LD, and uploaded successfully.",
-      product: productData,
+      message: isBatch
+        ? "Products created, transformed to one JSON-LD payload, and uploaded successfully."
+        : "Product created, transformed to JSON-LD, and uploaded successfully.",
+      product: isBatch ? undefined : products[0],
+      products: isBatch ? products : undefined,
       uploadResult,
     });
   } catch (error: unknown) {
