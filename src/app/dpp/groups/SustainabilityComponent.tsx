@@ -26,7 +26,7 @@ function EnvironmentalFootprintCard(
     { label: "Footprint type", value: footprint.environmentalFootprintType },
     {
       label: "Value",
-      value: `${footprint.environmentalFootprintValue}${footprint.environmentalFootprintUnit}`,
+      value: `${footprint.environmentalFootprintValue} ${footprint.environmentalFootprintUnit}`,
     },
     {
       label: "Measuring method",
@@ -60,7 +60,7 @@ function ResourceConsumptionCard(consumption: Readonly<ResourceConsumption>) {
     { label: "Resource", value: consumption.resource },
     {
       label: "Value",
-      value: `${consumption.resourceConsumptionValue}${consumption.resourceConsumptionUnit}`,
+      value: `${consumption.resourceConsumptionValue} ${consumption.resourceConsumptionUnit}`,
     },
   ];
   return <KeyValuePair numberOfColumn={3} pairs={pairs} />;
@@ -91,7 +91,7 @@ function EnvironmentalImpactCard(impact: Readonly<EnvironmentalImpact>) {
     { label: "Characterization Model", value: impact.characterizationModel },
     {
       label: "Impact indicator",
-      value: `${impact.impactIndicator.measurementValue}${impact.impactIndicator.measurementUnit}`,
+      value: `${impact.impactIndicator.measurementValue} ${impact.impactIndicator.measurementUnit}`,
     },
   ];
   return <KeyValuePair numberOfColumn={3} pairs={pairs} />;

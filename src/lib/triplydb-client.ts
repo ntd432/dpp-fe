@@ -7,8 +7,8 @@ import { tmpdir } from "node:os";
 import { describeSubjectFromTriplyDB } from "./api";
 import { ARRAY_TYPES } from "../../next.config";
 
-const STRING_TYPE = "http://www.w3.org/2001/XMLSchema#string";
-const NUMBER_TYPE = "http://www.w3.org/2001/XMLSchema#double";
+const INTEGER_TYPE = "http://www.w3.org/2001/XMLSchema#integer";
+const DOUBLE_TYPE = "http://www.w3.org/2001/XMLSchema#double";
 const IGNORE_PREDICATES = new Set([
   // "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
   "http://www.w3.org/2000/01/rdf-schema#label",
@@ -120,28 +120,60 @@ export async function transformToJsonFromDescribeResult(describeResult: Record<s
     const predicate = triple[1]?.value;
     const objectTermType = triple[2]?.termType;
     const object = triple[2]?.value;
+    const objectDataType = triple[2]?.datatype;
 
     if (IGNORE_PREDICATES.has(predicate)) {
       continue;
     }
 
-    if (objectTermType === "Literal" || fieldName === "type") {
-      result[fieldName] = object;
-    } else if (objectTermType === "NamedNode") {
-      const childDescribeResult = await describeSubjectFromTriplyDB(object);
-      const child = await transformToJsonFromDescribeResult(childDescribeResult);
-      if (fieldName in result) {
-        if (Array.isArray(result[fieldName])) {
-          (result[fieldName] as Record<string, unknown>[]).push(child);
-        } else {
-          result[fieldName] = [result[fieldName] as Record<string, unknown>, child];
-        }
-      } else if (ARRAY_TYPES.has(fieldName)) {
-        result[fieldName] = [child];
-      } else {
-        result[fieldName] = child;
-      }
-    }
+    await processTriple(result, fieldName, objectTermType, object, objectDataType);
   }
   return result;
+}
+
+async function processTriple(
+  result: Record<string, unknown>,
+  fieldName: string,
+  objectTermType: string | undefined,
+  object: string,
+  objectDataType: string | undefined
+): Promise<void> {
+  if (fieldName === "type") {
+    result[fieldName] = object;
+  } else if (objectTermType === "Literal") {
+    result[fieldName] = handleLiteralValue(object, objectDataType);
+  } else if (objectTermType === "NamedNode") {
+    await processNamedNode(result, fieldName, object);
+  }
+}
+
+async function processNamedNode(
+  result: Record<string, unknown>,
+  fieldName: string,
+  object: string
+): Promise<void> {
+  const childDescribeResult = await describeSubjectFromTriplyDB(object);
+  const child = await transformToJsonFromDescribeResult(childDescribeResult);
+  
+  if (fieldName in result) {
+    if (Array.isArray(result[fieldName])) {
+      (result[fieldName] as Record<string, unknown>[]).push(child);
+    } else {
+      result[fieldName] = [result[fieldName] as Record<string, unknown>, child];
+    }
+  } else if (ARRAY_TYPES.has(fieldName)) {
+    result[fieldName] = [child];
+  } else {
+    result[fieldName] = child;
+  }
+}
+
+function handleLiteralValue(object: string, objectDataType?: string) {
+  if (objectDataType === INTEGER_TYPE) {
+    return Number.parseInt(object, 10);
+  }
+  if (objectDataType === DOUBLE_TYPE) {
+    return Number.parseFloat(object);
+  }
+  return object;
 }
