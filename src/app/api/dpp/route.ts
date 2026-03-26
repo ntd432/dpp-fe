@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const token = process.env.TRIPLYDB_TOKEN;
   const datasetName = process.env.DATASET_NAME;
-  const companyName = process.env.COMPANY_NAME || "example-manufacturer";
+  const companyName = process.env.COMPANY_NAME?.toLowerCase().replaceAll(" ", "-") || "example-manufacturer";
   const graphName = `urn:dpp:data:${companyName}`;
 
   if (!token || !datasetName) {
