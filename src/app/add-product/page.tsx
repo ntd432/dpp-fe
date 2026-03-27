@@ -2,6 +2,7 @@
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import * as XLSX from "xlsx";
 import { FormField, TextAreaField } from "@/components/form/FormField";
 import {
   CollapsibleSection,
@@ -124,6 +125,7 @@ interface ImportedLeaf {
 
 interface FieldMapping {
   targetField: string;
+  targetKey: keyof FormState;
   sourcePath: string;
   value: string;
 }
@@ -145,6 +147,68 @@ type CustomFieldGroupKey =
   | "guidelinesCustomFields";
 
 const DRAG_MIME = "application/x-dpp-json-leaf";
+type ImportMode = "json" | "table";
+type TabularRow = Record<string, string>;
+
+function coerceMappedValue(raw: string, sampleValue: unknown): unknown {
+  if (Array.isArray(sampleValue)) {
+    if (!raw.trim()) return [];
+    try {
+      const parsed = JSON.parse(raw) as unknown;
+      return Array.isArray(parsed) ? parsed : [raw];
+    } catch {
+      return raw
+        .split("|")
+        .map((item) => item.trim())
+        .filter(Boolean);
+    }
+  }
+
+  if (sampleValue && typeof sampleValue === "object") {
+    if (!raw.trim()) return sampleValue;
+    try {
+      return JSON.parse(raw);
+    } catch {
+      return sampleValue;
+    }
+  }
+
+  if (typeof sampleValue === "number") {
+    const num = Number(raw);
+    return Number.isNaN(num) ? sampleValue : num;
+  }
+
+  if (typeof sampleValue === "boolean") {
+    return raw.trim().toLowerCase() === "true";
+  }
+
+  return raw;
+}
+
+function parseWorksheetRows(buffer: ArrayBuffer): TabularRow[] {
+  const workbook = XLSX.read(buffer, { type: "array" });
+  const firstSheetName = workbook.SheetNames[0];
+  if (!firstSheetName) {
+    return [];
+  }
+
+  const sheet = workbook.Sheets[firstSheetName];
+  const rawRows = XLSX.utils.sheet_to_json<Record<string, unknown>>(sheet, {
+    defval: "",
+    raw: false,
+  });
+
+  return rawRows
+    .map((row) =>
+      Object.fromEntries(
+        Object.entries(row).map(([key, value]) => [
+          String(key),
+          value == null ? "" : String(value),
+        ]),
+      ),
+    )
+    .filter((row) => Object.values(row).some((value) => value.trim() !== ""));
+}
 
 function stringifyJsonLeaf(value: unknown): string {
   if (value === null) return "null";
@@ -185,6 +249,10 @@ function collectJsonLeaves(value: unknown, basePath = "root"): ImportedLeaf[] {
 
 function normalizeJsonPath(path: string): string {
   return path.replaceAll(/\[\d+\]/g, "").replaceAll(/^root\.?/g, "");
+}
+
+function normalizeFieldIdentifier(value: string): string {
+  return value.toLowerCase().replaceAll(/[^a-z0-9]/g, "");
 }
 
 function customFieldNameFromLeafPath(path: string): string {
@@ -2059,7 +2127,9 @@ export default function AddProductPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [importMode, setImportMode] = useState<ImportMode>("json");
   const [importedJson, setImportedJson] = useState<unknown>(null);
+  const [tabularRows, setTabularRows] = useState<TabularRow[]>([]);
   const [importError, setImportError] = useState<string | null>(null);
   const [mappings, setMappings] = useState<FieldMapping[]>([]);
   const sectionSteps = [
@@ -2196,6 +2266,54 @@ export default function AddProductPage() {
     ],
   };
 
+  const formKeyLookup = useMemo(() => {
+    const lookup = new Map<string, keyof FormState>();
+    const keys = Object.keys(initialState) as Array<keyof FormState>;
+    for (const key of keys) {
+      lookup.set(normalizeFieldIdentifier(String(key)), key);
+    }
+    return lookup;
+  }, []);
+
+  const formKeyAliases: Record<string, keyof FormState> = {
+    company: "manufacturerId",
+    companyname: "manufacturerName",
+    companyurl: "manufacturerUrl",
+    componentbillsurl: "componentBills",
+    spareparts: "sparePartsAvailability",
+    testreporturl: "testReport",
+    onerelatedobjecturiidperline: "relatedObjectsRaw",
+  };
+
+  const resolveFormKeyFromElement = (target: EventTarget | null): keyof FormState | null => {
+    if (!(target instanceof HTMLElement)) return null;
+
+    const inputElement = target.closest("input, textarea, select");
+    if (!(inputElement instanceof HTMLInputElement || inputElement instanceof HTMLTextAreaElement || inputElement instanceof HTMLSelectElement)) {
+      return null;
+    }
+
+    const candidates = [
+      inputElement.getAttribute("data-field-key") || "",
+      inputElement.getAttribute("name") || "",
+      inputElement.id || "",
+      inferFieldNameFromElement(inputElement),
+    ];
+
+    for (const candidate of candidates) {
+      const normalized = normalizeFieldIdentifier(candidate);
+      if (!normalized) continue;
+
+      const alias = formKeyAliases[normalized];
+      if (alias) return alias;
+
+      const direct = formKeyLookup.get(normalized);
+      if (direct) return direct;
+    }
+
+    return null;
+  };
+
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setForm((prev) => ({ ...prev, [key]: value }));
 
@@ -2273,7 +2391,7 @@ export default function AddProductPage() {
 
   const addOrReplaceMapping = (next: FieldMapping) => {
     setMappings((prev) => {
-      const withoutTarget = prev.filter((mapping) => mapping.targetField !== next.targetField || mapping.sourcePath !== next.sourcePath);
+      const withoutTarget = prev.filter((mapping) => mapping.targetKey !== next.targetKey || mapping.sourcePath !== next.sourcePath);
       return [...withoutTarget, next];
     });
   };
@@ -2312,6 +2430,14 @@ export default function AddProductPage() {
     setMappings((prev) => prev.filter((mapping) => mapping.sourcePath !== sourcePath));
   };
 
+  const handleImportModeChange = (mode: ImportMode) => {
+    setImportMode(mode);
+    setImportedJson(null);
+    setTabularRows([]);
+    setMappings([]);
+    setImportError(null);
+  };
+
   const handleJsonFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -2322,8 +2448,37 @@ export default function AddProductPage() {
       setImportedJson(parsed);
       setImportError(null);
       setMappings([]);
+      setTabularRows([]);
     } catch {
       setImportError("Invalid JSON file. Please upload a valid JSON document.");
+      setImportedJson(null);
+      setTabularRows([]);
+      setMappings([]);
+    }
+  };
+
+  const handleTableFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const buffer = await file.arrayBuffer();
+      const rows = parseWorksheetRows(buffer);
+      if (rows.length === 0) {
+        setImportError("No data rows found in the uploaded file.");
+        setTabularRows([]);
+        setImportedJson(null);
+        setMappings([]);
+        return;
+      }
+
+      setTabularRows(rows);
+      setImportedJson(rows[0]);
+      setImportError(null);
+      setMappings([]);
+    } catch {
+      setImportError("Invalid CSV/XLSX file. Please upload a valid table file.");
+      setTabularRows([]);
       setImportedJson(null);
       setMappings([]);
     }
@@ -2351,9 +2506,16 @@ export default function AddProductPage() {
       return;
     }
 
+    const targetKey = resolveFormKeyFromElement(activeElement);
+    if (!targetKey) {
+      setImportError("Cannot map this target field. Please drop onto a supported form input field.");
+      return;
+    }
+
     setImportError(null);
     addOrReplaceMapping({
       targetField,
+      targetKey,
       sourcePath: leaf.path,
       value: writtenValue,
     });
@@ -2385,9 +2547,16 @@ export default function AddProductPage() {
       return;
     }
 
+    const targetKey = resolveFormKeyFromElement(event.target);
+    if (!targetKey) {
+      setImportError("Cannot map this target field. Please drop onto a supported form input field.");
+      return;
+    }
+
     setImportError(null);
     addOrReplaceMapping({
       targetField,
+      targetKey,
       sourcePath: parsed.path,
       value: writtenValue,
     });
@@ -2411,7 +2580,7 @@ export default function AddProductPage() {
     });
 
     const fieldNames = new Set(fields.map((field) => field.toString()));
-    setMappings((prev) => prev.filter((mapping) => !fieldNames.has(mapping.targetField)));
+    setMappings((prev) => prev.filter((mapping) => !fieldNames.has(mapping.targetKey)));
   };
 
   useEffect(() => {
@@ -2447,7 +2616,40 @@ export default function AddProductPage() {
     setSuccess(false);
 
     try {
-      const payload = buildPayload(form, manufacturers);
+      let payload: Record<string, unknown> | Record<string, unknown>[];
+
+      if (importMode === "table" && tabularRows.length > 0) {
+        const validMappings = mappings.filter((mapping) =>
+          Object.hasOwn(initialState, mapping.targetKey),
+        );
+
+        if (validMappings.length === 0) {
+          throw new Error("Map at least one CSV/XLSX column to a form field before submitting.");
+        }
+
+        const rowForms = tabularRows.map((row) => {
+          const rowForm = { ...form } as FormState;
+
+          for (const mapping of validMappings) {
+            const targetKey = mapping.targetKey;
+            const sourceKey = normalizeJsonPath(mapping.sourcePath);
+            const rawValue = row[mapping.sourcePath] ?? row[sourceKey] ?? "";
+            const templateValue = initialState[targetKey];
+
+            (rowForm as unknown as Record<string, unknown>)[targetKey] = coerceMappedValue(
+              rawValue,
+              templateValue,
+            );
+          }
+
+          return rowForm;
+        });
+
+        payload = rowForms.map((rowForm) => buildPayload(rowForm, manufacturers));
+      } else {
+        payload = buildPayload(form, manufacturers);
+      }
+
       const res = await fetch("/api/products", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -2472,20 +2674,47 @@ export default function AddProductPage() {
     <main className="w-full px-4 py-8">
       <div className="mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-[360px_minmax(0,1fr)] gap-6">
         <aside className="rounded-xl border border-gray-200 bg-white shadow-sm p-4 h-fit lg:sticky lg:top-4">
-          <h2 className="text-sm font-semibold text-gray-900 mb-3">Manufacturer JSON Import</h2>
+          <h2 className="text-sm font-semibold text-gray-900 mb-3">Data Import & Mapping</h2>
+          <div className="mb-3 space-y-1">
+            <div className="flex items-center justify-between text-[11px] font-medium text-gray-600">
+            </div>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={importMode === "table"}
+              aria-label="Toggle import mode between JSON and CSV/XLSX"
+              onClick={() => handleImportModeChange(importMode === "json" ? "table" : "json")}
+              className="relative w-full h-8 rounded-full border border-gray-300 bg-gray-100 hover:cursor-pointer"
+            >
+              <span
+                className={`absolute top-0.5 h-6 w-[calc(50%-4px)] rounded-full bg-[var(--color-brand-pink)] transition-transform ${
+                  importMode === "table" ? "translate-x-[calc(2px)]" : "translate-x-[calc(-100%+2px)]"
+                }`}
+              />
+              <span className="relative z-10 grid h-full grid-cols-2 text-xs font-semibold">
+                <span className={`self-center ${importMode === "json" ? "text-white" : "text-gray-700"}`}>JSON</span>
+                <span className={`self-center ${importMode === "table" ? "text-white" : "text-gray-700"}`}>CSV/XLSX</span>
+              </span>
+            </button>
+          </div>
           <div className="space-y-3">
             <input
               type="file"
-              accept="application/json,.json"
-              onChange={handleJsonFileUpload}
+              accept={importMode === "json" ? "application/json,.json" : ".csv,.xlsx,.xls"}
+              onChange={importMode === "json" ? handleJsonFileUpload : handleTableFileUpload}
               className="block w-full text-xs text-gray-600 file:mr-3 file:px-3 file:py-1.5 file:border file:border-gray-200 file:rounded-md file:bg-gray-50 file:text-gray-700"
             />
             <p className="text-xs text-gray-500">
-              Drag values from the tree onto form fields.
+              {importMode === "json"
+                ? "Drag values from the tree onto form fields."
+                : "Drag values from the first-row preview onto form fields."}
             </p>
             <div className="text-xs text-gray-600">
               <div>Imported leaves: <span className="font-medium">{importedLeafCount}</span></div>
               <div>Mapped fields: <span className="font-medium">{mappings.length}</span></div>
+              {importMode === "table" && (
+                <div>Rows detected: <span className="font-medium">{tabularRows.length}</span></div>
+              )}
             </div>
             {importError && (
               <div className="rounded-md border border-red-200 bg-red-50 px-2 py-1 text-xs text-red-700">
@@ -2496,7 +2725,9 @@ export default function AddProductPage() {
 
           <div className="mt-4 max-h-[340px] overflow-auto rounded-lg border border-gray-200 bg-gray-50 p-2">
             {importedJson == null ? (
-              <p className="text-xs text-gray-500">No JSON loaded.</p>
+              <p className="text-xs text-gray-500">
+                {importMode === "json" ? "No JSON loaded." : "No CSV/XLSX loaded."}
+              </p>
             ) : (
               <JsonTree
                 value={importedJson}
@@ -2507,6 +2738,11 @@ export default function AddProductPage() {
               />
             )}
           </div>
+          {importMode === "table" && tabularRows.length > 0 && (
+            <p className="mt-2 text-[11px] text-gray-500">
+              First row is shown above as the mapping example. All mappings apply automatically to every row.
+            </p>
+          )}
 
           <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-gray-600">
             <span className="inline-flex items-center gap-1 rounded border border-[var(--color-brand-pink)] bg-[var(--color-brand-pink-super-light)] px-2 py-0.5">
