@@ -2127,7 +2127,7 @@ export default function AddProductPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-  const [importMode, setImportMode] = useState<ImportMode>("json");
+  const [importMode, setImportMode] = useState<ImportMode>("table");
   const [importedJson, setImportedJson] = useState<unknown>(null);
   const [tabularRows, setTabularRows] = useState<TabularRow[]>([]);
   const [importError, setImportError] = useState<string | null>(null);
@@ -2682,18 +2682,18 @@ export default function AddProductPage() {
               type="button"
               role="switch"
               aria-checked={importMode === "table"}
-              aria-label="Toggle import mode between JSON and CSV/XLSX"
+              aria-label="Toggle import mode between CSV/XLSX and JSON"
               onClick={() => handleImportModeChange(importMode === "json" ? "table" : "json")}
               className="relative w-full h-8 rounded-full border border-gray-300 bg-gray-100 hover:cursor-pointer"
             >
               <span
-                className={`absolute top-0.5 h-6 w-[calc(50%-4px)] rounded-full bg-[var(--color-brand-pink)] transition-transform ${
-                  importMode === "table" ? "translate-x-[calc(2px)]" : "translate-x-[calc(-100%+2px)]"
+                className={`absolute top-0.75 h-6 w-[calc(50%-4px)] rounded-full bg-[var(--color-brand-pink)] transition-transform ${
+                  importMode === "json" ? "translate-x-[calc(1px)]" : "translate-x-[calc(-100%)]"
                 }`}
               />
               <span className="relative z-10 grid h-full grid-cols-2 text-xs font-semibold">
-                <span className={`self-center ${importMode === "json" ? "text-white" : "text-gray-700"}`}>JSON</span>
                 <span className={`self-center ${importMode === "table" ? "text-white" : "text-gray-700"}`}>CSV/XLSX</span>
+                <span className={`self-center ${importMode === "json" ? "text-white" : "text-gray-700"}`}>JSON</span>
               </span>
             </button>
           </div>
