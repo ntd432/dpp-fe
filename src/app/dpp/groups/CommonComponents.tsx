@@ -73,6 +73,30 @@ export function KeyValuePair({ indent=false, numberOfColumn, pairs }: Readonly<{
   );
 }
 
+export function ExtensionFieldCard({ fieldName, numberOfColumn = 2, children }: Readonly<{ fieldName: string; numberOfColumn: number; children: React.ReactNode }>) {
+  return (
+      <details key={fieldName} className="group/group border border-gray-200 rounded-lg bg-white">
+        <summary className="cursor-pointer list-none px-4 py-3 text-xs font-semibold uppercase tracking-wide text-gray-600 [&::-webkit-details-marker]:hidden">
+          <span className="flex items-center justify-between">
+            {fieldName}
+            <svg
+              className="w-4 h-4 text-gray-400 transition-transform group-open/group:rotate-180"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </span>
+        </summary>
+        <div className={`px-4 pb-4 grid grid-cols-${numberOfColumn} gap-4`}>
+          {children}
+        </div>
+      </details>
+    );
+}
+
 export function ValueTree({ label, value }: Readonly<{ label: string; value: unknown }>) {
   if (value === undefined) return null;
 

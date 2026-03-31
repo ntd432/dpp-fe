@@ -284,6 +284,16 @@ export const TEST_DPP = {
             ],
             "testReport": "https://www.apple.com/environment/pdf/products/iphone-17-pro-test-report.pdf",
             "productSpecification": {
+                "crossCompatibility": {
+                    "crossCompatibilityDetails": "Compatible with USB-C chargers and accessories; supports Qi wireless charging.",
+                    "compatibleInterfaceStandard": "USB Power Delivery (USB-PD) 3.1",
+                    "compatibilityLevel": "full"
+                },
+                "installedSoftware": {
+                    "installedSoftwareName": "iOS 17",
+                    "installedSoftwareVersion": "17.0",
+                    "softwareSupportEndDate": "2030-09-30"
+                },
                 "batteryCapacity": {
                     "type": "https://ntd432.github.io/dpp/models/dpp-core.ttl#MeasurementEntry",
                     "measurementUnit": "mAh",
@@ -322,6 +332,43 @@ export const TEST_DPP = {
                     "type": "https://ntd432.github.io/dpp/models/extensions/dpp-electronics.ttl#ProductionMethod",
                     "productionMethodDescription": "ISO 14001-aligned manufacturing with automated inspection and energy-efficiency controls."
                 }
+            },
+            "sectorNonRequiredInformation": {
+                "expectedEndConditionInfo": {
+                    "type": "https://ntd432.github.io/dpp/models/extensions/dpp-electronics.ttl#ExpectedEndCondition",
+                    "expectedEndCondition": "reusable"
+                },
+                "renewableEnergyProductionInfo": {
+                    "type": "https://ntd432.github.io/dpp/models/extensions/dpp-electronics.ttl#RenewableEnergyProduction",
+                    "renewableEnergyProductionValue": true,
+                    "renewableEnergyType": "On-site solar",
+                    "renewableEnergyOutput": 5000,
+                    "renewableEnergyOutputUnit": "kWh"
+                },
+                "materialSeparability": {
+                    "type": "https://ntd432.github.io/dpp/models/extensions/dpp-electronics.ttl#MaterialSeparability",
+                    "separabilityScore": 8,
+                    "separabilityMethod": "Apple Material Recovery Lab assessment"
+                },
+                "componentModularity": {
+                    "type": "https://ntd432.github.io/dpp/models/extensions/dpp-electronics.ttl#ComponentModularity",
+                    "modularityScore": 7,
+                    "replaceableComponent": "Battery, display, camera module, speaker module, charging port module"
+                },
+                "productDesignInfo": {
+                    "type": "https://ntd432.github.io/dpp/models/extensions/dpp-electronics.ttl#ProductDesign",
+                    "productDesign": "Designed for durability, repairability, and recyclability with high-quality materials and modular components.",
+                    "designForDisassembly": true
+                },
+                "appliedStandardsAndNorms": {
+                    "type": "https://ntd432.github.io/dpp/models/extensions/dpp-electronics.ttl#AppliedStandardsAndNorms",
+                    "appliedStandard": {
+                        "type": "https://ntd432.github.io/dpp/models/dpp-core.ttl#DefinedTerm",
+                        "identifier": "IEC 62474:2012",
+                        "name": "Material declaration for products of and for the electrotechnical industry"
+                    },
+                    "standardReference": "https://webstore.iec.ch/publication/6021"
+                },
             }
         },
         "sustainability": {

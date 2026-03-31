@@ -1,4 +1,4 @@
-import { BATTERY_UNITS, LENGTH_UNITS, MASS_UNITS, ENERGY_OUTPUT_UNITS } from "./master-data";
+import { BATTERY_UNITS, LENGTH_UNITS, MASS_UNITS, ENERGY_OUTPUT_UNITS, VOLUME_UNITS } from "./master-data";
 import { ExtensionSectionGroups } from "./product-extension-fields";
 
 export const ELECTRONIC_EXTENSION_FIELDS: ExtensionSectionGroups = {
@@ -80,6 +80,12 @@ export const ELECTRONIC_EXTENSION_FIELDS: ExtensionSectionGroups = {
         kind: "measurement",
         unitOptions: BATTERY_UNITS,
       },
+      {
+        key: "specVolume",
+        label: "Volume",
+        kind: "measurement",
+        unitOptions: VOLUME_UNITS,
+      },
     ],
     "Technical Specifications": [
       {
@@ -142,13 +148,6 @@ export const ELECTRONIC_EXTENSION_FIELDS: ExtensionSectionGroups = {
     ],
   },
   sectorNonRequiredInformation: {
-    General: [
-      {
-        key: "sectorNonRequiredInformationText",
-        label: "Additional Sector Details",
-        kind: "textarea",
-      },
-    ],
     "Expected End Condition": [
       {
         key: "sectorNonRequiredExpectedEndCondition",
