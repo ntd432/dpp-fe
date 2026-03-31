@@ -1444,7 +1444,6 @@ interface FormState {
   sectorRequiredProductionDesc: string;
   sectorRequiredManufacturingTechnology: string;
   sectorRequiredProcessCertification: string;
-  sectorNonRequiredInformationText: string;
   sectorNonRequiredExpectedEndCondition: string;
   sectorNonRequiredRenewableEnergyProductionValue: string;
   sectorNonRequiredRenewableEnergyType: string;
@@ -1467,6 +1466,7 @@ interface FormState {
   specIngressProtection: string;
   specNetworkConnectivity: string;
   specBatteryCapacity: MeasurementValue;
+  specVolume: MeasurementValue;
   specChargingInterface: string;
   specCrossCompatibilityDetails: string;
   specCompatibleInterfaceStandard: string;
@@ -1570,7 +1570,6 @@ const initialState: FormState = {
   sectorRequiredProductionDesc: "",
   sectorRequiredManufacturingTechnology: "",
   sectorRequiredProcessCertification: "",
-  sectorNonRequiredInformationText: "",
   sectorNonRequiredExpectedEndCondition: "",
   sectorNonRequiredRenewableEnergyProductionValue: "",
   sectorNonRequiredRenewableEnergyType: "",
@@ -1592,6 +1591,7 @@ const initialState: FormState = {
   specIngressProtection: "",
   specNetworkConnectivity: "",
   specBatteryCapacity: { value: "", unit: "", customUnit: "" },
+  specVolume: { value: "", unit: "", customUnit: "" },
   specChargingInterface: "",
   specCrossCompatibilityDetails: "",
   specCompatibleInterfaceStandard: "",
@@ -1955,7 +1955,6 @@ function buildPayload(
       },
       sectorNonRequiredInformation: {
         extensionType: f.sectorType,
-        information: f.sectorNonRequiredInformationText,
         expectedEndConditionInfo: {
           expectedEndCondition: f.sectorNonRequiredExpectedEndCondition,
         },
@@ -2007,6 +2006,7 @@ function buildPayload(
         ingressProtection: f.specIngressProtection,
         networkConnectivity: f.specNetworkConnectivity,
         batteryCapacity: toMeasurementEntry(f.specBatteryCapacity),
+        volume: toMeasurementEntry(f.specVolume),
         chargingInterface: f.specChargingInterface,
         crossCompatibility: {
           crossCompatibilityDetails: f.specCrossCompatibilityDetails,
@@ -2169,7 +2169,6 @@ export default function AddProductPage() {
       "sectorRequiredProductionDesc",
       "sectorRequiredManufacturingTechnology",
       "sectorRequiredProcessCertification",
-      "sectorNonRequiredInformationText",
       "sectorNonRequiredExpectedEndCondition",
       "sectorNonRequiredRenewableEnergyProductionValue",
       "sectorNonRequiredRenewableEnergyType",
@@ -2191,6 +2190,7 @@ export default function AddProductPage() {
       "specIngressProtection",
       "specNetworkConnectivity",
       "specBatteryCapacity",
+      "specVolume",
       "specChargingInterface",
       "specCrossCompatibilityDetails",
       "specCompatibleInterfaceStandard",

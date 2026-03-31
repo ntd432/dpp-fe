@@ -6,6 +6,7 @@ import { ComponentListCard, KeyValuePair, ListCards, ValueTree } from "./CommonC
 import { ProductInformation, Substance } from "@/types";
 import { ImageInfoCard, InfoCardWithLink } from "@/components/InfoCard";
 import DataPointComponent from "@/components/DataPointComponent";
+import { SectorExtensionComponent } from "./extensions/SectorExtensionFactory";
 
 type ProductInformationComponentProps = Readonly<{
   productInfo: ProductInformation;
@@ -155,22 +156,21 @@ export function ProductInformationComponent({
         <DataPointComponent label="Substances of Concern" isEmpty={(substancesOfConcern?.length || 0) === 0}>
           <SubstanceListCard list={substancesOfConcern || []} />
         </DataPointComponent>
-        {/* TODO: Add remaining data points (sector required/non-required information, related objects, test report, commercial information, quality assessment, identified risk) */}
-        {/* <DataPointComponent label="Sector Required Information">
-          <ValueTree label="Sector Required Information" value={sectorRequiredInformation} />
+        <DataPointComponent label="Sector Required Information" isEmpty={!sectorRequiredInformation}>
+          <SectorExtensionComponent sector={productSector} field="sectorRequiredInformation" data={sectorRequiredInformation} />
         </DataPointComponent>
-        */}
+       
       </DataLayerGroup>
       <DataLayerGroup layer="Sectoral">
-        {/* <DataPointComponent label="Product Specification">
-          <ValueTree label="Product Specification" value={productSpecification} />
+        <DataPointComponent label="Product Specification" isEmpty={!productSpecification}>
+          <SectorExtensionComponent sector={productSector} field="productSpecification" data={productSpecification} />
         </DataPointComponent>
-        <DataPointComponent label="Sector Non-Required Information">
-          <ValueTree label="Sector Non-Required Information" value={sectorNonRequiredInformation} />
+        <DataPointComponent label="Sector Non-Required Information" isEmpty={!sectorNonRequiredInformation}>
+          <SectorExtensionComponent sector={productSector} field="sectorNonRequiredInformation" data={sectorNonRequiredInformation} />
         </DataPointComponent> 
-        <DataPointComponent label="Related Objects">
+        {/* <DataPointComponent label="Related Objects">
           <ValueTree label="Related Objects" value={relatedObjects} />
-        </DataPointComponent>*/}
+        </DataPointComponent> */}
         <DataPointComponent label="Test Report" isEmpty={!testReport}>
           <ValueTree label="" value={testReport} />
         </DataPointComponent>
