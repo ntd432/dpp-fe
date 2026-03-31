@@ -5,7 +5,7 @@ const categories = [
     title: "Passport Information",
     description:
       "Passport identifier, granularity, data carrier format, issuer, product batch and serial number.",
-    href: "/dpp",
+    href: "/dpp-information",
     icon: (
       <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 3h12a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V5a2 2 0 012-2zm3 5h6M9 11h2m-2 3h6m-9 0h1m0-3h1m4 0a2 2 0 100 4 2 2 0 000-4z" />
@@ -177,7 +177,9 @@ export default function DashboardPage() {
           What is a Digital Product Passport?
         </h1>
         <p className="text-gray-500 mt-3 max-w-2xl mx-auto">
-          Blah blah blah whatever
+          A Digital Product Passport (DPP) is a structured digital record that follows a product across
+          its lifecycle. It connects key facts such as identity, materials, compliance, sustainability,
+          maintenance history, and end-of-life guidance so everyone in the value chain can access trusted data.
         </p>
       </div>
 
@@ -186,18 +188,20 @@ export default function DashboardPage() {
           What can you see in a Digital Product Passport?
         </h1>
         <p className="text-gray-500 mt-3 max-w-2xl mx-auto">
-          Blah blah blah whatever
+          You can explore product identification, technical and commercial information,
+          environmental performance, maintenance and repair records, compliance evidence,
+          supply chain actors, and end-of-life recovery instructions in one place.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 md:auto-rows-fr gap-6">
         {firstRow.map((cat) => {
           const style = colorStyles[cat.color];
           return (
             <Link
               key={cat.href}
               href={cat.href}
-              className={`block rounded-xl border-2 ${style.border} ${style.hover} bg-white p-8 transition-all hover:shadow-md group`}
+              className={`flex h-full flex-col rounded-xl border-2 ${style.border} ${style.hover} bg-white p-8 transition-all hover:shadow-md group`}
             >
               <div
                 className={`w-14 h-14 ${style.bg} rounded-xl flex items-center justify-center ${style.text} mb-5 group-hover:scale-110 transition-transform`}
@@ -210,7 +214,7 @@ export default function DashboardPage() {
               <p className="text-gray-500 text-sm leading-relaxed">
                 {cat.description}
               </p>
-              <span className={`inline-flex items-center mt-4 text-sm font-medium ${style.text}`}>
+              <span className={`inline-flex items-center mt-auto pt-4 text-sm font-medium ${style.text}`}>
                 View details
                 <svg className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -221,14 +225,14 @@ export default function DashboardPage() {
         })}
       </div>
 
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="mt-6 grid grid-cols-1 md:grid-cols-4 md:auto-rows-fr gap-6">
         {secondRow.map((cat) => {
           const style = colorStyles[cat.color];
           return (
             <Link
               key={cat.href}
               href={cat.href}
-              className={`block rounded-xl border-2 ${style.border} ${style.hover} bg-white p-8 transition-all hover:shadow-md group`}
+              className={`flex h-full flex-col rounded-xl border-2 ${style.border} ${style.hover} bg-white p-8 transition-all hover:shadow-md group`}
             >
               <div
                 className={`w-14 h-14 ${style.bg} rounded-xl flex items-center justify-center ${style.text} mb-5 group-hover:scale-110 transition-transform`}
@@ -241,7 +245,7 @@ export default function DashboardPage() {
               <p className="text-gray-500 text-sm leading-relaxed">
                 {cat.description}
               </p>
-              <span className={`inline-flex items-center mt-4 text-sm font-medium ${style.text}`}>
+              <span className={`inline-flex items-center mt-auto pt-4 text-sm font-medium ${style.text}`}>
                 View details
                 <svg className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
