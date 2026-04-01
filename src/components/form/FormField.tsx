@@ -1,7 +1,3 @@
-"use client";
-
-import React from "react";
-
 interface FormFieldProps {
   label: string;
   value: string | number;
