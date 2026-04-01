@@ -1,4 +1,4 @@
-import { fetchFromAPI } from "@/lib/api";
+import { TriplyDBClient } from "@/lib/triplydb-client";
 import ProductCard from "@/components/ProductCard";
 import ErrorMessage from "@/components/ErrorMessage";
 import { ProductIdentificationInformation } from "@/types/dpp-product-info";
@@ -10,7 +10,7 @@ export default async function IdentificationPage() {
   let error: string | null = null;
 
   try {
-    data = await fetchFromAPI<ProductIdentificationInformation>("pii");
+    data = await TriplyDBClient.fetchFromAPI<ProductIdentificationInformation>("pii");
   } catch (e) {
     error =
       e instanceof Error ? e.message : "Failed to load identification data";

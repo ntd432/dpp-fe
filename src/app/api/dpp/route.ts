@@ -1,14 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { toJsonLdPayload, transformToJsonFromDescribeResult, TriplyUploadError, uploadToTriplyDB } from "@/lib/triplydb-client";
+import { toJsonLdPayload, transformToJsonFromDescribeResult, TriplyDBClient, TriplyUploadError } from "@/lib/triplydb-client";
 import type { DPP } from "@/types/dpp-core";
 import { getContext, transformNestedObjects } from "@/lib/transforms-jsonld/dpp";
-import { describeSubjectFromTriplyDB } from "@/lib/api";
 
 export async function GET(request: NextRequest) {
   const dppId = request.nextUrl.searchParams.get("id");
   if (dppId) {
     try {
-      const describeResult = await describeSubjectFromTriplyDB(`urn:dpp:${dppId}`);
+      const describeResult = await TriplyDBClient.describeSubjectFromTriplyDB(`urn:dpp:${dppId}`);
       const dppData = await transformToJsonFromDescribeResult(describeResult);
       return NextResponse.json(dppData);
     } catch (error) {
@@ -28,20 +27,8 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const token = process.env.TRIPLYDB_TOKEN;
-  const datasetName = process.env.DATASET_NAME;
   const companyName = process.env.COMPANY_NAME?.toLowerCase().replaceAll(" ", "-") || "example-manufacturer";
   const graphName = `urn:dpp:data:${companyName}`;
-
-  if (!token || !datasetName) {
-    return NextResponse.json(
-      {
-        error:
-          "Missing environment variables. TRIPLYDB_TOKEN and DATASET_NAME are required.",
-      },
-      { status: 500 },
-    );
-  }
 
   let dpp: DPP;
     try {
@@ -64,11 +51,7 @@ export async function POST(request: NextRequest) {
         transformNestedObjects
     );
 
-    const uploadResult = await uploadToTriplyDB(jsonLdPayload, {
-      token,
-      datasetName,
-      graphName,
-    });
+    const uploadResult = await TriplyDBClient.uploadToTriplyDB(jsonLdPayload, graphName);
 
     return NextResponse.json({
       message:

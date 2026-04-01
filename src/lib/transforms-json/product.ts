@@ -1,5 +1,4 @@
-import { describeSubjectFromTriplyDB } from "../api";
-import { transformToJsonFromDescribeResult } from "../triplydb-client";
+import { transformToJsonFromDescribeResult, TriplyDBClient } from "../triplydb-client";
 import { transformDataGroupJson } from "./data-groups";
 import { PRODUCT_INFO_PREFIX, SUSTAINABILITY_PREFIX, EOL_PREFIX, GUIDELINES_PREFIX, COMPLIANCE_PREFIX, DATA_GROUP_PREDICATE } from "../../../next.config";
 
@@ -62,7 +61,7 @@ export async function transformToProductJson(describeResult: Record<string, any>
     if (objectTermType === "Literal") {
       result[fieldName] = object;
     } else if (objectTermType === "NamedNode") {
-      const childDescribeResult = await describeSubjectFromTriplyDB(object);
+      const childDescribeResult = await TriplyDBClient.describeSubjectFromTriplyDB(object);
       const child = await transformToJsonFromDescribeResult(childDescribeResult);
 
       if (predicate === DATA_GROUP_PREDICATE) {

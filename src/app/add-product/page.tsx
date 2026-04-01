@@ -1,4 +1,4 @@
-import { fetchFromAPI } from "@/lib/api";
+import { TriplyDBClient } from "@/lib/triplydb-client";
 import AddProductFormClient from "./AddProductFormClient";
 
 interface ManufacturerOption {
@@ -10,7 +10,7 @@ interface ManufacturerOption {
 
 async function loadManufacturers(): Promise<ManufacturerOption[]> {
   try {
-    const data = await fetchFromAPI<ManufacturerOption>("manufacturers", "2");
+    const data = await TriplyDBClient.fetchFromAPI<ManufacturerOption>("manufacturers", "2");
     return data
       .filter((m) => m.id || m.name)
       .map((m) => ({

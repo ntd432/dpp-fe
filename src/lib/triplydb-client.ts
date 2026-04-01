@@ -4,8 +4,8 @@ import { randomUUID } from "node:crypto";
 import { writeFile, unlink, mkdir } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { describeSubjectFromTriplyDB } from "./api";
 import { ARRAY_TYPES } from "../../next.config";
+import { describeSubjectQuery } from "@/query/common";
 
 const INTEGER_TYPE = "http://www.w3.org/2001/XMLSchema#integer";
 const DOUBLE_TYPE = "http://www.w3.org/2001/XMLSchema#double";
@@ -28,53 +28,118 @@ export interface TriplyDBUploadResult {
   tripleCount: number;
 }
 
-// export async function toJsonLdPayload
+export class TriplyDBClient {
+  private static readonly API_BASE_URL: string = process.env.API_BASE_URL ?? "";
+  private static readonly QUERY_BASE_URL: string = process.env.QUERY_BASE_URL ?? "";
+  private static readonly TRIPLYDB_TOKEN: string = process.env.TRIPLYDB_TOKEN ?? "";
+  private static readonly DATASET_NAME: string = process.env.DATASET_NAME ?? "";
 
-export async function uploadToTriplyDB(
-  jsonLdPayload: Record<string, unknown>,
-  config: TriplyDBConfig
-): Promise<TriplyDBUploadResult> {
-  let tempFile: string | undefined;
-
-  try {
-    const nquads = (await jsonld.toRDF(jsonLdPayload, {
-      format: "application/n-quads",
-    })) as string;
-
-    if (!nquads || nquads.trim().length === 0) {
-      throw new TriplyUploadError("JSON-LD payload produced no RDF triples", 422);
-    }
-
-    const tripleCount = nquads.trim().split("\n").length;
-
-    const tempDir = join(tmpdir(), "dpp-upload");
-    await mkdir(tempDir, { recursive: true });
-    tempFile = join(tempDir, `dpp-${randomUUID()}.nq`);
-    await writeFile(tempFile, nquads, "utf-8");
-
-    const triply = App.get({ token: config.token });
-    const account = await triply.getAccount();
-    const dataset = await account.getDataset(config.datasetName);
-
-    await dataset.importFromFiles([tempFile], {
-      defaultGraphName: config.graphName,
-      mergeGraphs: true,
+  static async fetchFromAPI<T>(endpoint: string, version = '1'): Promise<T[]> {
+    const url = `${TriplyDBClient.API_BASE_URL}/${endpoint}/${version}/run`;
+  
+    const res = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${TriplyDBClient.TRIPLYDB_TOKEN}`,
+        Accept: "application/json",
+      },
+      next: { revalidate: 60 }, // cache for 60 seconds
     });
-
-    await dataset.ensureService("sparql");
-
-    return { graphName: config.graphName, tripleCount };
-  } catch (error: unknown) {
-    if (error instanceof TriplyUploadError) {
-      throw error;
+  
+    if (!res.ok) {
+      throw new Error(`API request failed: ${res.status} ${res.statusText}`);
     }
+  
+    return res.json();
+  }
 
-    const message =
-      error instanceof Error ? error.message : "Unknown upload error";
-    throw new TriplyUploadError(`Failed to upload to TriplyDB: ${message}`, 500);
-  } finally {
-    if (tempFile) {
-      await unlink(tempFile).catch(() => {});
+  static async queryFromTriplyDB<T>(query: string): Promise<T[]> {
+    const url = `${TriplyDBClient.QUERY_BASE_URL}`;
+  
+    const res = await fetch(url, {
+      method: "POST",
+      body: query,
+      headers: {
+        "Authorization": `Bearer ${TriplyDBClient.TRIPLYDB_TOKEN}`,
+        "Accept": "application/json",
+        "Content-Type": "application/sparql-query",
+      },
+      next: { revalidate: 60 }, // cache for 60 seconds
+    });
+  
+    if (!res.ok) {
+      throw new Error(`TriplyDB request failed: ${res.status} ${res.statusText}`);
+    }
+  
+    return res.json();
+  }
+
+  static async describeSubjectFromTriplyDB(subjectId: string): Promise<Record<string, any>[][]> {
+    const url = `${TriplyDBClient.QUERY_BASE_URL}`;
+  
+    const res = await fetch(url, {
+      method: "POST",
+      body: describeSubjectQuery(subjectId),
+      headers: {
+        "Authorization": `Bearer ${TriplyDBClient.TRIPLYDB_TOKEN}`,
+        "Accept": "application/json",
+        "Content-Type": "application/sparql-query",
+      },
+      next: { revalidate: 60 }, // cache for 60 seconds
+    });
+  
+    if (!res.ok) {
+      throw new Error(`TriplyDB request failed: ${res.status} ${res.statusText}`);
+    }
+  
+    return res.json();
+  }
+
+  static async uploadToTriplyDB(
+    jsonLdPayload: Record<string, unknown>,
+    graphName: string
+  ): Promise<TriplyDBUploadResult> {
+    let tempFile: string | undefined;
+
+    try {
+      const nquads = (await jsonld.toRDF(jsonLdPayload, {
+        format: "application/n-quads",
+      })) as string;
+
+      if (!nquads || nquads.trim().length === 0) {
+        throw new TriplyUploadError("JSON-LD payload produced no RDF triples", 422);
+      }
+
+      const tripleCount = nquads.trim().split("\n").length;
+
+      const tempDir = join(tmpdir(), "dpp-upload");
+      await mkdir(tempDir, { recursive: true });
+      tempFile = join(tempDir, `dpp-${randomUUID()}.nq`);
+      await writeFile(tempFile, nquads, "utf-8");
+
+      const triply = App.get({ token: TriplyDBClient.TRIPLYDB_TOKEN });
+      const account = await triply.getAccount();
+      const dataset = await account.getDataset(TriplyDBClient.DATASET_NAME);
+
+      await dataset.importFromFiles([tempFile], {
+        defaultGraphName: graphName,
+        mergeGraphs: true,
+      });
+
+      await dataset.ensureService("sparql");
+
+      return { graphName: graphName, tripleCount };
+    } catch (error: unknown) {
+      if (error instanceof TriplyUploadError) {
+        throw error;
+      }
+
+      const message =
+        error instanceof Error ? error.message : "Unknown upload error";
+      throw new TriplyUploadError(`Failed to upload to TriplyDB: ${message}`, 500);
+    } finally {
+      if (tempFile) {
+        await unlink(tempFile).catch(() => {});
+      }
     }
   }
 }
@@ -152,7 +217,7 @@ async function processNamedNode(
   fieldName: string,
   object: string
 ): Promise<void> {
-  const childDescribeResult = await describeSubjectFromTriplyDB(object);
+  const childDescribeResult = await TriplyDBClient.describeSubjectFromTriplyDB(object);
   const child = await transformToJsonFromDescribeResult(childDescribeResult);
   
   if (fieldName in result) {

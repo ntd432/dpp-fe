@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
-import { fetchFromAPI } from "@/lib/api";
+import { TriplyDBClient } from "@/lib/triplydb-client";
 import { ProductIdentificationInformation } from "@/types/dpp-product-info";
 
 export async function GET() {
   try {
-    const data = await fetchFromAPI<ProductIdentificationInformation>("pii");
+    const data = await TriplyDBClient.fetchFromAPI<ProductIdentificationInformation>("pii");
     return NextResponse.json(data);
   } catch (error) {
     console.error("Failed to fetch identification data:", error);

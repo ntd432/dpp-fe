@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { queryFromTriplyDB, fetchFromAPI } from "@/lib/api";
 import {
   queryProductByCompanyQuery,
 } from "@/query/products";
 import {
+  TriplyDBClient,
   toJsonLdPayload,
   TriplyUploadError,
-  uploadToTriplyDB,
 } from "@/lib/triplydb-client";
 import { getContext, transformNestedObjects } from "@/lib/transforms-jsonld/product";
 import { Product } from "@/types";
@@ -131,7 +130,7 @@ export async function GET(request: NextRequest) {
   if (manufacturerId) {
     try {
       const query = queryProductByCompanyQuery(manufacturerId);
-      const data = await queryFromTriplyDB<ProductRow>(query);
+      const data = await TriplyDBClient.queryFromTriplyDB<ProductRow>(query);
       return NextResponse.json(data);
     } catch (error) {
       console.error("Failed to fetch products by manufacturer:", error);
@@ -156,7 +155,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-      const data = await fetchFromAPI<Product>("products");
+      const data = await TriplyDBClient.fetchFromAPI<Product>("products");
       return NextResponse.json(data);
     } catch (error) {
       console.error("Failed to fetch all products:", error);
@@ -168,20 +167,8 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
-  const token = process.env.TRIPLYDB_TOKEN;
-  const datasetName = process.env.DATASET_NAME;
   const companyName = process.env.COMPANY_NAME?.toLowerCase().replaceAll(" ", "-") || "example-manufacturer";
   const graphName = `urn:dpp:data:${companyName}`;
-
-  if (!token || !datasetName) {
-    return NextResponse.json(
-      {
-        error:
-          "Missing environment variables. TRIPLYDB_TOKEN and DATASET_NAME are required.",
-      },
-      { status: 500 },
-    );
-  }
 
   let requestBody: unknown;
   try {
@@ -242,11 +229,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             }),
           };
 
-    const uploadResult = await uploadToTriplyDB(jsonLdPayload, {
-      token,
-      datasetName,
-      graphName,
-    });
+    const uploadResult = await TriplyDBClient.uploadToTriplyDB(jsonLdPayload, graphName);
 
     const isBatch = products.length > 1;
 
