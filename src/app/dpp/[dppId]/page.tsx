@@ -17,6 +17,7 @@ import { EndOfLifeComponent } from "../groups/EndOfLifeComponent";
 import { GuidelinesAndManualsComponent } from "../groups/GuidelinesAndManualsComponent";
 import { SupplyChainComponent } from "../groups/SupplyChainComponent";
 import { UsageComponent } from "../groups/UsageComponent";
+import { TEST_DPP } from "../../../../next.config";
 
 
 type JsonValue = string | number | boolean | null | JsonObject | JsonValue[];
@@ -164,6 +165,7 @@ export default function DppDetailPage() {
       }
 
       setData(payload);
+      setData(TEST_DPP)
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load DPP data.");
     } finally {
