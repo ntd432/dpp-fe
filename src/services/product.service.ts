@@ -1,8 +1,8 @@
-import { describeSubjectFromTriplyDB } from "@/lib/api";
+import { TriplyDBClient } from "@/lib/triplydb-client";
 import { transformToProductJson } from "@/lib/transforms-json/product";
 
 export async function getProductById(id: string): Promise<Record<string, unknown>> {
-    const describeResult = await describeSubjectFromTriplyDB(
+    const describeResult = await TriplyDBClient.describeSubjectFromTriplyDB(
         `urn:product:generated:${id}`,
     );
     const productData = await transformToProductJson(describeResult);

@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
-import { fetchFromAPI } from "@/lib/api";
+import { TriplyDBClient } from "@/lib/triplydb-client";
 import { Organization } from "@/types/dpp-core";
 
 export async function GET() {
   try {
-    const data = await fetchFromAPI<Organization>("manufacturers", "2");
+    const data = await TriplyDBClient.fetchFromAPI<Organization>("manufacturers", "2");
     return NextResponse.json(data);
   } catch (error) {
     console.error("Failed to fetch manufacturers:", error);

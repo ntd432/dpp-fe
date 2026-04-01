@@ -2,12 +2,12 @@ import AddDppFormClient, {
   ManufacturerOption,
   ProductOption,
 } from "./AddDppFormClient";
-import { fetchFromAPI } from "@/lib/api";
+import { TriplyDBClient } from "@/lib/triplydb-client";
 import { Product } from "@/types";
 
 async function loadManufacturers(): Promise<ManufacturerOption[]> {
   try {
-    const data = await fetchFromAPI<ManufacturerOption>("manufacturers", "2");
+    const data = await TriplyDBClient.fetchFromAPI<ManufacturerOption>("manufacturers", "2");
     return data
       .filter((m) => m.id || m.name)
       .map((m) => ({
@@ -23,7 +23,7 @@ async function loadManufacturers(): Promise<ManufacturerOption[]> {
 
 async function loadProducts(): Promise<ProductOption[]> {
   try {
-    const data = await fetchFromAPI<Product>("products");
+    const data = await TriplyDBClient.fetchFromAPI<Product>("products");
     return data
       .filter((p) => p.id)
       .map((p) => ({
