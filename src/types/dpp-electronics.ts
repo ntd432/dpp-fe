@@ -25,11 +25,6 @@ export interface ProductionMethod {
   processCertification?: string;
 }
 
-export interface Components {
-  componentDescription?: string;
-  componentCount?: number;
-}
-
 export interface ExpectedEndCondition {
   expectedEndCondition?:
     | "reusable"
@@ -80,19 +75,18 @@ export interface ElectronicExtension extends Extension {
   depth?: MeasurementEntry;
   weight?: MeasurementEntry;
   batteryCapacity?: MeasurementEntry;
+  volume?: MeasurementEntry;
   networkConnectivity?: string;
   ingressProtection?: string;
   chargingInterface?: string;
   crossCompatibility?: CrossCompatibility;
+  installedSoftware?: InstalledSoftware;
   assemblyProcess?: AssemblyProcess;
   productionMethod?: ProductionMethod;
-  volume?: MeasurementEntry;
-  components?: Components;
   expectedEndConditionInfo?: ExpectedEndCondition;
   renewableEnergyProductionInfo?: RenewableEnergyProduction;
   materialSeparability?: MaterialSeparability;
   componentModularity?: ComponentModularity;
   productDesignInfo?: ProductDesign;
   appliedStandardsAndNorms?: AppliedStandardsAndNorms;
-  installedSoftware?: InstalledSoftware;
 }
