@@ -41,3 +41,22 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), sans-serif;
 }
+
+.cls-1 {
+  fill: #9f2066;
+}
+.cls-2 {
+  fill: #b52076;
+}
+.cls-3 {
+  fill: #dc6aa5;
+}
+.cls-4 {
+  fill: #df0f79;
+}
+.cls-5 {
+  fill: #6abd45;
+}
+.cls-6 {
+  fill: #921d5a;
+}
