@@ -12,6 +12,9 @@ import { SupplyChainComponent } from "../groups/SupplyChainComponent";
 import { UsageComponent } from "../groups/UsageComponent";
 import DppQrCardClient from "./DppQrCardClient";
 import { getDPPById } from "@/services/dpp.service";
+import { cookies } from "next/headers";
+import { LOCALE_COOKIE_KEY, normalizeLocale } from "@/i18n/locale";
+import { translate } from "@/i18n/translate";
 
 type JsonValue = string | number | boolean | null | JsonObject | JsonValue[];
 
@@ -36,6 +39,9 @@ export default async function DppDetailPage({
 }: Readonly<{
   params: Promise<{ dppId: string }>;
 }>) {
+  const locale = normalizeLocale((await cookies()).get(LOCALE_COOKIE_KEY)?.value);
+  const t = (key: string) => translate(locale, key);
+
   const { dppId } = await params;
 
 
@@ -43,13 +49,13 @@ export default async function DppDetailPage({
     return (
       <main className="max-w-4xl mx-auto px-4 py-8">
         <ErrorMessage
-          message="Missing DPP ID."
+          message={t("dppDetail.missingId")}
           action={
             <Link
               href="/dpp"
               className="inline-flex px-4 py-2 bg-[var(--color-brand-pink)] text-white rounded-lg text-sm hover:bg-[var(--color-brand-pink-dark)] transition-colors"
             >
-              Back to View DPP
+              {t("dppDetail.backToView")}
             </Link>
           }
         />
@@ -64,16 +70,16 @@ export default async function DppDetailPage({
     const payload = (await getDPPById(dppId)) as JsonValue;
 
     if (isEmptyPayload(payload)) {
-      throw new Error("This DPP does not exist. Try another ID.");
+      throw new Error(t("dppDetail.notFound"));
     }
 
     if (!isObject(payload)) {
-      throw new Error("Unexpected API response format.");
+      throw new Error(t("dppDetail.unexpected"));
     }
 
     data = payload;
   } catch (err) {
-    error = err instanceof Error ? err.message : "Failed to load DPP data.";
+    error = err instanceof Error ? err.message : t("dppDetail.failed");
   }
 
   if (error) {
@@ -86,7 +92,7 @@ export default async function DppDetailPage({
               href="/dpp"
               className="inline-flex px-4 py-2 bg-[var(--color-brand-pink)] text-white rounded-lg text-sm hover:bg-[var(--color-brand-pink-dark)] transition-colors"
             >
-              Back to View DPP
+              {t("dppDetail.backToView")}
             </Link>
           }
         />
@@ -97,7 +103,7 @@ export default async function DppDetailPage({
   if (!data) {
     return (
       <main className="max-w-4xl mx-auto px-4 py-8">
-        <ErrorMessage message="No DPP data returned." />
+        <ErrorMessage message={t("dppDetail.noData")} />
       </main>
     );
   }
@@ -116,13 +122,13 @@ export default async function DppDetailPage({
     <main className="max-w-6xl mx-auto px-4 py-8 space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Digital Product Passport</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t("dppDetail.title")}</h1>
         </div>
         <Link
           href="/dpp"
           className="px-4 py-2 text-sm rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50"
         >
-          Back to View DPP
+          {t("dppDetail.backToView")}
         </Link>
       </div>
 
@@ -149,7 +155,7 @@ export default async function DppDetailPage({
 
       <ComplianceComponent compliance={compliance} />
 
-      <CollapsibleSection title="Raw JSON" showCollapseButton defaultOpen={false}>
+      <CollapsibleSection title={t("dppDetail.rawJson")} showCollapseButton defaultOpen={false}>
         <pre className="text-xs leading-5 overflow-x-auto rounded-lg border border-gray-200 bg-gray-900 text-gray-100 p-4">
           {JSON.stringify(data, null, 2)}
         </pre>

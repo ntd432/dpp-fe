@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FormField } from "@/components/form/FormField";
 import { CollapsibleSection, DataLayerGroup } from "@/components/form/CollapsibleSection";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type BarcodeLike = {
   rawValue?: string;
@@ -55,6 +56,7 @@ function extractDppId(raw: string): string {
 
 export default function ViewDppClient() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [inputValue, setInputValue] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isScanning, setIsScanning] = useState(false);
@@ -106,7 +108,7 @@ export default function ViewDppClient() {
     const dppId = extractDppId(raw);
 
     if (!dppId) {
-      setError("Please enter or scan a valid DPP ID.");
+      setError(t("viewDpp.invalidId"));
       return;
     }
 
@@ -116,13 +118,13 @@ export default function ViewDppClient() {
 
   const handleScan = async () => {
     if (!detector) {
-      setError("QR scanner is not supported in this browser. Please enter the DPP ID manually.");
+      setError(t("viewDpp.scannerUnsupported"));
       return;
     }
 
     const mediaDevices = (navigator as unknown as { mediaDevices?: MediaDevicesLike }).mediaDevices;
     if (!mediaDevices?.getUserMedia) {
-      setError("Camera access is not available in this browser.");
+      setError(t("viewDpp.cameraUnavailable"));
       return;
     }
 
@@ -166,7 +168,7 @@ export default function ViewDppClient() {
       });
     } catch {
       stopScan();
-      setError("Unable to access camera. Check browser permissions and try again.");
+      setError(t("viewDpp.cameraError"));
     }
   };
 
@@ -176,12 +178,12 @@ export default function ViewDppClient() {
         onClick={() => router.push("/")}
         className="text-sm text-gray-500 hover:text-gray-700 mb-4 inline-flex items-center gap-1 hover:cursor-pointer"
       >
-        ← Back to Dashboard
+        {`← ${t("viewDpp.back")}`}
       </button>
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">View Digital Product Passport</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{t("viewDpp.title")}</h1>
         <p className="mt-1 text-sm text-gray-600">
-          Enter a DPP ID or scan a QR code to open the DPP details page.
+          {t("viewDpp.subtitle")}
         </p>
       </div>
 
@@ -191,12 +193,12 @@ export default function ViewDppClient() {
         </div>
       )}
 
-      <CollapsibleSection title="Find DPP" defaultOpen>
+      <CollapsibleSection title={t("viewDpp.findSection")} defaultOpen>
         <FormField
-          label="DPP ID or Data Carrier"
+          label={t("viewDpp.inputLabel")}
           value={inputValue}
           onChange={setInputValue}
-          placeholder="e.g. p9dp0510-89c8-4ae3-l0a8-lo012e1d89fa"
+          placeholder={t("viewDpp.inputPlaceholder")}
           required
         />
         <div className="flex flex-wrap gap-3">
@@ -205,7 +207,7 @@ export default function ViewDppClient() {
             onClick={() => goToDpp(inputValue)}
             className="px-5 py-2 rounded-lg bg-[var(--color-brand-pink)] text-white text-sm font-semibold hover:brightness-110 hover:cursor-pointer"
           >
-            View DPP
+            {t("viewDpp.viewButton")}
           </button>
           <button
             type="button"
@@ -219,18 +221,18 @@ export default function ViewDppClient() {
             className="px-5 py-2 rounded-lg border border-gray-300 text-sm font-semibold text-gray-700 hover:bg-gray-100 hover:cursor-pointer"
             disabled={!isScannerAvailable && !isScanning}
           >
-            {isScanning ? "Stop Scanning" : "Scan QR Code"}
+            {isScanning ? t("viewDpp.stopScan") : t("viewDpp.scanButton")}
           </button>
         </div>
         {!isScannerAvailable && (
           <p className="text-xs text-gray-500">
-            QR scanning is unavailable in this browser. Manual input still works.
+            {t("viewDpp.scanUnavailable")}
           </p>
         )}
       </CollapsibleSection>
 
       {isScanning && (
-        <CollapsibleSection title="Camera Scanner" defaultOpen>
+        <CollapsibleSection title={t("viewDpp.cameraSection")} defaultOpen>
           <DataLayerGroup layer="Commercial">
             <div className="rounded-lg border border-gray-200 bg-black p-2">
               <video

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { FormField } from "@/components/form/FormField";
 import { CollapsibleSection, DataLayerGroup } from "@/components/form/CollapsibleSection";
 import { AddEntryButton } from "@/components/form/AddEntryButton";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const INPUT_CLASS =
   "px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-blue-light)] focus:border-[var(--color-brand-blue-light)] w-full";
@@ -212,6 +213,7 @@ export default function AddDppFormClient({
   initialProducts: ProductOption[];
 }>) {
   const router = useRouter();
+  const { t } = useLanguage();
 
   const [form, setForm] = useState<FormState>({
     dppRegistrationNumber: "",
@@ -363,18 +365,17 @@ export default function AddDppFormClient({
           onClick={() => router.push("/")}
           className="text-sm text-gray-500 hover:text-gray-700 mb-4 inline-flex items-center gap-1 hover:cursor-pointer"
         >
-          ← Back to Dashboard
+          {`← ${t("addDpp.back")}`}
         </button>
-        <h1 className="text-2xl font-bold text-gray-900">Register Digital Product Passport</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{t("addDpp.title")}</h1>
         <p className="mt-1 text-sm text-gray-500">
-          Create a new DPP record. A registration number is auto-generated. Link
-          it to an existing product or leave blank to create a standalone record.
+          {t("addDpp.subtitle")}
         </p>
       </div>
 
       {success && (
         <div className="mb-6 rounded-lg bg-emerald-50 border border-emerald-200 px-4 py-3 text-sm text-emerald-800">
-          DPP registered successfully! Redirecting…
+          {t("addDpp.success")}
         </div>
       )}
 
@@ -582,14 +583,14 @@ export default function AddDppFormClient({
             onClick={() => router.back()}
             className="px-4 py-2 text-sm rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 hover:cursor-pointer"
           >
-            Cancel
+            {t("addDpp.cancel")}
           </button>
           <button
             type="submit"
             disabled={submitting}
             className="px-5 py-2 text-sm rounded-lg bg-[var(--color-brand-pink)] text-white font-bold hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed hover:cursor-pointer"
           >
-            {submitting ? "Registering…" : "Register DPP"}
+            {submitting ? t("addDpp.submitting") : t("addDpp.submit")}
           </button>
         </div>
       </form>

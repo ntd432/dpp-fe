@@ -4,12 +4,14 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import QRCode from "qrcode";
 import { CollapsibleSection } from "@/components/form/CollapsibleSection";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type DppQrCardClientProps = Readonly<{
   dppId: string;
 }>;
 
 export default function DppQrCardClient({ dppId }: DppQrCardClientProps) {
+  const { t } = useLanguage();
   const [origin, setOrigin] = useState("");
   const [qrDataUrl, setQrDataUrl] = useState<string>("");
   const [shareMessage, setShareMessage] = useState<string | null>(null);
@@ -47,7 +49,7 @@ export default function DppQrCardClient({ dppId }: DppQrCardClientProps) {
 
   const handleShareQr = useCallback(async () => {
     if (!dppPageUrl) {
-      setShareMessage("Unable to share: DPP URL is not available.");
+      setShareMessage(t("dppQr.share.noUrl"));
       return;
     }
 
@@ -62,26 +64,26 @@ export default function DppQrCardClient({ dppId }: DppQrCardClientProps) {
           if (navigator.canShare?.({ files: [qrFile] })) {
             await navigator.share({
               title: shareTitle,
-              text: "Scan this QR code to view the Digital Product Passport.",
+              text: t("dppQr.share.withQrText"),
               files: [qrFile],
               url: dppPageUrl,
             });
-            setShareMessage("QR code shared.");
+            setShareMessage(t("dppQr.share.qrShared"));
             return;
           }
         }
 
         await navigator.share({
           title: shareTitle,
-          text: "Open this Digital Product Passport:",
+          text: t("dppQr.share.openText"),
           url: dppPageUrl,
         });
-        setShareMessage("DPP link shared.");
+        setShareMessage(t("dppQr.share.linkShared"));
         return;
       }
 
       await navigator.clipboard.writeText(dppPageUrl);
-      setShareMessage("Sharing is unavailable in this browser. Link copied to clipboard.");
+      setShareMessage(t("dppQr.share.copied"));
     } catch (shareError) {
       if (shareError instanceof Error && shareError.name === "AbortError") {
         return;
@@ -89,26 +91,26 @@ export default function DppQrCardClient({ dppId }: DppQrCardClientProps) {
 
       try {
         await navigator.clipboard.writeText(dppPageUrl);
-        setShareMessage("Could not open share sheet. Link copied to clipboard.");
+        setShareMessage(t("dppQr.share.abortFallback"));
       } catch {
-        setShareMessage("Unable to share automatically. Please copy the DPP link manually.");
+        setShareMessage(t("dppQr.share.manual"));
       }
     }
-  }, [dppId, dppPageUrl, qrDataUrl]);
+  }, [dppId, dppPageUrl, qrDataUrl, t]);
 
   return (
-    <CollapsibleSection title="DPP QR Code">
+    <CollapsibleSection title={t("dppQr.title")}>
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div className="space-y-3">
-          <p className="text-sm text-gray-600">Scan or share this QR code to open this DPP page.</p>
-          <p className="text-xs text-gray-500 break-all">{dppPageUrl || "Preparing URL..."}</p>
+          <p className="text-sm text-gray-600">{t("dppQr.description")}</p>
+          <p className="text-xs text-gray-500 break-all">{dppPageUrl || t("dppQr.preparing")}</p>
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
               onClick={() => void handleShareQr()}
               className="px-4 py-2 text-sm rounded-lg bg-[var(--color-brand-pink)] text-white font-bold hover:brightness-110 hover:cursor-pointer"
             >
-              Share QR
+              {t("dppQr.share")}
             </button>
             {qrDataUrl && (
               <a
@@ -116,7 +118,7 @@ export default function DppQrCardClient({ dppId }: DppQrCardClientProps) {
                 download={`dpp-${dppId}.png`}
                 className="px-4 py-2 text-sm rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50"
               >
-                Download QR
+                {t("dppQr.download")}
               </a>
             )}
           </div>
@@ -127,13 +129,13 @@ export default function DppQrCardClient({ dppId }: DppQrCardClientProps) {
           {qrDataUrl ? (
             <Image
               src={qrDataUrl}
-              alt="QR code linking to this DPP page"
+              alt={t("dppQr.imageAlt")}
               width={256}
               height={256}
               className="w-full h-full"
             />
           ) : (
-            <p className="text-xs text-gray-500 text-center">Generating QR code...</p>
+            <p className="text-xs text-gray-500 text-center">{t("dppQr.generating")}</p>
           )}
         </div>
       </div>

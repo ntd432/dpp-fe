@@ -22,6 +22,7 @@ import { EndOfLifeStep } from "@/app/add-product/steps/EndOfLifeStep";
 import { GuidelinesStep } from "@/app/add-product/steps/GuidelinesStep";
 import { AddEntryButton } from "@/components/form/AddEntryButton";
 import { CONSUMPTION_UNITS, FOOTPRINT_UNITS, IMPACT_UNITS, MASS_UNITS } from "@/config/master-data";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const INPUT_CLASS =
   "px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-blue-light)] focus:border-[var(--color-brand-blue-light)]";
@@ -2045,6 +2046,7 @@ export default function AddProductFormClient({
     initialManufacturers: ManufacturerOption[] 
 }>) {
   const router = useRouter();
+  const { t } = useLanguage();
   const formRef = useRef<HTMLFormElement | null>(null);
   const [form, setForm] = useState<FormState>(initialState);
   const [manufacturers] = useState<ManufacturerOption[]>(initialManufacturers);
@@ -2064,6 +2066,15 @@ export default function AddProductFormClient({
     "Compliance",
   ] as const;
   const [currentSectionStep, setCurrentSectionStep] = useState(0);
+
+  const sectionLabel = (step: string) => {
+    if (step === "Product Information") return t("dashboard.productInfo.title");
+    if (step === "Sustainability") return t("dashboard.sustainability.title");
+    if (step === "End of Life") return t("dashboard.eol.title");
+    if (step === "Guidelines & Manuals") return t("dashboard.guidelines.title");
+    if (step === "Compliance") return t("dashboard.compliance.title");
+    return step;
+  };
 
   const fieldsByStep: Record<string, Array<keyof FormState>> = {
     "Product Information": [
@@ -2685,12 +2696,11 @@ export default function AddProductFormClient({
           onClick={() => router.push("/")}
           className="text-sm text-gray-500 hover:text-gray-700 mb-4 inline-flex items-center gap-1 hover:cursor-pointer"
         >
-          ← Back to Dashboard
+          {`← ${t("addProduct.back")}`}
         </button>
-        <h1 className="text-2xl font-bold text-gray-900">Add New Product</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{t("addProduct.title")}</h1>
         <p className="mt-1 text-sm text-gray-500">
-          Fill in the product information organized by thematic data groups and
-          data layers.
+          {t("addProduct.subtitle")}
         </p>
       </div>
 
@@ -2716,13 +2726,13 @@ export default function AddProductFormClient({
                       : "bg-white border-gray-200 text-gray-600 hover:bg-gray-50 hover:cursor-pointer"
                   }`}
                 >
-                  {index + 1}. {step}
+                  {index + 1}. {sectionLabel(step)}
                 </button>
               );
             })}
           </div>
           <div className="flex items-center justify-between text-xs text-gray-500">
-            <span>Step {currentSectionStep + 1} of {sectionSteps.length}</span>
+            <span>{`${t("addProduct.step")} ${currentSectionStep + 1} ${t("addProduct.of")} ${sectionSteps.length}`}</span>
             <div className="flex items-center gap-3">
               {/* <span>{sectionSteps[currentSectionStep]}</span> */}
               <button
@@ -2730,7 +2740,7 @@ export default function AddProductFormClient({
                 onClick={clearCurrentStep}
                 className="px-2 py-1 border border-gray-300 rounded text-[11px] text-gray-600 disabled:opacity-50 hover:cursor-pointer"
               >
-                Clear Current Step
+                {t("addProduct.clearCurrent")}
               </button>
             </div>
           </div>
@@ -2849,7 +2859,7 @@ export default function AddProductFormClient({
               disabled={currentSectionStep === 0}
               className="px-3 py-1.5 text-sm border border-gray-300 rounded-md disabled:opacity-50 hover:cursor-pointer"
             >
-              Previous Section
+              {t("addProduct.previous")}
             </button>
             <button
               type="button"
@@ -2861,7 +2871,7 @@ export default function AddProductFormClient({
               disabled={currentSectionStep === sectionSteps.length - 1}
               className="px-3 py-1.5 text-sm border border-gray-300 rounded-md disabled:opacity-50 hover:cursor-pointer"
             >
-              Next Section
+              {t("addProduct.next")}
             </button>
           </div>
 
@@ -2871,7 +2881,7 @@ export default function AddProductFormClient({
             disabled={submitting}
             className="px-6 py-3 bg-[var(--color-brand-pink)] text-white font-bold rounded-xl hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-colors hover:cursor-pointer"
           >
-            {submitting ? "Submitting…" : "Add Product"}
+            {submitting ? t("addProduct.submitting") : t("addProduct.submit")}
           </button>
           {error && (
             <div className="flex items-center gap-2 text-red-600 text-sm">
