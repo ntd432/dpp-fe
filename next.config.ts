@@ -1,4 +1,6 @@
-import type { NextConfig } from "next";
+import type {
+    NextConfig
+} from "next";
 
 export const PRODUCT_INFO_PREFIX = process.env.PRODUCT_INFO_PREFIX || "https://ntd432.github.io/dpp/models/dpp-product-info.ttl#";
 export const SUSTAINABILITY_PREFIX = process.env.SUSTAINABILITY_PREFIX || "https://ntd432.github.io/dpp/models/dpp-sustainability.ttl#";
@@ -34,8 +36,7 @@ export const TEST_DPP = {
             "name": "Apple Trade In"
         }],
         "productTraceability": {
-            "traceabilityEvent": [
-                {
+            "traceabilityEvent": [{
                     "type": "https://ntd432.github.io/dpp/models/dpp-core.ttl#Event",
                     "actionName": "Final assembly and QA",
                     "actionType": "Assembly",
@@ -58,15 +59,16 @@ export const TEST_DPP = {
             ]
         },
         "recyclingPartner": [{
-            "type": "https://schema.org/Organization",
-            "name": "TES-AMM",
-            "url": "https://tes-amm.com"
-        },
-    {
-            "type": "https://schema.org/Organization",
-            "name": "TES-AMM-2"
-        }],
-        
+                "type": "https://schema.org/Organization",
+                "name": "TES-AMM",
+                "url": "https://tes-amm.com"
+            },
+            {
+                "type": "https://schema.org/Organization",
+                "name": "TES-AMM-2"
+            }
+        ],
+
     },
     "usage": {
         "incidentsAndErrors": [{
@@ -95,20 +97,17 @@ export const TEST_DPP = {
     },
     "product": {
         "compliance": {
-            "certification": [
-                {
-                    "type": "https://ntd432.github.io/dpp/models/dpp-compliance.ttl#Certification",
-                    "description": "Conforms to applicable EU safety, EMC, and environmental requirements.",
-                    "name": "CE Marking"
-                }
-            ],
+            "certification": [{
+                "type": "https://ntd432.github.io/dpp/models/dpp-compliance.ttl#Certification",
+                "description": "Conforms to applicable EU safety, EMC, and environmental requirements.",
+                "name": "CE Marking"
+            }],
             "dataManagementMethod": {
                 "type": "https://schema.org/Legislation",
                 "identifier": "APPLE-DMM-001",
                 "name": "Apple Secure Product Data Ledger"
             },
-            "productLabel": [
-                {
+            "productLabel": [{
                     "type": "https://ntd432.github.io/dpp/models/dpp-compliance.ttl#Label",
                     "labelDescription": "Declared energy efficiency class.",
                     "labelDocumentation": "https://example.com/eu-energy-label/iphone-17-pro",
@@ -124,8 +123,7 @@ export const TEST_DPP = {
                 }
             ],
             "productStatusAssessment": "https://apple.com/assessment/iphone-17",
-            "regulation": [
-                {
+            "regulation": [{
                     "type": "https://schema.org/Legislation",
                     "identifier": "EU 2024/1781",
                     "name": "EU Ecodesign for Sustainable Products Regulation (ESPR)"
@@ -152,13 +150,11 @@ export const TEST_DPP = {
             "repairability": "Battery and display service supported through authorized channels and self-service repair program in eligible regions.",
             "reusability": "Suitable for refurbishment and second-life deployment when core modules pass diagnostics.",
             "upgradeOptions": "Long-term iOS software updates; hardware upgrades are limited.",
-            "endOfLifeHistory": [
-                {
-                    "type": "https://ntd432.github.io/dpp/models/dpp-core.ttl#Event",
-                    "actionName": "Moved to recycling facility",
-                    "time": "2026-03-01T00:00:00Z"
-                }
-            ]
+            "endOfLifeHistory": [{
+                "type": "https://ntd432.github.io/dpp/models/dpp-core.ttl#Event",
+                "actionName": "Moved to recycling facility",
+                "time": "2026-03-01T00:00:00Z"
+            }]
         },
         "guidelines": {
             "accessibility": "VoiceOver, AssistiveTouch, Live Captions, Sound Recognition, and hearing device compatibility.",
@@ -205,8 +201,7 @@ export const TEST_DPP = {
             },
             "component": {
                 "componentBills": "https://www.apple.com/environment/pdf/products/iphone-17-pro-components.pdf",
-                "componentComposition": [
-                    {
+                "componentComposition": [{
                         "type": "https://ntd432.github.io/dpp/models/dpp-core.ttl#Component",
                         "componentName": "Titanium alloy frame",
                         "componentPercentage": "35"
@@ -232,8 +227,7 @@ export const TEST_DPP = {
                         "componentPercentage": "22"
                     }
                 ],
-                "recycledReusedContent": [
-                    {
+                "recycledReusedContent": [{
                         "type": "https://ntd432.github.io/dpp/models/dpp-core.ttl#Component",
                         "componentName": "Recycled rare earth elements"
                     },
@@ -247,13 +241,11 @@ export const TEST_DPP = {
                     }
                 ]
             },
-            "hazardousSubstances": [
-                {
-                    "type": "https://ntd432.github.io/dpp/models/dpp-core.ttl#Substance",
-                    "substanceDescription": "Contained in lithium-ion battery and managed under applicable safety standards.",
-                    "substanceName": "Cobalt (in battery cathode)"
-                }
-            ],
+            "hazardousSubstances": [{
+                "type": "https://ntd432.github.io/dpp/models/dpp-core.ttl#Substance",
+                "substanceDescription": "Contained in lithium-ion battery and managed under applicable safety standards.",
+                "substanceName": "Cobalt (in battery cathode)"
+            }],
             "identifiedRisk": "Lithium-ion battery thermal event risk in extreme misuse conditions; mitigated by battery management and hardware protections.",
             "manufacturer": {
                 "type": "https://schema.org/Organization",
@@ -275,13 +267,11 @@ export const TEST_DPP = {
             },
             "qualityAssessment": "Passed internal reliability, drop, vibration, and ingress-protection verification programs.",
             "sparePartsAvailability": "Display, battery, camera module, speaker module, charging port module. Available for 7 years from production date.",
-            "substancesOfConcern": [
-                {
-                    "type": "https://ntd432.github.io/dpp/models/dpp-core.ttl#Substance",
-                    "substanceDescription": "RoHS-compliant lead-free assembly.",
-                    "substanceName": "Battery-related cobalt and lithium compounds"
-                }
-            ],
+            "substancesOfConcern": [{
+                "type": "https://ntd432.github.io/dpp/models/dpp-core.ttl#Substance",
+                "substanceDescription": "RoHS-compliant lead-free assembly.",
+                "substanceName": "Battery-related cobalt and lithium compounds"
+            }],
             "testReport": "https://www.apple.com/environment/pdf/products/iphone-17-pro-test-report.pdf",
             "productSpecification": {
                 "crossCompatibility": {
@@ -373,25 +363,20 @@ export const TEST_DPP = {
         },
         "sustainability": {
             "sustainabilityPerformance": {
-                "environmentalFootprint": [
-                    {
-                        "environmentalFootprintType": "Carbon footprint",
-                        "environmentalFootprintMeasuringMethod": "Life Cycle Assessment",
-                        "environmentalFootprintUnit": "kg CO2eq",
-                        "environmentalFootprintValue": 150
-                    }
-                ],
-                "resourceConsumption": [
-                    {
-                        "resource": "Energy",
-                        "resourceConsumptionUnit": "kWh",
-                        "resourceConsumptionValue": 50
-                    }
-                ],
+                "environmentalFootprint": [{
+                    "environmentalFootprintType": "Carbon footprint",
+                    "environmentalFootprintMeasuringMethod": "Life Cycle Assessment",
+                    "environmentalFootprintUnit": "kg CO2eq",
+                    "environmentalFootprintValue": 150
+                }],
+                "resourceConsumption": [{
+                    "resource": "Energy",
+                    "resourceConsumptionUnit": "kWh",
+                    "resourceConsumptionValue": 50
+                }],
                 "plasticsRelease": "Approximately 5 grams of microplastics released over the product lifecycle, primarily from wear of plastic components and packaging materials."
             },
-            "criticalRawMaterial": [
-                {
+            "criticalRawMaterial": [{
                     "type": "https://ntd432.github.io/dpp/models/dpp-core.ttl#Component",
                     "componentName": "Rare earth elements",
                     "componentPercentage": 10
@@ -430,8 +415,7 @@ export const TEST_DPP = {
                 }],
                 "lifeCycleAssessmentReport": "https://www.apple.com/environment/pdf/products/iphone-17-pro-lca.pdf"
             },
-            "renewableNonRenewableContent": [
-                {
+            "renewableNonRenewableContent": [{
                     "type": "https://ntd432.github.io/dpp/models/dpp-core.ttl#Component",
                     "componentName": "Recycled rare earth content"
                 },
@@ -455,8 +439,22 @@ export const TEST_DPP = {
 };
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  
+    /* config options here */
+    images: {
+        remotePatterns: [{
+                protocol: 'https',
+                hostname: '**',
+                port: '',
+                pathname: '**',
+            },
+            {
+                protocol: 'http',
+                hostname: '**',
+                port: '',
+                pathname: '**',
+            }
+        ],
+    },
 };
 
 export default nextConfig;
