@@ -1,14 +1,19 @@
+"use client";
+
 import Link from "next/link";
 import NavbarLinks from "@/components/NavbarLinks";
-
-const navItems = [
-  { href: "/", label: "Dashboard" },
-  { href: "/add-product", label: "Add Product" },
-  { href: "/add-dpp", label: "Register DPP" },
-  { href: "/dpp", label: "View DPP" },
-];
+import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Navbar() {
+  const { t } = useLanguage();
+  const navItems = [
+    { href: "/", label: t("navbar.dashboard") },
+    { href: "/add-product", label: t("navbar.addProduct") },
+    { href: "/add-dpp", label: t("navbar.registerDpp") },
+    { href: "/dpp", label: t("navbar.viewDpp") },
+  ];
+
   return (
     <nav className="bg-white border-b border-gray-200 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -29,10 +34,13 @@ export default function Navbar() {
               </svg>
             </div>
             <span className="text-lg font-semibold text-gray-900">
-              Digital Product Passport
+              {t("navbar.brand")}
             </span>
           </Link>
-          <NavbarLinks items={navItems} />
+          <div className="flex items-center gap-3">
+            <NavbarLinks items={navItems} />
+            <LanguageSwitcher />
+          </div>
         </div>
       </div>
     </nav>

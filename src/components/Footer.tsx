@@ -1,16 +1,21 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { TriplyLogo } from "./TriplyLogo";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Footer() {
+  const { t } = useLanguage();
+
   return (
     <footer className="mt-14 border-t border-gray-200 bg-white/70">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <section>
-            <h2 className="text-base font-semibold text-gray-900">Digital Product Passport</h2>
+            <h2 className="text-base font-semibold text-gray-900">{t("footer.title")}</h2>
             <p className="mt-2 text-sm text-gray-600">
-              Master's thesis project by James Nguyen 
+              {t("footer.thesis")}
               <Link
                 href="https://linkedin.com/in/ntd432"
                 target="_blank"
@@ -35,21 +40,21 @@ export default function Footer() {
               </Link>
             </p>
             <p className="mt-2 text-sm text-gray-600">
-              Software Engineering for Green Deals (SE4GD) Erasmus Mundus programme, Cohort 4, 2024-2026
+              {t("footer.programme")}
             </p>
           </section>
 
           <section>
-            <h2 className="text-base font-semibold text-gray-900">Quick links</h2>
+            <h2 className="text-base font-semibold text-gray-900">{t("footer.quickLinks")}</h2>
             <ul className="mt-2 space-y-2 text-sm text-gray-600">
-              <li><Link href="/add-product" className="hover:text-[var(--color-brand-pink-dark)]">Add product</Link></li>
-              <li><Link href="/add-dpp" className="hover:text-[var(--color-brand-pink-dark)]">Register DPP</Link></li>
-              <li><Link href="/dpp" className="hover:text-[var(--color-brand-pink-dark)]">View DPP</Link></li>
+              <li><Link href="/add-product" className="hover:text-[var(--color-brand-pink-dark)]">{t("footer.addProduct")}</Link></li>
+              <li><Link href="/add-dpp" className="hover:text-[var(--color-brand-pink-dark)]">{t("footer.registerDpp")}</Link></li>
+              <li><Link href="/dpp" className="hover:text-[var(--color-brand-pink-dark)]">{t("footer.viewDpp")}</Link></li>
             </ul>
           </section>
 
           <section>
-            <h2 className="text-base font-semibold text-gray-900">This project is proudly supported by</h2>
+            <h2 className="text-base font-semibold text-gray-900">{t("footer.supportedBy")}</h2>
             {/* <p className="mt-2 text-sm text-gray-600">This project is proudly supported by</p> */}
             <div className="flex items-center gap-3">
               <Image width={60} height={40} style={{minWidth: '50px'}} sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" src="https://se4gd.lutsoftware.com/wp-content/uploads/2020/10/cropped-logo.png" className="custom-logo" alt="SE4GD" decoding="async"/>
@@ -60,7 +65,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-8 border-t border-gray-200 pt-4 text-xs text-gray-500">
-          © {new Date().getFullYear()} Digital Product Passport. All rights reserved.
+          © {new Date().getFullYear()} {t("footer.title")}. {t("footer.rights")}
         </div>
       </div>
     </footer>

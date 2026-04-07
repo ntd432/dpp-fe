@@ -5,8 +5,9 @@ import DataPointComponent from "@/components/DataPointComponent";
 import { COUNTRIES } from "@/config/countries";
 import { SECTORS } from "@/config/sectors";
 
-export function ProductInformationStep({ shared }: { shared: any }) {
+export function ProductInformationStep({ shared }: Readonly<{ shared: any }>) {
   const {
+    t,
     form,
     set,
     setField,
@@ -21,13 +22,15 @@ export function ProductInformationStep({ shared }: { shared: any }) {
   } = shared;
 
   return (
-    <CollapsibleSection title="Product Information" defaultOpen>
+    <CollapsibleSection title={t("Product Information")} defaultOpen>
       <div>
         <label htmlFor="sector-select" className="block text-sm font-medium text-gray-700 mb-1">
-          Product Sector
+          {t("Product Sector")}
         </label>
         <select
           id="sector-select"
+          name="sectorType"
+          data-field-key="sectorType"
           value={form.sectorType}
           onChange={(e) => {
             const selected = SECTORS.find((s) => s.extensionType === e.target.value);
@@ -42,31 +45,34 @@ export function ProductInformationStep({ shared }: { shared: any }) {
             </option>
           ))}
         </select>
-        <p className="mt-1 text-xs text-gray-400">Determines the extension type for sector-specific fields.</p>
+        <p className="mt-1 text-xs text-gray-400">{t("Determines the extension type for sector-specific fields.")}</p>
       </div>
 
       <DataLayerGroup layer="Regulatory">
-        <DataPointComponent label="Product Identification Information">
+        <DataPointComponent label={t("Product Identification Information")}>
           <div className="grid grid-cols-2 gap-4">
             <FormField
-              label="Product Name"
+              label={t("Product Name")}
               value={form.productName}
               onChange={(v) => set("productName", v)}
+              fieldKey="productName"
               required
             />
-            <FormField label="GTIN" value={form.gtin} onChange={(v) => set("gtin", v)} required />
-            <FormField label="TARIC Code" value={form.taricCode} onChange={(v) => set("taricCode", v)} />
+            <FormField label={t("GTIN")} value={form.gtin} onChange={(v) => set("gtin", v)} fieldKey="gtin" required />
+            <FormField label={t("TARIC Code")} value={form.taricCode} onChange={(v) => set("taricCode", v)} fieldKey="taricCode" />
             <div>
               <label htmlFor="country-origin" className="block text-sm font-medium text-gray-700 mb-1">
-                Country of Origin
+                {t("Country of Origin")}
               </label>
               <select
                 id="country-origin"
+                name="countryOfOrigin"
+                data-field-key="countryOfOrigin"
                 value={form.countryOfOrigin}
                 onChange={(e) => set("countryOfOrigin", e.target.value)}
                 className={INPUT_CLASS}
               >
-                <option value="">Select country</option>
+                <option value="">{t("Select country")}</option>
                 {COUNTRIES.map((country) => (
                   <option key={country} value={country}>
                     {country}
@@ -75,32 +81,37 @@ export function ProductInformationStep({ shared }: { shared: any }) {
               </select>
             </div>
             <FormField
-              label="Production Date"
+              label={t("Production Date")}
               value={form.productionDate}
               onChange={(v) => set("productionDate", v)}
+              fieldKey="productionDate"
               type="date"
             />
             <FormField
-              label="Documentation URL"
+              label={t("Documentation URL")}
               value={form.documentation}
               onChange={(v) => set("documentation", v)}
+              fieldKey="documentation"
               type="url"
             />
           </div>
           <TextAreaField
-            label="Description"
+            label={t("Description")}
             value={form.description}
             onChange={(v) => set("description", v)}
+            fieldKey="description"
           />
         </DataPointComponent>
 
-        <DataPointComponent label="Manufacturer">
+        <DataPointComponent label={t("Manufacturer")}>
           <div>
             <label htmlFor="manufacturer-select" className="block text-sm font-medium text-gray-700 mb-1">
-              Company
+              {t("Company")}
             </label>
             <select
               id="manufacturer-select"
+              name="manufacturerId"
+              data-field-key="manufacturerId"
               value={form.manufacturerMode === "new" ? "__new__" : form.manufacturerId}
               onChange={(e) => {
                 const val = e.target.value;
@@ -119,157 +130,174 @@ export function ProductInformationStep({ shared }: { shared: any }) {
               }}
               className={INPUT_CLASS}
             >
-              <option value="">Select a manufacturer…</option>
+              <option value="">{t("Select a manufacturer…")}</option>
               {manufacturers.map((m: any) => (
                 <option key={m.id ?? m.identifier ?? m.name} value={m.id ?? ""}>
                   {m.name}
                 </option>
               ))}
-              <option value="__new__">+ Add a new manufacturer</option>
+              <option value="__new__">{t("+ Add a new manufacturer")}</option>
             </select>
           </div>
 
           {form.manufacturerMode === "new" && (
             <div className="grid grid-cols-2 gap-4">
               <FormField
-                label="Company Name"
+                label={t("Company Name")}
                 value={form.manufacturerName}
                 onChange={(v) => set("manufacturerName", v)}
+                fieldKey="manufacturerName"
               />
               <FormField
-                label="Company URL"
+                label={t("Company URL")}
                 value={form.manufacturerUrl}
                 onChange={(v) => set("manufacturerUrl", v)}
+                fieldKey="manufacturerUrl"
                 type="url"
               />
             </div>
           )}
         </DataPointComponent>
 
-        <DataPointComponent label="Component Information">
+        <DataPointComponent label={t("Component Information")}>
           <ComponentArrayEditor
-            label="Component Composition"
+            label={t("Component Composition")}
             items={form.componentComposition}
             onChange={(v: any) => set("componentComposition", v)}
             organizations={manufacturers}
+            t={t}
             showPercentage
           />
           <FormField
-            label="Component Bills URL"
+            label={t("Component Bills URL")}
             value={form.componentBills}
             onChange={(v) => set("componentBills", v)}
+            fieldKey="componentBills"
             type="url"
           />
           <ComponentArrayEditor
-            label="Recycled / Reused Content"
+            label={t("Recycled / Reused Content")}
             items={form.recycledReusedContent}
             onChange={(v: any) => set("recycledReusedContent", v)}
             organizations={manufacturers}
+            t={t}
           />
         </DataPointComponent>
 
-        <DataPointComponent label="Spare Parts Availability">
+        <DataPointComponent label={t("Spare Parts Availability")}>
           <TextAreaField
-            label="Spare Parts"
+            label={t("Spare Parts")}
             value={form.sparePartsAvailability}
             onChange={(v: any) => set("sparePartsAvailability", v)}
+            fieldKey="sparePartsAvailability"
           />
         </DataPointComponent>
 
-        <DataPointComponent label="Hazardous Substances">
+        <DataPointComponent label={t("Hazardous Substances")}>
           <SubstanceArrayEditor
-            label="Hazardous Substances"
+            label={t("Hazardous Substances")}
             items={form.hazardousSubstances}
             onChange={(v: any) => set("hazardousSubstances", v)}
+            t={t}
           />
         </DataPointComponent>
 
-        <DataPointComponent label="Substances of Concern">
+        <DataPointComponent label={t("Substances of Concern")}>
           <SubstanceArrayEditor
-            label="Substances of Concern"
+            label={t("Substances of Concern")}
             items={form.substancesOfConcern}
             onChange={(v: any) => set("substancesOfConcern", v)}
+            t={t}
           />
         </DataPointComponent>
 
-        {renderExtensionSection("sectorRequiredInformation", form, setField)}
+        {renderExtensionSection("sectorRequiredInformation", form, setField, t)}
       </DataLayerGroup>
 
       <DataLayerGroup layer="Sectoral">
-        {renderExtensionSection("productSpecification", form, setField)}
-        {renderExtensionSection("sectorNonRequiredInformation", form, setField)}
+        {renderExtensionSection("productSpecification", form, setField, t)}
+        {renderExtensionSection("sectorNonRequiredInformation", form, setField, t)}
 
-        <DataPointComponent label="Related Objects">
+        <DataPointComponent label={t("Related Objects")}>
           <TextAreaField
-            label="One related object URI/ID per line"
+            label={t("One related object URI/ID per line")}
             value={form.relatedObjectsRaw}
             onChange={(v) => set("relatedObjectsRaw", v)}
+            fieldKey="relatedObjectsRaw"
             rows={4}
           />
         </DataPointComponent>
 
-        <DataPointComponent label="Test Report">
+        <DataPointComponent label={t("Test Report")}>
           <FormField
-            label="Test Report URL"
+            label={t("Test Report URL")}
             value={form.testReport}
             onChange={(v) => set("testReport", v)}
+            fieldKey="testReport"
             type="url"
           />
         </DataPointComponent>
       </DataLayerGroup>
 
       <DataLayerGroup layer="Commercial">
-        <DataPointComponent label="Product Commercial Information">
+        <DataPointComponent label={t("Product Commercial Information")}>
           <div className="grid grid-cols-2 gap-4">
             <FormField
-              label="Image URL"
+              label={t("Image URL")}
               value={form.imageUrl}
               onChange={(v) => set("imageUrl", v)}
+              fieldKey="imageUrl"
               type="url"
             />
             <FormField
-              label="Lifetime Expectancy (ISO 8601)"
+              label={t("Lifetime Expectancy (ISO 8601)")}
               value={form.lifetimeExpectancy}
               onChange={(v) => set("lifetimeExpectancy", v)}
-              placeholder="e.g., P5Y"
+              fieldKey="lifetimeExpectancy"
+              placeholder={t("e.g., P5Y")}
             />
             <FormField
-              label="Warranty Period (ISO 8601)"
+              label={t("Warranty Period (ISO 8601)")}
               value={form.warrantyPeriod}
               onChange={(v) => set("warrantyPeriod", v)}
-              placeholder="e.g., P2Y"
+              fieldKey="warrantyPeriod"
+              placeholder={t("e.g., P2Y")}
             />
             <FormField
-              label="Takeback Option"
+              label={t("Takeback Option")}
               value={form.takebackOption}
               onChange={(v) => set("takebackOption", v)}
+              fieldKey="takebackOption"
             />
           </div>
         </DataPointComponent>
 
-        <DataPointComponent label="Quality Assessment">
+        <DataPointComponent label={t("Quality Assessment")}>
           <TextAreaField
-            label="Quality Assessment"
+            label={t("Quality Assessment")}
             value={form.qualityAssessment}
             onChange={(v) => set("qualityAssessment", v)}
+            fieldKey="qualityAssessment"
           />
         </DataPointComponent>
 
-        <DataPointComponent label="Identified Risk">
+        <DataPointComponent label={t("Identified Risk")}>
           <TextAreaField
-            label="Identified Risk"
+            label={t("Identified Risk")}
             value={form.identifiedRisk}
             onChange={(v) => set("identifiedRisk", v)}
+            fieldKey="identifiedRisk"
           />
         </DataPointComponent>
       </DataLayerGroup>
 
       <DataLayerGroup layer="Custom Fields">
         <CustomFieldsEditor
-          title="Product Information Custom Fields"
+          title={t("Product Information Custom Fields")}
           items={form.productInfoCustomFields}
           onChange={(items: any[]) => setCustomGroupFields("productInfoCustomFields", items)}
           canUseLeaf={canUseLeaf}
+          t={t}
         />
       </DataLayerGroup>
     </CollapsibleSection>

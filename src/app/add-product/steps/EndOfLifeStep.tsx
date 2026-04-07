@@ -3,8 +3,9 @@ import { FormField, TextAreaField } from "@/components/form/FormField";
 import { CollapsibleSection, DataLayerGroup } from "@/components/form/CollapsibleSection";
 import DataPointComponent from "@/components/DataPointComponent";
 
-export function EndOfLifeStep({ shared }: { shared: any }) {
+export function EndOfLifeStep({ shared }: Readonly<{ shared: any }>) {
   const {
+    t,
     form,
     set,
     canUseLeaf,
@@ -14,108 +15,122 @@ export function EndOfLifeStep({ shared }: { shared: any }) {
   } = shared;
 
   return (
-        <CollapsibleSection title="End of Life" defaultOpen>
+        <CollapsibleSection title={t("End of Life")} defaultOpen>
           <DataLayerGroup layer="Regulatory">
-            <DataPointComponent label="Recycling and Reuse Potential">
+            <DataPointComponent label={t("Recycling and Reuse Potential")}>
               <TextAreaField
-                label=""
+                label={t("Recycling and Reuse Potential")}
                 value={form.recyclingReusePotential}
                 onChange={(v) => set("recyclingReusePotential", v)}
+                fieldKey="recyclingReusePotential"
               />
             </DataPointComponent>
-            <DataPointComponent label="Disposal Options">
+            <DataPointComponent label={t("Disposal Options")}>
               <TextAreaField
-                label=""
+                label={t("Disposal Options")}
                 value={form.disposalOptions}
                 onChange={(v) => set("disposalOptions", v)}
+                fieldKey="disposalOptions"
               />
             </DataPointComponent>
-            <DataPointComponent label="Unsold Products Information">
+            <DataPointComponent label={t("Unsold Products Information")}>
               <TextAreaField
-                label=""
+                label={t("Unsold Products Information")}
                 value={form.unsoldProductsInformation}
                 onChange={(v) => set("unsoldProductsInformation", v)}
+                fieldKey="unsoldProductsInformation"
               />
             </DataPointComponent>
           </DataLayerGroup>
 
           <DataLayerGroup layer="Sectoral">
-              <DataPointComponent label="Expected Waste">
+              <DataPointComponent label={t("Expected Waste")}>
                 <TextAreaField
-                label=""
+                label={t("Expected Waste")}
                 value={form.expectedWaste}
                 onChange={(v) => set("expectedWaste", v)}
+                fieldKey="expectedWaste"
               />
               </DataPointComponent>
           </DataLayerGroup>
 
           <DataLayerGroup layer="Commercial">
-            <DataPointComponent label="Reusability and Repurposability">
+            <DataPointComponent label={t("Reusability and Repurposability")}>
               <TextAreaField
-                  label=""
+                  label={t("Reusability and Repurposability")}
                   value={form.reusability}
                   onChange={(v) => set("reusability", v)}
+                  fieldKey="reusability"
                 />
             </DataPointComponent>
-            <DataPointComponent label="Repairability and Maintainability">
+            <DataPointComponent label={t("Repairability and Maintainability")}>
               <TextAreaField
-                  label=""
+                  label={t("Repairability and Maintainability")}
                   value={form.repairability}
                   onChange={(v) => set("repairability", v)}
+                  fieldKey="repairability"
                 />
             </DataPointComponent>
-            <DataPointComponent label="Refurbishability and Remanufacturability">
+            <DataPointComponent label={t("Refurbishability and Remanufacturability")}>
               <TextAreaField
-                  label=""
+                  label={t("Refurbishability and Remanufacturability")}
                   value={form.refurbishability}
                   onChange={(v) => set("refurbishability", v)}
+                  fieldKey="refurbishability"
                 />
             </DataPointComponent>
-            <DataPointComponent label="Upgrade Options">
+            <DataPointComponent label={t("Upgrade Options")}>
               <TextAreaField
-                  label=""
+                  label={t("Upgrade Options")}
                   value={form.upgradeOptions}
                   onChange={(v) => set("upgradeOptions", v)}
+                  fieldKey="upgradeOptions"
                 />
             </DataPointComponent>
           </DataLayerGroup>
 
           <DataLayerGroup layer="Downstream Data">
-              <DataPointComponent label="End-of-Life History">
+              <DataPointComponent label={t("End-of-Life History")}>
                 <EventArrayEditor
-                  label="End-of-Life History Events"
+                  label={t("End-of-Life History Events")}
                   events={form.endOfLifeHistory}
                   onChange={(v: any) => set("endOfLifeHistory", v)}
+                  t={t}
                 />
               </DataPointComponent>
-              <DataPointComponent label="Number of Lifecycles">
+              <DataPointComponent label={t("Number of Lifecycles")}>
                 <FormField
-                  label=""
+                  label={t("Number of Lifecycles")}
                   value={form.numberOfLifecycles}
                   onChange={(v) => set("numberOfLifecycles", v)}
+                  fieldKey="numberOfLifecycles"
                   type="number"
                 />
               </DataPointComponent>
-              <DataPointComponent label="End-of-Life Information">
+              <DataPointComponent label={t("End-of-Life Information")}>
                 <TextAreaField
-                  label="Waste Prevention"
+                  label={t("Waste Prevention")}
                   value={form.wastePrevention}
                   onChange={(v) => set("wastePrevention", v)}
+                  fieldKey="wastePrevention"
                 />
                 <TextAreaField
-                  label="Separate Collection"
+                  label={t("Separate Collection")}
                   value={form.separateCollection}
                   onChange={(v) => set("separateCollection", v)}
+                  fieldKey="separateCollection"
                 />
                 <TextAreaField
-                  label="Collection Information"
+                  label={t("Collection Information")}
                   value={form.collectionInformation}
                   onChange={(v) => set("collectionInformation", v)}
+                  fieldKey="collectionInformation"
                 />
                 <FormField
-                  label="End-of-Life Report URL"
+                  label={t("End-of-Life Report URL")}
                   value={form.endOfLifeReport}
                   onChange={(v) => set("endOfLifeReport", v)}
+                  fieldKey="endOfLifeReport"
                   type="url"
                 />
               </DataPointComponent>
@@ -123,10 +138,11 @@ export function EndOfLifeStep({ shared }: { shared: any }) {
 
           <DataLayerGroup layer="Custom Fields">
             <CustomFieldsEditor
-              title="End of Life Custom Fields"
+              title={t("End of Life Custom Fields")}
               items={form.endOfLifeCustomFields}
               onChange={(items: any[]) => setCustomGroupFields("endOfLifeCustomFields", items)}
               canUseLeaf={canUseLeaf}
+              t={t}
             />
           </DataLayerGroup>
         </CollapsibleSection>

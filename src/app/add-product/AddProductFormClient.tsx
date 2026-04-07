@@ -22,6 +22,7 @@ import { EndOfLifeStep } from "@/app/add-product/steps/EndOfLifeStep";
 import { GuidelinesStep } from "@/app/add-product/steps/GuidelinesStep";
 import { AddEntryButton } from "@/components/form/AddEntryButton";
 import { CONSUMPTION_UNITS, FOOTPRINT_UNITS, IMPACT_UNITS, MASS_UNITS } from "@/config/master-data";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const INPUT_CLASS =
   "px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-blue-light)] focus:border-[var(--color-brand-blue-light)]";
@@ -30,6 +31,7 @@ const INPUT_LARGE_CLASS = "md:col-span-2 px-3 py-2 border border-gray-300 rounde
 
 type LeafUsageStatus = "mapped" | "custom";
 type FormSetter = (key: keyof FormState, value: FormState[keyof FormState]) => void;
+type Translator = (key: string) => string;
 type CustomFieldGroupKey =
   | "productInfoCustomFields"
   | "complianceCustomFields"
@@ -170,23 +172,25 @@ function EventArrayEditor({
   label,
   events,
   onChange,
+  t,
 }: Readonly<{
   label: string;
   events: EventEntry[];
   onChange: (events: EventEntry[]) => void;
+  t: Translator;
 }>) {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <span className="block text-sm font-medium text-gray-700">{label}</span>
-        <AddEntryButton label="+ Add Entry" onClick={() => onChange([...events, emptyEvent()])} />
+        <AddEntryButton label={t("+ Add Entry")} onClick={() => onChange([...events, emptyEvent()])} />
       </div>
       {events.map((ev, i) => (
         <div key={ev._key} className="flex gap-2 items-start">
           <div className="flex-1 grid grid-cols-2 gap-2">
             <input
               type="text"
-              placeholder="Action name"
+              placeholder={t("Action name")}
               value={ev.actionName}
               onChange={(e) => updateAt(events, i, "actionName", e.target.value, onChange)}
               className={INPUT_CLASS}
@@ -199,23 +203,25 @@ function EventArrayEditor({
             />
             <input
               type="text"
-              placeholder="Action type"
+              placeholder={t("Action type")}
               value={ev.actionType}
               onChange={(e) => updateAt(events, i, "actionType", e.target.value, onChange)}
               className={INPUT_CLASS}
             />
             <input
               type="text"
-              placeholder="Location name"
+              placeholder={t("Location name")}
               value={ev.locationName}
               onChange={(e) => updateAt(events, i, "locationName", e.target.value, onChange)}
               className={INPUT_CLASS}
             />
             <input
               type="text"
-              placeholder="Actor name"
+              placeholder={t("Actor name")}
               value={ev.actorName}
               onChange={(e) => updateAt(events, i, "actorName", e.target.value, onChange)}
+              name="actorName"
+              data-field-key="actorName"
               className="col-span-2 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-blue-light)] focus:border-[var(--color-brand-blue-light)]"
             />
           </div>
@@ -238,18 +244,20 @@ function ComponentArrayEditor({
   onChange,
   organizations = [],
   showPercentage = true,
+  t,
 }: Readonly<{
   label: string;
   items: ComponentEntry[];
   onChange: (items: ComponentEntry[]) => void;
   organizations?: ManufacturerOption[];
   showPercentage?: boolean;
+  t: Translator;
 }>) {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <span className="block text-sm font-medium text-gray-700">{label}</span>
-        <AddEntryButton label="+ Add Entry" onClick={() => onChange([
+        <AddEntryButton label={t("+ Add Entry")} onClick={() => onChange([
           ...items,
           {
             _key: uid(),
@@ -270,38 +278,46 @@ function ComponentArrayEditor({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2 items-center">
             <input
               type="text"
-              placeholder="Component name"
+              placeholder={t("Component name")}
               value={m.componentName}
               onChange={(e) => updateAt(items, i, "componentName", e.target.value, onChange)}
+              name="componentName"
+              data-field-key="componentName"
               className={INPUT_CLASS}
             />
             <input
               type="text"
-              placeholder="Component reference"
+              placeholder={t("Component reference")}
               value={m.componentReference}
               onChange={(e) => updateAt(items, i, "componentReference", e.target.value, onChange)}
+              name="componentReference"
+              data-field-key="componentReference"
               className={INPUT_CLASS}
             />
             <input
               type="url"
-              placeholder="Component URI"
+              placeholder={t("Component URI")}
               value={m.componentURI}
               onChange={(e) => updateAt(items, i, "componentURI", e.target.value, onChange)}
+              name="componentURI"
+              data-field-key="componentURI"
               className={INPUT_CLASS}
             />
             <div>
               <select
                 id={`component-supplier-${m._key}`}
+                name="componentSupplierRef"
+                data-field-key="componentSupplierRef"
                 value={m.componentSupplierRef}
                 onChange={(e) => updateAt(items, i, "componentSupplierRef", e.target.value, onChange)}
                 className={INPUT_CLASS}
               >
-                <option value="">Select a supplier...</option>
+                <option value="">{t("Select a supplier...")}</option>
                 {organizations.map((org) => {
                   const value = org.id ?? org.identifier ?? org.name ?? "";
                   return (
                     <option key={org.id ?? org.identifier ?? org.name} value={value}>
-                      {org.name ?? org.identifier ?? "Unknown organization"}
+                      {org.name ?? org.identifier ?? t("Unknown organization")}
                     </option>
                   );
                 })}
@@ -312,6 +328,8 @@ function ComponentArrayEditor({
           {showPercentage && (
             <div className="grid grid-cols-1 md:grid-cols-4 gap-2 items-center">
               <select
+                name="mode"
+                data-field-key="mode"
                 value={m.mode}
                 onChange={(e) =>
                   updateAt(
@@ -324,17 +342,19 @@ function ComponentArrayEditor({
                 }
                 className={INPUT_CLASS}
               >
-                <option value="percentage">Percentage</option>
-                <option value="mass">Mass</option>
+                <option value="percentage">{t("Percentage")}</option>
+                <option value="mass">{t("Mass")}</option>
               </select>
               {m.mode === "percentage" ? (
                 <input
                   type="number"
-                  placeholder="%"
+                  placeholder={t("%")}
                   value={m.componentPercentage}
                   onChange={(e) =>
                     updateAt(items, i, "componentPercentage", e.target.value, onChange)
                   }
+                  name="componentPercentage"
+                  data-field-key="componentPercentage"
                   className={INPUT_CLASS}
                 />
               ) : (
@@ -342,34 +362,38 @@ function ComponentArrayEditor({
                   <input
                     type="number"
                     step="any"
-                    placeholder="Count value"
+                    placeholder={t("Count value")}
                     value={m.componentCountValue}
                     onChange={(e) =>
                       updateAt(items, i, "componentCountValue", e.target.value, onChange)
                     }
+                    name="componentCountValue"
+                    data-field-key="componentCountValue"
                     className={INPUT_CLASS}
                   />
                   <select
+                    name="componentCountUnit"
+                    data-field-key="componentCountUnit"
                     value={m.componentCountUnit}
                     onChange={(e) =>
                       updateAt(items, i, "componentCountUnit", e.target.value, onChange)
                     }
                     className={INPUT_CLASS}
                   >
-                    <option value="">Unit</option>
+                    <option value="">{t("Unit")}</option>
                     {MASS_UNITS.map((u) => (
                       <option key={u} value={u}>
                         {u}
                       </option>
                     ))}
-                    <option value="custom">Custom</option>
+                    <option value="custom">{t("Custom")}</option>
                   </select>
                 </>
               )}
               {m.mode === "mass" && m.componentCountUnit === "custom" && (
                 <input
                   type="text"
-                  placeholder="Custom unit"
+                  placeholder={t("Custom unit")}
                   value={m.componentCountCustomUnit}
                   onChange={(e) =>
                     updateAt(
@@ -380,6 +404,8 @@ function ComponentArrayEditor({
                       onChange,
                     )
                   }
+                  name="componentCountCustomUnit"
+                  data-field-key="componentCountCustomUnit"
                   className={INPUT_CLASS}
                 />
               )}
@@ -405,16 +431,18 @@ function SubstanceArrayEditor({
   label,
   items,
   onChange,
+  t,
 }: Readonly<{
   label: string;
   items: SubstanceEntry[];
   onChange: (items: SubstanceEntry[]) => void;
+  t: Translator;
 }>) {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <span className="block text-sm font-medium text-gray-700">{label}</span>
-        <AddEntryButton label="+ Add Entry" onClick={() => onChange([
+        <AddEntryButton label={t("+ Add Entry")} onClick={() => onChange([
           ...items,
           {
             _key: uid(),
@@ -434,65 +462,83 @@ function SubstanceArrayEditor({
         <div key={item._key} className="grid grid-cols-1 md:grid-cols-2 gap-2 p-3 bg-white border border-gray-200 rounded-lg">
           <input
             type="text"
-            placeholder="Substance name"
+            placeholder={t("Substance name")}
             value={item.substanceName}
             onChange={(e) => updateAt(items, i, "substanceName", e.target.value, onChange)}
+            name="substanceName"
+            data-field-key="substanceName"
             className={INPUT_CLASS}
           />
           <input
             type="text"
-            placeholder="IUPAC name"
+            placeholder={t("IUPAC name")}
             value={item.iupacName}
             onChange={(e) => updateAt(items, i, "iupacName", e.target.value, onChange)}
+            name="iupacName"
+            data-field-key="iupacName"
             className={INPUT_CLASS}
           />
           <input
             type="text"
-            placeholder="EC number"
+            placeholder={t("EC number")}
             value={item.ecNumber}
             onChange={(e) => updateAt(items, i, "ecNumber", e.target.value, onChange)}
+            name="ecNumber"
+            data-field-key="ecNumber"
             className={INPUT_CLASS}
           />
           <input
             type="text"
-            placeholder="CAS number"
+            placeholder={t("CAS number")}
             value={item.casNumber}
             onChange={(e) => updateAt(items, i, "casNumber", e.target.value, onChange)}
+            name="casNumber"
+            data-field-key="casNumber"
             className={INPUT_CLASS}
           />
           <input
             type="text"
-            placeholder="Concentration level"
+            placeholder={t("Concentration level")}
             value={item.concentrationLevel}
             onChange={(e) => updateAt(items, i, "concentrationLevel", e.target.value, onChange)}
+            name="concentrationLevel"
+            data-field-key="concentrationLevel"
             className={INPUT_CLASS}
           />
           <input
             type="text"
-            placeholder="Location within product"
+            placeholder={t("Location within product")}
             value={item.locationWithinProduct}
             onChange={(e) => updateAt(items, i, "locationWithinProduct", e.target.value, onChange)}
+            name="locationWithinProduct"
+            data-field-key="locationWithinProduct"
             className={INPUT_CLASS}
           />
           <input
             type="text"
-            placeholder="Substance description"
+            placeholder={t("Substance description")}
             value={item.substanceDescription}
             onChange={(e) => updateAt(items, i, "substanceDescription", e.target.value, onChange)}
+            name="substanceDescription"
+            data-field-key="substanceDescription"
             className={INPUT_LARGE_CLASS}
           />    
           <input
             type="text"
-            placeholder="Safe usage instruction"
+            placeholder={t("Safe usage instruction")}
             value={item.safeUsageInstruction}
             onChange={(e) => updateAt(items, i, "safeUsageInstruction", e.target.value, onChange)}
+            name="safeUsageInstruction"
+            data-field-key="safeUsageInstruction"
             className={INPUT_LARGE_CLASS}
           />
           <input
             type="text"
-            placeholder="Disassembly instruction"
+            placeholder={t("Disassembly instruction")}
             value={item.disassemblyInstruction}
             onChange={(e) => updateAt(items, i, "disassemblyInstruction", e.target.value, onChange)}
+            name="disassemblyInstruction"
+            data-field-key="disassemblyInstruction"
             className={INPUT_LARGE_CLASS}
           />
           <div className="md:col-span-2 flex justify-end">
@@ -513,30 +559,36 @@ function SubstanceArrayEditor({
 function RegulationArrayEditor({
   items,
   onChange,
+  t,
 }: Readonly<{
   items: RegulationEntry[];
   onChange: (items: RegulationEntry[]) => void;
+  t: Translator;
 }>) {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <span className="block text-sm font-medium text-gray-700">Regulations</span>
-        <AddEntryButton label="+ Add Entry" onClick={() => onChange([...items, { _key: uid(), name: "", identifier: "" }])} />
+        <span className="block text-sm font-medium text-gray-700">{t("Regulations")}</span>
+        <AddEntryButton label={t("+ Add Entry")} onClick={() => onChange([...items, { _key: uid(), name: "", identifier: "" }])} />
       </div>
       {items.map((entry, i) => (
         <div key={entry._key} className="flex gap-2 items-start">
           <input
             type="text"
-            placeholder="Regulation name"
+            placeholder={t("Regulation name")}
             value={entry.name}
             onChange={(e) => updateAt(items, i, "name", e.target.value, onChange)}
+            name="name"
+            data-field-key="name"
             className={`flex-1 ${INPUT_CLASS}`}
           />
           <input
             type="text"
-            placeholder="Regulation identifier"
+            placeholder={t("Regulation identifier")}
             value={entry.identifier}
             onChange={(e) => updateAt(items, i, "identifier", e.target.value, onChange)}
+            name="identifier"
+            data-field-key="identifier"
             className={`flex-1 ${INPUT_CLASS}`}
           />
           <button
@@ -559,6 +611,7 @@ function NameDescArrayEditor({
   namePlaceholder = "Name",
   descPlaceholder = "Description",
   addLabel = "+ Add Entry",
+  t,
 }: Readonly<{
   label: string;
   items: NameDescEntry[];
@@ -566,12 +619,13 @@ function NameDescArrayEditor({
   namePlaceholder?: string;
   descPlaceholder?: string;
   addLabel?: string;
+  t: Translator;
 }>) {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <span className="block text-sm font-medium text-gray-700">{label}</span>
-        <AddEntryButton label={addLabel} onClick={() => onChange([...items, { _key: uid(), name: "", description: "" }])} />
+        <AddEntryButton label={t(addLabel)} onClick={() => onChange([...items, { _key: uid(), name: "", description: "" }])} />
       </div>
       {items.map((s, i) => (
         <div key={s._key} className="flex gap-2 items-start">
@@ -580,6 +634,8 @@ function NameDescArrayEditor({
             placeholder={namePlaceholder}
             value={s.name}
             onChange={(e) => updateAt(items, i, "name", e.target.value, onChange)}
+            name="name"
+            data-field-key="name"
             className={`flex-1 ${INPUT_CLASS}`}
           />
           <input
@@ -587,6 +643,8 @@ function NameDescArrayEditor({
             placeholder={descPlaceholder}
             value={s.description}
             onChange={(e) => updateAt(items, i, "description", e.target.value, onChange)}
+            name="description"
+            data-field-key="description"
             className={`flex-1 ${INPUT_CLASS}`}
           />
           <button
@@ -605,46 +663,56 @@ function NameDescArrayEditor({
 function LabelArrayEditor({
   items,
   onChange,
+  t,
 }: Readonly<{
   items: LabelEntry[];
   onChange: (items: LabelEntry[]) => void;
+  t: Translator;
 }>) {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <span className="block text-sm font-medium text-gray-700">
-          Product Labels
+          {t("Product Labels")}
         </span>
-        <AddEntryButton label="+ Add Entry" onClick={() => onChange([...items, { _key: uid(), labelName: "", labelValue: "", labelDescription: "", labelDocumentation: "" }])} />
+        <AddEntryButton label={t("+ Add Entry")} onClick={() => onChange([...items, { _key: uid(), labelName: "", labelValue: "", labelDescription: "", labelDocumentation: "" }])} />
       </div>
       {items.map((l, i) => (
         <div key={l._key} className="grid grid-cols-2 gap-2 p-3 bg-gray-50 rounded-lg relative">
           <input
             type="text"
-            placeholder="Label name"
+            placeholder={t("Label name")}
             value={l.labelName}
             onChange={(e) => updateAt(items, i, "labelName", e.target.value, onChange)}
+            name="labelName"
+            data-field-key="labelName"
             className={INPUT_CLASS}
           />
           <input
             type="text"
-            placeholder="Label value"
+            placeholder={t("Label value")}
             value={l.labelValue}
             onChange={(e) => updateAt(items, i, "labelValue", e.target.value, onChange)}
+            name="labelValue"
+            data-field-key="labelValue"
             className={INPUT_CLASS}
           />
           <input
             type="text"
-            placeholder="Description"
+            placeholder={t("Description")}
             value={l.labelDescription}
             onChange={(e) => updateAt(items, i, "labelDescription", e.target.value, onChange)}
+            name="labelDescription"
+            data-field-key="labelDescription"
             className={INPUT_CLASS}
           />
           <input
             type="url"
-            placeholder="Documentation URL"
+            placeholder={t("Documentation URL")}
             value={l.labelDocumentation}
             onChange={(e) => updateAt(items, i, "labelDocumentation", e.target.value, onChange)}
+            name="labelDocumentation"
+            data-field-key="labelDocumentation"
             className={INPUT_CLASS}
           />
           <button
@@ -663,15 +731,17 @@ function LabelArrayEditor({
 function EnvironmentalFootprintArrayEditor({
   items,
   onChange,
+  t,
 }: Readonly<{
   items: EnvironmentalFootprintEntry[];
   onChange: (items: EnvironmentalFootprintEntry[]) => void;
+  t: Translator;
 }>) {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <span className="block text-sm font-medium text-gray-700">Environmental Footprint</span>
-        <AddEntryButton label="+ Add Entry" onClick={() => onChange([
+        <span className="block text-sm font-medium text-gray-700">{t("Environmental Footprint")}</span>
+        <AddEntryButton label={t("+ Add Entry")} onClick={() => onChange([
               ...items,
               {
                 _key: uid(),
@@ -686,16 +756,18 @@ function EnvironmentalFootprintArrayEditor({
           <div className="grid grid-cols-2 gap-2">
             <input
               type="text"
-              placeholder="Type"
+              placeholder={t("Type")}
               value={item.environmentalFootprintType}
               onChange={(e) =>
                 updateAt(items, i, "environmentalFootprintType", e.target.value, onChange)
               }
+              name="environmentalFootprintType"
+              data-field-key="environmentalFootprintType"
               className={INPUT_CLASS}
             />
             <input
               type="text"
-              placeholder="Measuring method"
+              placeholder={t("Measuring method")}
               value={item.environmentalFootprintMeasuringMethod}
               onChange={(e) =>
                 updateAt(
@@ -706,14 +778,17 @@ function EnvironmentalFootprintArrayEditor({
                   onChange,
                 )
               }
+              name="environmentalFootprintMeasuringMethod"
+              data-field-key="environmentalFootprintMeasuringMethod"
               className={INPUT_CLASS}
             />
           </div>
           <MeasurementInput
-            label="Measurement"
+            label={t("Measurement")}
             measurement={item.measurement}
             unitOptions={FOOTPRINT_UNITS}
             onChange={(next) => updateAt(items, i, "measurement", next, onChange)}
+            t={t}
           />
           <div className="flex justify-end">
             <button
@@ -734,16 +809,18 @@ function ResourceConsumptionArrayEditor({
   label,
   items,
   onChange,
+  t,
 }: Readonly<{
   label: string;
   items: ResourceConsumptionEntry[];
   onChange: (items: ResourceConsumptionEntry[]) => void;
+  t: Translator;
 }>) {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <span className="block text-sm font-medium text-gray-700">{label}</span>
-        <AddEntryButton label="+ Add Entry" onClick={() => onChange([
+        <AddEntryButton label={t("+ Add Entry")} onClick={() => onChange([
               ...items,
               { _key: uid(), resource: "", measurement: emptyMeasurement() },
             ])} />
@@ -752,16 +829,19 @@ function ResourceConsumptionArrayEditor({
         <div key={item._key} className="space-y-3 p-3 bg-white border border-gray-200 rounded-lg">
           <input
             type="text"
-            placeholder="Resource"
+            placeholder={t("Resource")}
             value={item.resource}
             onChange={(e) => updateAt(items, i, "resource", e.target.value, onChange)}
+            name="resource"
+            data-field-key="resource"
             className={INPUT_CLASS}
           />
           <MeasurementInput
-            label="Measurement"
+            label={t("Measurement")}
             measurement={item.measurement}
             unitOptions={CONSUMPTION_UNITS}
             onChange={(next) => updateAt(items, i, "measurement", next, onChange)}
+            t={t}
           />
           <div className="flex justify-end">
             <button
@@ -781,15 +861,17 @@ function ResourceConsumptionArrayEditor({
 function EnvironmentalImpactArrayEditor({
   items,
   onChange,
+  t,
 }: Readonly<{
   items: EnvironmentalImpactEntry[];
   onChange: (items: EnvironmentalImpactEntry[]) => void;
+  t: Translator;
 }>) {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <span className="block text-sm font-medium text-gray-700">Environmental Impact</span>
-        <AddEntryButton label="+ Add Entry" onClick={() => onChange([
+        <span className="block text-sm font-medium text-gray-700">{t("Environmental Impact")}</span>
+        <AddEntryButton label={t("+ Add Entry")} onClick={() => onChange([
               ...items,
               {
                 _key: uid(),
@@ -806,38 +888,47 @@ function EnvironmentalImpactArrayEditor({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             <input
               type="text"
-              placeholder="Impact category"
+              placeholder={t("Impact category")}
               value={item.impactCategory}
               onChange={(e) => updateAt(items, i, "impactCategory", e.target.value, onChange)}
+              name="impactCategory"
+              data-field-key="impactCategory"
               className={INPUT_CLASS}
             />
             <input
               type="text"
-              placeholder="Method"
+              placeholder={t("Method")}
               value={item.method}
               onChange={(e) => updateAt(items, i, "method", e.target.value, onChange)}
+              name="method"
+              data-field-key="method"
               className={INPUT_CLASS}
             />
             <input
               type="text"
-              placeholder="Characterization factor"
+              placeholder={t("Characterization factor")}
               value={item.characterizationFactor}
               onChange={(e) => updateAt(items, i, "characterizationFactor", e.target.value, onChange)}
+              name="characterizationFactor"
+              data-field-key="characterizationFactor"
               className={INPUT_CLASS}
             />
             <input
               type="text"
-              placeholder="Characterization model"
+              placeholder={t("Characterization model")}
               value={item.characterizationModel}
               onChange={(e) => updateAt(items, i, "characterizationModel", e.target.value, onChange)}
+              name="characterizationModel"
+              data-field-key="characterizationModel"
               className={INPUT_CLASS}
             />
           </div>
           <MeasurementInput
-            label="Impact Indicator"
+            label={t("Impact Indicator")}
             measurement={item.impactIndicator}
             unitOptions={IMPACT_UNITS}
             onChange={(next) => updateAt(items, i, "impactIndicator", next, onChange)}
+            t={t}
           />
           <div className="flex justify-end">
             <button
@@ -859,11 +950,13 @@ function CustomFieldsEditor({
   items,
   onChange,
   canUseLeaf,
+  t,
 }: Readonly<{
   title: string;
   items: CustomFieldEntry[];
   onChange: (items: CustomFieldEntry[]) => void;
   canUseLeaf: (leaf: ImportedLeaf) => boolean;
+  t: Translator;
 }>): React.ReactNode {
   const canHandleDrop = (event: React.DragEvent<HTMLElement>) =>
     event.dataTransfer.types.includes(DRAG_MIME);
@@ -925,7 +1018,7 @@ function CustomFieldsEditor({
       </summary>
       <div className="space-y-3 px-4 pb-4 pt-2">
       <p className="text-xs text-gray-500">
-        Define manual fields and drag imported JSON values here to auto-fill key and value.
+        {t("Define manual fields and drag imported JSON values here to auto-fill key and value.")}
       </p>
       <div className="space-y-2">
         {items.map((field, index) => (
@@ -935,7 +1028,7 @@ function CustomFieldsEditor({
           >
             <input
               type="text"
-              placeholder="Field name"
+              placeholder={t("Field name")}
               value={field.key}
               onChange={(event) => updateAt(items, index, "key", event.target.value, onChange)}
               onDragOver={(event) => {
@@ -955,7 +1048,7 @@ function CustomFieldsEditor({
             />
             <input
               type="text"
-              placeholder="Value"
+              placeholder={t("Value")}
               value={field.value}
               onChange={(event) => updateAt(items, index, "value", event.target.value, onChange)}
               onDragOver={(event) => {
@@ -983,7 +1076,7 @@ function CustomFieldsEditor({
           </div>
         ))}
       </div>
-      <AddEntryButton label="+ Add Custom Field" onClick={() => onChange([...items, { _key: uid(), key: "", value: "", sourcePath: undefined }])} />
+      <AddEntryButton label={t("+ Add Custom Field")} onClick={() => onChange([...items, { _key: uid(), key: "", value: "", sourcePath: undefined }])} />
       </div>
     </details>
   );
@@ -1297,12 +1390,14 @@ function JsonTree({
   onLeafDrag,
   onLeafClick,
   leafUsageByPath,
+  t,
 }: Readonly<{
   value: unknown;
   path: string;
   onLeafDrag: (leaf: ImportedLeaf, event: React.DragEvent<HTMLElement>) => void;
   onLeafClick: (leaf: ImportedLeaf) => void;
   leafUsageByPath: Record<string, LeafUsageStatus>;
+  t: Translator;
 }>): React.ReactNode {
   const [open, setOpen] = useState(path === "root");
 
@@ -1314,7 +1409,7 @@ function JsonTree({
           onClick={() => setOpen((prev) => !prev)}
           className="text-xs text-gray-600 hover:text-gray-900 hover:cursor-pointer"
         >
-          {open ? "▾" : "▸"} {path.split(".")[path.split(".").length - 1]} [{value.length}]
+          {open ? "▾" : "▸"} {path.split(".")[path.split(".").length - 1]} {t("[")}{value.length}{t("]")}
         </button>
         {open && (
           <div className="mt-1 space-y-1">
@@ -1325,7 +1420,8 @@ function JsonTree({
                 path={`${path}[${index}]`}
                 onLeafDrag={onLeafDrag}
                 onLeafClick={onLeafClick}
-                  leafUsageByPath={leafUsageByPath}
+                leafUsageByPath={leafUsageByPath}
+                t={t}
               />
             ))}
           </div>
@@ -1343,7 +1439,7 @@ function JsonTree({
           onClick={() => setOpen((prev) => !prev)}
           className="text-xs text-gray-600 hover:text-gray-900 hover:cursor-pointer"
         >
-          {open ? "▾" : "▸"} {path.split(".")[path.split(".").length - 1]} {"{"}{entries.length}{"}"}
+          {open ? "▾" : "▸"} {path.split(".")[path.split(".").length - 1]} {t("{")}{entries.length}{t("}")}
         </button>
         {open && (
           <div className="mt-1 space-y-1">
@@ -1357,6 +1453,7 @@ function JsonTree({
                   onLeafDrag={onLeafDrag}
                   onLeafClick={onLeafClick}
                   leafUsageByPath={leafUsageByPath}
+                  t={t}
                 />
               );
             })}
@@ -1379,11 +1476,11 @@ function JsonTree({
         ? "border-[var(--color-brand-blue)] bg-[var(--color-brand-blue)]/6 text-[var(--color-brand-blue)]"
         : "border-gray-200 bg-white";
   const leafHint =
-    leafUsage === "mapped"
-      ? "Already mapped to an existing form field"
-      : leafUsage === "custom"
-        ? "Already added to custom fields"
-        : "Click to map to focused field, or drag to a field";
+      leafUsage === "mapped"
+        ? t("Already mapped to an existing form field")
+        : leafUsage === "custom"
+          ? t("Already added to custom fields")
+          : t("Click to map to focused field, or drag to a field");
 
   return (
     <button
@@ -1416,11 +1513,13 @@ function MeasurementInput({
   measurement,
   unitOptions,
   onChange,
+  t,
 }: Readonly<{
   label: string;
   measurement: MeasurementValue;
   unitOptions: string[];
   onChange: (next: MeasurementValue) => void;
+  t: Translator;
 }>) {
   const isCustom = measurement.unit === "custom";
   return (
@@ -1430,7 +1529,7 @@ function MeasurementInput({
         <input
           type="number"
           step="any"
-          placeholder={`${label} value`}
+          placeholder={t(`${label} value`)}
           value={measurement.value}
           onChange={(e) => onChange({ ...measurement, value: e.target.value })}
           className={INPUT_CLASS}
@@ -1440,19 +1539,19 @@ function MeasurementInput({
           onChange={(e) => onChange({ ...measurement, unit: e.target.value })}
           className={INPUT_CLASS}
         >
-          <option value="">Select unit</option>
+          <option value="">{t("Select unit")}</option>
           {unitOptions.map((u) => (
             <option key={u} value={u}>
               {u}
             </option>
           ))}
-          <option value="custom">Custom</option>
+          <option value="custom">{t("Custom")}</option>
         </select>
       </div>
       {isCustom && (
         <input
           type="text"
-          placeholder="Enter custom unit"
+          placeholder={t("Enter custom unit")}
           value={measurement.customUnit}
           onChange={(e) =>
             onChange({ ...measurement, customUnit: e.target.value })
@@ -1468,6 +1567,7 @@ function renderExtensionSection(
   section: ExtensionSectionKey,
   form: FormState,
   setValue: FormSetter,
+  t: Translator,
 ): React.ReactNode {
   const groups = EXTENSION_FIELD_CONFIG[form.sectorType]?.[section];
 
@@ -1479,7 +1579,7 @@ function renderExtensionSection(
     <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
       <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
         <span className="flex items-center justify-between">
-          {EXTENSION_SECTION_LABELS[section]}
+          {t(EXTENSION_SECTION_LABELS[section])}
           <svg
             className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
             fill="none"
@@ -1497,7 +1597,7 @@ function renderExtensionSection(
           <details key={groupName} className="group/group border border-gray-200 rounded-lg bg-white">
             <summary className="cursor-pointer list-none px-4 py-3 text-xs font-semibold uppercase tracking-wide text-gray-600 [&::-webkit-details-marker]:hidden">
               <span className="flex items-center justify-between">
-                {groupName}
+                {t(groupName)}
                 <svg
                   className="w-4 h-4 text-gray-400 transition-transform group-open/group:rotate-180"
                   fill="none"
@@ -1522,10 +1622,11 @@ function renderExtensionSection(
                   return (
                     <div key={String(field.key)} className={wrapperClass}>
                       <MeasurementInput
-                        label={field.label}
+                        label={t(field.label)}
                         measurement={fieldValue as MeasurementValue}
                         unitOptions={field.unitOptions ?? []}
                         onChange={(next) => setValue(fieldKey, next)}
+                        t={t}
                       />
                     </div>
                   );
@@ -1535,10 +1636,11 @@ function renderExtensionSection(
                   return (
                     <div key={String(field.key)} className={wrapperClass}>
                       <TextAreaField
-                        label={field.label}
+                        label={t(field.label)}
                         value={fieldValue as string}
                         onChange={(next) => setValue(fieldKey, next)}
                         rows={field.rows}
+                        fieldKey={String(field.key)}
                       />
                     </div>
                   );
@@ -1551,18 +1653,20 @@ function renderExtensionSection(
                         htmlFor={String(field.key)}
                         className="block text-sm font-medium text-gray-700 mb-1"
                       >
-                        {field.label}
+                        {t(field.label)}
                       </label>
                       <select
                         id={String(field.key)}
+                        name={String(field.key)}
+                        data-field-key={String(field.key)}
                         value={fieldValue as string}
                         onChange={(e) => setValue(fieldKey, e.target.value)}
                         className={INPUT_CLASS}
                       >
-                        <option value="">Select option</option>
+                        <option value="">{t("Select option")}</option>
                         {field.options?.map((option) => (
                           <option key={option.value} value={option.value}>
-                            {option.label}
+                            {t(option.label)}
                           </option>
                         ))}
                       </select>
@@ -1573,11 +1677,12 @@ function renderExtensionSection(
                 return (
                   <FormField
                     key={String(field.key)}
-                    label={field.label}
+                    label={t(field.label)}
                     value={fieldValue as string}
                     onChange={(next) => setValue(fieldKey, next)}
                     type={field.kind === "number" || field.kind === "date" ? field.kind : "text"}
                     placeholder={field.placeholder}
+                    fieldKey={String(field.key)}
                   />
                 );
               })}
@@ -1655,25 +1760,11 @@ type TabularRow = Record<string, string>;
 
 function coerceMappedValue(raw: string, sampleValue: unknown): unknown {
   if (Array.isArray(sampleValue)) {
-    if (!raw.trim()) return [];
-    try {
-      const parsed = JSON.parse(raw) as unknown;
-      return Array.isArray(parsed) ? parsed : [raw];
-    } catch {
-      return raw
-        .split("|")
-        .map((item) => item.trim())
-        .filter(Boolean);
-    }
+    return coerceMappedArrayValue(raw);
   }
 
   if (sampleValue && typeof sampleValue === "object") {
-    if (!raw.trim()) return sampleValue;
-    try {
-      return JSON.parse(raw);
-    } catch {
-      return sampleValue;
-    }
+    return coerceMappedObjectValue(raw, sampleValue as Record<string, unknown>);
   }
 
   if (typeof sampleValue === "number") {
@@ -1686,6 +1777,47 @@ function coerceMappedValue(raw: string, sampleValue: unknown): unknown {
   }
 
   return raw;
+}
+
+function coerceMappedArrayValue(raw: string): unknown {
+  if (!raw.trim()) return [];
+
+  try {
+    const parsed = JSON.parse(raw) as unknown;
+    return Array.isArray(parsed) ? parsed : [raw];
+  } catch {
+    return raw
+      .split("|")
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+}
+
+function coerceMappedObjectValue(raw: string, sampleValue: Record<string, unknown>): unknown {
+  if (!raw.trim()) return sampleValue;
+
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return sampleValue;
+  }
+}
+
+function stringifyWorksheetValue(value: unknown): string {
+  if (value == null) return "";
+  if (typeof value === "object") {
+    return JSON.stringify(value) ?? "";
+  }
+  if (
+    typeof value === "string" ||
+    typeof value === "number" ||
+    typeof value === "boolean" ||
+    typeof value === "bigint" ||
+    typeof value === "symbol"
+  ) {
+    return String(value);
+  }
+  return "";
 }
 
 function parseWorksheetRows(buffer: ArrayBuffer): TabularRow[] {
@@ -1706,7 +1838,7 @@ function parseWorksheetRows(buffer: ArrayBuffer): TabularRow[] {
       Object.fromEntries(
         Object.entries(row).map(([key, value]) => [
           String(key),
-          value == null ? "" : String(value),
+          stringifyWorksheetValue(value),
         ]),
       ),
     )
@@ -2045,6 +2177,7 @@ export default function AddProductFormClient({
     initialManufacturers: ManufacturerOption[] 
 }>) {
   const router = useRouter();
+  const { t } = useLanguage();
   const formRef = useRef<HTMLFormElement | null>(null);
   const [form, setForm] = useState<FormState>(initialState);
   const [manufacturers] = useState<ManufacturerOption[]>(initialManufacturers);
@@ -2064,6 +2197,15 @@ export default function AddProductFormClient({
     "Compliance",
   ] as const;
   const [currentSectionStep, setCurrentSectionStep] = useState(0);
+
+  const sectionLabel = (step: string) => {
+    if (step === "Product Information") return t("dashboard.productInfo.title");
+    if (step === "Sustainability") return t("dashboard.sustainability.title");
+    if (step === "End of Life") return t("dashboard.eol.title");
+    if (step === "Guidelines & Manuals") return t("dashboard.guidelines.title");
+    if (step === "Compliance") return t("dashboard.compliance.title");
+    return step;
+  };
 
   const fieldsByStep: Record<string, Array<keyof FormState>> = {
     "Product Information": [
@@ -2218,7 +2360,7 @@ export default function AddProductFormClient({
     }
 
     const candidates = [
-      inputElement.getAttribute("data-field-key") || "",
+      inputElement.dataset.fieldKey || "",
       inputElement.getAttribute("name") || "",
       inputElement.id || "",
       inferFieldNameFromElement(inputElement),
@@ -2288,6 +2430,7 @@ export default function AddProductFormClient({
   const canUseLeaf = (leaf: ImportedLeaf) => !leafUsageByPath[leaf.path];
 
   const stepShared = {
+    t,
     form,
     set,
     setField,
@@ -2303,7 +2446,6 @@ export default function AddProductFormClient({
     NameDescArrayEditor,
     EnvironmentalFootprintArrayEditor,
     ResourceConsumptionArrayEditor,
-    EnvironmentalImpactArrayEditor,
     EventArrayEditor,
     CustomFieldsEditor,
   };
@@ -2315,7 +2457,9 @@ export default function AddProductFormClient({
 
   const addOrReplaceMapping = (next: FieldMapping) => {
     setMappings((prev) => {
-      const withoutTarget = prev.filter((mapping) => mapping.targetKey !== next.targetKey || mapping.sourcePath !== next.sourcePath);
+      const withoutTarget = prev.filter(
+        (mapping) => mapping.targetKey !== next.targetKey || mapping.sourcePath !== next.sourcePath,
+      );
       return [...withoutTarget, next];
     });
   };
@@ -2572,7 +2716,7 @@ export default function AddProductFormClient({
     <main className="w-full px-4 py-8">
       <div className="mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-[360px_minmax(0,1fr)] gap-6">
         <aside className="rounded-xl border border-gray-200 bg-white shadow-sm p-4 h-fit lg:sticky lg:top-4">
-          <h2 className="text-sm font-semibold text-gray-900 mb-3">Data Import & Mapping</h2>
+          <h2 className="text-sm font-semibold text-gray-900 mb-3">{t("Data Import & Mapping")}</h2>
           <div className="mb-3 space-y-1">
             <div className="flex items-center justify-between text-[11px] font-medium text-gray-600">
             </div>
@@ -2580,7 +2724,7 @@ export default function AddProductFormClient({
               type="button"
               role="switch"
               aria-checked={importMode === "table"}
-              aria-label="Toggle import mode between CSV/XLSX and JSON"
+              aria-label={t("Toggle import mode between CSV/XLSX and JSON")}
               onClick={() => handleImportModeChange(importMode === "json" ? "table" : "json")}
               className="relative w-full h-8 rounded-full border border-gray-300 bg-gray-100 hover:cursor-pointer"
             >
@@ -2604,14 +2748,14 @@ export default function AddProductFormClient({
             />
             <p className="text-xs text-gray-500">
               {importMode === "json"
-                ? "Drag values from the tree onto form fields."
-                : "Drag values from the first-row preview onto form fields."}
+                ? t("Drag values from the tree onto form fields.")
+                : t("Drag values from the first-row preview onto form fields.")}
             </p>
             <div className="text-xs text-gray-600">
-              <div>Imported leaves: <span className="font-medium">{importedLeafCount}</span></div>
-              <div>Mapped fields: <span className="font-medium">{mappings.length}</span></div>
+              <div>{t("Imported leaves")}: <span className="font-medium">{importedLeafCount}</span></div>
+              <div>{t("Mapped fields")}: <span className="font-medium">{mappings.length}</span></div>
               {importMode === "table" && (
-                <div>Rows detected: <span className="font-medium">{tabularRows.length}</span></div>
+                <div>{t("Rows detected")}: <span className="font-medium">{tabularRows.length}</span></div>
               )}
             </div>
             {importError && (
@@ -2624,7 +2768,7 @@ export default function AddProductFormClient({
           <div className="mt-4 max-h-[340px] overflow-auto rounded-lg border border-gray-200 bg-gray-50 p-2">
             {importedJson == null ? (
               <p className="text-xs text-gray-500">
-                {importMode === "json" ? "No JSON loaded." : "No CSV/XLSX loaded."}
+                {importMode === "json" ? t("No JSON loaded.") : t("No CSV/XLSX loaded.")}
               </p>
             ) : (
               <JsonTree
@@ -2633,29 +2777,30 @@ export default function AddProductFormClient({
                 onLeafDrag={handleLeafDragStart}
                 onLeafClick={handleLeafClick}
                 leafUsageByPath={leafUsageByPath}
+                t={t}
               />
             )}
           </div>
           {importMode === "table" && tabularRows.length > 0 && (
             <p className="mt-2 text-[11px] text-gray-500">
-              First row is shown above as the mapping example. All mappings apply automatically to every row.
+              {t("First row is shown above as the mapping example. All mappings apply automatically to every row.")}
             </p>
           )}
 
           <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-gray-600">
             <span className="inline-flex items-center gap-1 rounded border border-[var(--color-brand-pink)] bg-[var(--color-brand-pink-super-light)] px-2 py-0.5">
-              Mapped field
+              {t("Mapped field")}
             </span>
             <span className="inline-flex items-center gap-1 rounded border border-[var(--color-brand-blue)] bg-[var(--color-brand-blue-super-light)] px-2 py-0.5">
-              Custom field
+              {t("Custom field")}
             </span>
           </div>
 
           <div className="mt-4">
-            <h3 className="text-xs font-semibold text-gray-700 mb-2">Current Mappings</h3>
+            <h3 className="text-xs font-semibold text-gray-700 mb-2">{t("Current Mappings")}</h3>
             <div className="max-h-[220px] overflow-auto space-y-2">
               {mappings.length === 0 && (
-                <p className="text-xs text-gray-500">No mappings yet.</p>
+                <p className="text-xs text-gray-500">{t("No mappings yet.")}</p>
               )}
               {mappings.map((mapping) => (
                 <div key={`${mapping.targetField}:${mapping.sourcePath}`} className="rounded-md border border-[var(--color-brand-pink)] bg-[var(--color-brand-pink)]/6 px-2 py-1">
@@ -2670,7 +2815,7 @@ export default function AddProductFormClient({
                       onClick={() => removeMapping(mapping.sourcePath)}
                       className="text-red-500 hover:text-red-700 text-[11px] hover:cursor-pointer"
                     >
-                      Remove
+                      {t("Remove")}
                     </button>
                   </div>
                 </div>
@@ -2685,12 +2830,11 @@ export default function AddProductFormClient({
           onClick={() => router.push("/")}
           className="text-sm text-gray-500 hover:text-gray-700 mb-4 inline-flex items-center gap-1 hover:cursor-pointer"
         >
-          ← Back to Dashboard
+          {`← ${t("addProduct.back")}`}
         </button>
-        <h1 className="text-2xl font-bold text-gray-900">Add New Product</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{t("addProduct.title")}</h1>
         <p className="mt-1 text-sm text-gray-500">
-          Fill in the product information organized by thematic data groups and
-          data layers.
+          {t("addProduct.subtitle")}
         </p>
       </div>
 
@@ -2716,13 +2860,13 @@ export default function AddProductFormClient({
                       : "bg-white border-gray-200 text-gray-600 hover:bg-gray-50 hover:cursor-pointer"
                   }`}
                 >
-                  {index + 1}. {step}
+                  {index + 1}. {sectionLabel(step)}
                 </button>
               );
             })}
           </div>
           <div className="flex items-center justify-between text-xs text-gray-500">
-            <span>Step {currentSectionStep + 1} of {sectionSteps.length}</span>
+            <span>{`${t("addProduct.step")} ${currentSectionStep + 1} ${t("addProduct.of")} ${sectionSteps.length}`}</span>
             <div className="flex items-center gap-3">
               {/* <span>{sectionSteps[currentSectionStep]}</span> */}
               <button
@@ -2730,7 +2874,7 @@ export default function AddProductFormClient({
                 onClick={clearCurrentStep}
                 className="px-2 py-1 border border-gray-300 rounded text-[11px] text-gray-600 disabled:opacity-50 hover:cursor-pointer"
               >
-                Clear Current Step
+                {t("addProduct.clearCurrent")}
               </button>
             </div>
           </div>
@@ -2761,12 +2905,12 @@ export default function AddProductFormClient({
 
 {/* ── USAGE & MAINTENANCE ──────────────────────────────────────── */}
         {currentSectionStep === 5 && (
-        <CollapsibleSection title="Usage & Maintenance" defaultOpen>
+        <CollapsibleSection title={t("Usage & Maintenance")} defaultOpen>
           <DataLayerGroup layer="Downstream Data">
             <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
               <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
                 <span className="flex items-center justify-between">
-                  Maintenance Log
+                  {t("Maintenance Log")}
                   <svg
                     className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
                     fill="none"
@@ -2780,9 +2924,10 @@ export default function AddProductFormClient({
               </summary>
               <div className="space-y-4 px-4 pb-4 pt-2">
               <EventArrayEditor
-                label="Maintenance Events"
+                label={t("Maintenance Events")}
                 events={form.maintenanceLog}
                 onChange={(v) => set("maintenanceLog", v)}
+                t={t}
               />
               </div>
             </details>
@@ -2790,7 +2935,7 @@ export default function AddProductFormClient({
             <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
               <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
                 <span className="flex items-center justify-between">
-                  Usage History
+                  {t("Usage History")}
                   <svg
                     className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
                     fill="none"
@@ -2804,9 +2949,10 @@ export default function AddProductFormClient({
               </summary>
               <div className="space-y-4 px-4 pb-4 pt-2">
               <EventArrayEditor
-                label="Usage Events"
+                label={t("Usage Events")}
                 events={form.usageHistory}
                 onChange={(v) => set("usageHistory", v)}
+                t={t}
               />
               </div>
             </details>
@@ -2814,7 +2960,7 @@ export default function AddProductFormClient({
             <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
               <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
                 <span className="flex items-center justify-between">
-                  Incidents & Errors
+                  {t("Incidents & Errors")}
                   <svg
                     className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
                     fill="none"
@@ -2828,9 +2974,10 @@ export default function AddProductFormClient({
               </summary>
               <div className="space-y-4 px-4 pb-4 pt-2">
               <EventArrayEditor
-                label="Incident Events"
+                label={t("Incident Events")}
                 events={form.incidentsAndErrors}
                 onChange={(v) => set("incidentsAndErrors", v)}
+                t={t}
               />
               </div>
             </details>
@@ -2849,7 +2996,7 @@ export default function AddProductFormClient({
               disabled={currentSectionStep === 0}
               className="px-3 py-1.5 text-sm border border-gray-300 rounded-md disabled:opacity-50 hover:cursor-pointer"
             >
-              Previous Section
+              {t("addProduct.previous")}
             </button>
             <button
               type="button"
@@ -2861,7 +3008,7 @@ export default function AddProductFormClient({
               disabled={currentSectionStep === sectionSteps.length - 1}
               className="px-3 py-1.5 text-sm border border-gray-300 rounded-md disabled:opacity-50 hover:cursor-pointer"
             >
-              Next Section
+              {t("addProduct.next")}
             </button>
           </div>
 
@@ -2871,7 +3018,7 @@ export default function AddProductFormClient({
             disabled={submitting}
             className="px-6 py-3 bg-[var(--color-brand-pink)] text-white font-bold rounded-xl hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-colors hover:cursor-pointer"
           >
-            {submitting ? "Submitting…" : "Add Product"}
+            {submitting ? t("addProduct.submitting") : t("addProduct.submit")}
           </button>
           {error && (
             <div className="flex items-center gap-2 text-red-600 text-sm">
@@ -2902,7 +3049,7 @@ export default function AddProductFormClient({
                   clipRule="evenodd"
                 />
               </svg>
-              Product added successfully! Redirecting…
+              {t("Product added successfully! Redirecting…")}
             </div>
           )}
           </div>

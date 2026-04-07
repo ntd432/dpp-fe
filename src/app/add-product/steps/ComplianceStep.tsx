@@ -5,6 +5,7 @@ import DataPointComponent from "@/components/DataPointComponent";
 
 export function ComplianceStep({ shared }: Readonly<{ shared: any }>) {
   const {
+    t,
     form,
     set,
     canUseLeaf,
@@ -16,51 +17,56 @@ export function ComplianceStep({ shared }: Readonly<{ shared: any }>) {
   } = shared;
 
   return (
-    <CollapsibleSection title="Compliance" defaultOpen>
+    <CollapsibleSection title={t("Compliance")} defaultOpen>
       <DataLayerGroup layer="Regulatory">
-        <DataPointComponent label="Regulations">
+        <DataPointComponent label={t("Regulations")}>
           <RegulationArrayEditor
             items={form.regulations}
             onChange={(v: typeof form.regulations) => set("regulations", v)}
+            t={t}
           />
         </DataPointComponent>
 
-        <DataPointComponent label="Product Labels">
+        <DataPointComponent label={t("Product Labels")}>
           <LabelArrayEditor
             items={form.productLabels}
             onChange={(v: typeof form.productLabels) => set("productLabels", v)}
+            t={t}
           />
         </DataPointComponent>
       </DataLayerGroup>
 
       <DataLayerGroup layer="Sectoral">
-        <DataPointComponent label="Product Status Assessment">
+        <DataPointComponent label={t("Product Status Assessment")}>
           <FormField
-            label="Assessment URL"
+            label={t("Assessment URL")}
             value={form.productStatusAssessment}
             onChange={(v) => set("productStatusAssessment", v)}
+            fieldKey="productStatusAssessment"
             type="url"
           />
         </DataPointComponent>
       </DataLayerGroup>
 
       <DataLayerGroup layer="Commercial">
-        <DataPointComponent label="Certifications">
+        <DataPointComponent label={t("Certifications")}>
           <NameDescArrayEditor
-            label="Certifications"
+            label={t("Certifications")}
             items={form.certifications}
             onChange={(v: typeof form.certifications) => set("certifications", v)}
-            namePlaceholder="Certification name"
+            namePlaceholder={t("Certification name")}
+            t={t}
           />
         </DataPointComponent>
 
-        <DataPointComponent label="Data Management Method">
+        <DataPointComponent label={t("Data Management Method")}>
           <div className="grid grid-cols-2 gap-4">
-            <FormField label="Name" value={form.dmmName} onChange={(v) => set("dmmName", v)} />
+            <FormField label={t("Name")} value={form.dmmName} onChange={(v) => set("dmmName", v)} fieldKey="dmmName" />
             <FormField
-              label="Identifier"
+              label={t("Identifier")}
               value={form.dmmIdentifier}
               onChange={(v) => set("dmmIdentifier", v)}
+              fieldKey="dmmIdentifier"
             />
           </div>
         </DataPointComponent>
@@ -68,12 +74,13 @@ export function ComplianceStep({ shared }: Readonly<{ shared: any }>) {
 
       <DataLayerGroup layer="Custom Fields">
         <CustomFieldsEditor
-          title="Compliance Custom Fields"
+          title={t("Compliance Custom Fields")}
           items={form.complianceCustomFields}
           onChange={(items: typeof form.complianceCustomFields) =>
             setCustomGroupFields("complianceCustomFields", items)
           }
           canUseLeaf={canUseLeaf}
+          t={t}
         />
       </DataLayerGroup>
     </CollapsibleSection>

@@ -5,6 +5,7 @@ interface FormFieldProps {
   type?: "text" | "number" | "url" | "date" | "datetime-local";
   placeholder?: string;
   required?: boolean;
+  fieldKey?: string;
 }
 
 export function FormField({
@@ -14,6 +15,7 @@ export function FormField({
   type = "text",
   placeholder,
   required,
+  fieldKey,
 }: Readonly<FormFieldProps>) {
   return (
     <div>
@@ -23,6 +25,8 @@ export function FormField({
       </label>
       <input
         type={type}
+        name={fieldKey}
+        data-field-key={fieldKey}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
@@ -39,6 +43,7 @@ interface TextAreaFieldProps {
   onChange: (value: string) => void;
   placeholder?: string;
   rows?: number;
+  fieldKey?: string;
 }
 
 export function TextAreaField({
@@ -47,6 +52,7 @@ export function TextAreaField({
   onChange,
   placeholder,
   rows = 3,
+  fieldKey,
 }: Readonly<TextAreaFieldProps>) {
   return (
     <div>
@@ -54,6 +60,8 @@ export function TextAreaField({
         {label}
       </label>
       <textarea
+        name={fieldKey}
+        data-field-key={fieldKey}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}

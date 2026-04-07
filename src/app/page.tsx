@@ -1,10 +1,12 @@
+"use client";
+
 import Link from "next/link";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const categories = [
   {
-    title: "Passport Information",
-    description:
-      "Passport identifier, granularity, data carrier format, issuer, product batch and serial number.",
+    titleKey: "dashboard.passportInfo.title",
+    descriptionKey: "dashboard.passportInfo.desc",
     href: "/dpp-information",
     icon: (
       <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -14,9 +16,8 @@ const categories = [
     color: "cyan",
   },
   {
-    title: "Product Information",
-    description:
-      "Product names, serial numbers, GTINs, country of origin, and production dates.",
+    titleKey: "dashboard.productInfo.title",
+    descriptionKey: "dashboard.productInfo.desc",
     href: "/product-information",
     icon: (
       <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -26,9 +27,8 @@ const categories = [
     color: "blue",
   },
   {
-    title: "Sustainability",
-    description:
-      "Environmental footprint, resource consumption, and sustainability declarations.",
+    titleKey: "dashboard.sustainability.title",
+    descriptionKey: "dashboard.sustainability.desc",
     href: "/sustainability",
     icon: (
       <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -38,9 +38,8 @@ const categories = [
     color: "emerald",
   },
   {
-    title: "Usage & Maintenance",
-    description:
-      "Usage history, repaired/maintenance history.",
+    titleKey: "dashboard.usage.title",
+    descriptionKey: "dashboard.usage.desc",
     href: "/usage-and-maintenance",
     icon: (
       <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -50,9 +49,8 @@ const categories = [
     color: "amber",
   },
   {
-    title: "End-of-Life and Recovery",
-    description:
-      "Expected potential of products that can be reused, recycled, etc. Documentation on collection, sorting, and treatment during end-of-life.",
+    titleKey: "dashboard.eol.title",
+    descriptionKey: "dashboard.eol.desc",
     href: "/end-of-life",
     icon: (
       <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -62,9 +60,8 @@ const categories = [
     color: "rose",
   },
   {
-    title: "Supply Chain Data",
-    description:
-      "Information about partners in the value chain from upstream suppliers to downstream recycling partners, including supply chain activities.",
+    titleKey: "dashboard.supply.title",
+    descriptionKey: "dashboard.supply.desc",
     href: "/supply-chain",
     icon: (
       <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -74,9 +71,8 @@ const categories = [
     color: "indigo",
   },
   {
-    title: "Guidelines & Manuals",
-    description:
-      "Product manuals and guidelines throughout the supply chain, from safety instructions for end users to transport guidelines.",
+    titleKey: "dashboard.guidelines.title",
+    descriptionKey: "dashboard.guidelines.desc",
     href: "/guidelines",
     icon: (
       <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -86,9 +82,8 @@ const categories = [
     color: "teal",
   },
   {
-    title: "Compliance",
-    description:
-      "Regulations, certifications, labels, and data management methods.",
+    titleKey: "dashboard.compliance.title",
+    descriptionKey: "dashboard.compliance.desc",
     href: "/compliance",
     icon: (
       <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -157,6 +152,7 @@ const colorStyles: Record<string, { bg: string; text: string; border: string; ho
 };
 
 export default function DashboardPage() {
+  const { t } = useLanguage();
   const firstRow = categories.slice(0, 4);
   const secondRow = categories.slice(4, 8);
 
@@ -164,33 +160,28 @@ export default function DashboardPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="text-center mb-12">
         <h1 className="text-3xl font-bold text-gray-900">
-          Digital Product Passport
+          {t("dashboard.title")}
         </h1>
         <p className="text-gray-500 mt-3 max-w-2xl mx-auto">
-          Access comprehensive product information including identification,
-          regulatory compliance, and environmental sustainability data.
+          {t("dashboard.subtitle")}
         </p>
       </div>
 
       <div className="text-center mb-12">
         <h1 className="text-3xl font-bold text-gray-900">
-          What is a Digital Product Passport?
+          {t("dashboard.whatIsTitle")}
         </h1>
         <p className="text-gray-500 mt-3 max-w-2xl mx-auto">
-          A Digital Product Passport (DPP) is a structured digital record that follows a product across
-          its lifecycle. It connects key facts such as identity, materials, compliance, sustainability,
-          maintenance history, and end-of-life guidance so everyone in the value chain can access trusted data.
+          {t("dashboard.whatIsBody")}
         </p>
       </div>
 
       <div className="text-center mb-12">
         <h1 className="text-3xl font-bold text-gray-900">
-          What can you see in a Digital Product Passport?
+          {t("dashboard.whatSeeTitle")}
         </h1>
         <p className="text-gray-500 mt-3 max-w-2xl mx-auto">
-          You can explore product identification, technical and commercial information,
-          environmental performance, maintenance and repair records, compliance evidence,
-          supply chain actors, and end-of-life recovery instructions in one place.
+          {t("dashboard.whatSeeBody")}
         </p>
       </div>
 
@@ -209,13 +200,13 @@ export default function DashboardPage() {
                 {cat.icon}
               </div>
               <h2 className="text-xl font-semibold text-gray-900 mb-2">
-                {cat.title}
+                {t(cat.titleKey)}
               </h2>
               <p className="text-gray-500 text-sm leading-relaxed">
-                {cat.description}
+                {t(cat.descriptionKey)}
               </p>
               <span className={`inline-flex items-center mt-auto pt-4 text-sm font-medium ${style.text}`}>
-                View details
+                {t("dashboard.viewDetails")}
                 <svg className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
@@ -240,13 +231,13 @@ export default function DashboardPage() {
                 {cat.icon}
               </div>
               <h2 className="text-xl font-semibold text-gray-900 mb-2">
-                {cat.title}
+                {t(cat.titleKey)}
               </h2>
               <p className="text-gray-500 text-sm leading-relaxed">
-                {cat.description}
+                {t(cat.descriptionKey)}
               </p>
               <span className={`inline-flex items-center mt-auto pt-4 text-sm font-medium ${style.text}`}>
-                View details
+                {t("dashboard.viewDetails")}
                 <svg className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
