@@ -1,8 +1,13 @@
+"use client";
+
+import { useLanguage } from "@/contexts/LanguageContext";
+
 export default function DataPointComponent({
   label,
   children,
   isEmpty = false,
 }: Readonly<{ label: string; children: React.ReactNode; isEmpty?: boolean }>) {
+  const { t } = useLanguage();
   const hasRenderableChildren = children !== null && children !== undefined;
 
   return (
@@ -30,7 +35,7 @@ export default function DataPointComponent({
         </span>
       </summary>
       <div className="space-y-4 px-4 pb-4 pt-2">
-        {!isEmpty && hasRenderableChildren ? children : <p className="text-sm text-gray-500">No data</p>}
+        {!isEmpty && hasRenderableChildren ? children : <p className="text-sm text-gray-500">{t("No data")}</p>}
       </div>
     </details>
   );

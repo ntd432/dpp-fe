@@ -80,23 +80,25 @@ function EventArrayEditor({
   label,
   events,
   onChange,
+  t,
 }: Readonly<{
   label: string;
   events: EventEntry[];
   onChange: (events: EventEntry[]) => void;
+  t: (key: string) => string;
 }>) {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <span className="block text-sm font-medium text-gray-700">{label}</span>
-        <AddEntryButton label="+ Add Entry" onClick={() => onChange([...events, emptyEvent()])} />
+        <AddEntryButton label={t("+ Add Entry")} onClick={() => onChange([...events, emptyEvent()])} />
       </div>
       {events.map((ev, i) => (
         <div key={ev._key} className="flex gap-2 items-start">
           <div className="flex-1 grid grid-cols-2 gap-2">
             <input
               type="text"
-              placeholder="Action name"
+              placeholder={t("Action name")}
               value={ev.actionName}
               onChange={(e) => updateAt(events, i, "actionName", e.target.value, onChange)}
               className={INPUT_CLASS}
@@ -109,21 +111,21 @@ function EventArrayEditor({
             />
             <input
               type="text"
-              placeholder="Action type"
+              placeholder={t("Action type")}
               value={ev.actionType}
               onChange={(e) => updateAt(events, i, "actionType", e.target.value, onChange)}
               className={INPUT_CLASS}
             />
             <input
               type="text"
-              placeholder="Location name"
+              placeholder={t("Location name")}
               value={ev.locationName}
               onChange={(e) => updateAt(events, i, "locationName", e.target.value, onChange)}
               className={INPUT_CLASS}
             />
             <input
               type="text"
-              placeholder="Actor name"
+              placeholder={t("Actor name")}
               value={ev.actorName}
               onChange={(e) => updateAt(events, i, "actorName", e.target.value, onChange)}
               className="col-span-2 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-blue-light)] focus:border-[var(--color-brand-blue-light)]"
@@ -134,7 +136,7 @@ function EventArrayEditor({
             onClick={() => removeAt(events, i, onChange)}
             className="text-red-400 hover:text-red-600 px-2 py-2 hover:cursor-pointer"
           >
-            x
+            {t("Remove")}
           </button>
         </div>
       ))}
@@ -146,30 +148,32 @@ function ParticipantArrayEditor({
   label,
   participants,
   onChange,
+  t,
 }: Readonly<{
   label: string;
   participants: ParticipantEntry[];
   onChange: (participants: ParticipantEntry[]) => void;
+  t: (key: string) => string;
 }>) {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <span className="block text-sm font-medium text-gray-700">{label}</span>
-        <AddEntryButton label="+ Add Entry" onClick={() => onChange([...participants, emptyParticipant()])} />
+        <AddEntryButton label={t("+ Add Entry")} onClick={() => onChange([...participants, emptyParticipant()])} />
       </div>
       {participants.map((participant, i) => (
         <div key={participant._key} className="flex gap-2 items-start">
           <div className="flex-1 grid grid-cols-2 gap-2">
             <input
               type="text"
-              placeholder="Name"
+              placeholder={t("Name")}
               value={participant.name}
               onChange={(e) => updateAt(participants, i, "name", e.target.value, onChange)}
               className={INPUT_CLASS}
             />
             <input
               type="url"
-              placeholder="URL"
+              placeholder={t("URL")}
               value={participant.url}
               onChange={(e) => updateAt(participants, i, "url", e.target.value, onChange)}
               className={INPUT_CLASS}
@@ -180,7 +184,7 @@ function ParticipantArrayEditor({
             onClick={() => removeAt(participants, i, onChange)}
             className="text-red-400 hover:text-red-600 px-2 py-2 hover:cursor-pointer"
           >
-            x
+            {t("Remove")}
           </button>
         </div>
       ))}
@@ -244,20 +248,20 @@ export default function AddDppFormClient({
   function validateRequiredFields(): string[] {
     const errors: string[] = [];
 
-    if (!form.productBatchNumber.trim()) errors.push("Batch Number is required.");
-    if (!form.productSerialNumber.trim()) errors.push("Serial Number is required.");
-    if (!form.granularity) errors.push("DPP Granularity is required.");
-    if (!form.dataCarrierFormat) errors.push("Data Carrier Format is required.");
+    if (!form.productBatchNumber.trim()) errors.push(t("Batch Number is required."));
+    if (!form.productSerialNumber.trim()) errors.push(t("Serial Number is required."));
+    if (!form.granularity) errors.push(t("DPP Granularity is required."));
+    if (!form.dataCarrierFormat) errors.push(t("Data Carrier Format is required."));
 
     if (form.issuerMode === "existing" && !form.issuerId) {
-      errors.push("DPP Issuer is required.");
+      errors.push(t("DPP Issuer is required."));
     }
 
     if (form.issuerMode === "new" && !form.issuerName.trim()) {
-      errors.push("Organisation Name is required when adding a new issuer.");
+      errors.push(t("Organisation Name is required when adding a new issuer."));
     }
 
-    if (!form.productId) errors.push("Linked Product is required.");
+    if (!form.productId) errors.push(t("Linked Product is required."));
 
     return errors;
   }
@@ -386,20 +390,20 @@ export default function AddDppFormClient({
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <CollapsibleSection title="Digital Product Passport Information" defaultOpen>
+        <CollapsibleSection title={t("Digital Product Passport Information")} defaultOpen>
           <div className="grid grid-cols-2 gap-4">
             <FormField
-              label="Batch Number"
+              label={t("Batch Number")}
               value={form.productBatchNumber}
               onChange={(v) => set("productBatchNumber", v)}
-              placeholder="e.g. BATCH-2025-001"
+              placeholder={t("e.g. BATCH-2025-001")}
               required
             />
             <FormField
-              label="Serial Number"
+              label={t("Serial Number")}
               value={form.productSerialNumber}
               onChange={(v) => set("productSerialNumber", v)}
-              placeholder="e.g. SN-00123456"
+              placeholder={t("e.g. SN-00123456")}
               required
             />
           </div>
@@ -407,7 +411,7 @@ export default function AddDppFormClient({
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label htmlFor="granularity" className="block text-sm font-medium text-gray-700 mb-1">
-                DPP Granularity
+                {t("DPP Granularity")}
               </label>
               <select
                 id="granularity"
@@ -416,17 +420,17 @@ export default function AddDppFormClient({
                 className={INPUT_CLASS}
                 required
               >
-                <option value="">Select granularity</option>
+                <option value="">{t("Select granularity")}</option>
                 {GRANULARITY_OPTIONS.map((g) => (
                   <option key={g} value={g}>
-                    {g.charAt(0).toUpperCase() + g.slice(1)}
+                    {t(g.charAt(0).toUpperCase() + g.slice(1))}
                   </option>
                 ))}
               </select>
             </div>
             <div>
               <label htmlFor="dataCarrierFormat" className="block text-sm font-medium text-gray-700 mb-1">
-                Data Carrier Format
+                {t("Data Carrier Format")}
               </label>
               <select
                 id="dataCarrierFormat"
@@ -435,10 +439,10 @@ export default function AddDppFormClient({
                 className={INPUT_CLASS}
                 required
               >
-                <option value="">Select format</option>
+                <option value="">{t("Select format")}</option>
                 {DATA_CARRIER_FORMAT_OPTIONS.map((f) => (
                   <option key={f} value={f}>
-                    {f}
+                    {t(f)}
                   </option>
                 ))}
               </select>
@@ -447,7 +451,7 @@ export default function AddDppFormClient({
 
           <div>
             <label htmlFor="issuer-select" className="block text-sm font-medium text-gray-700 mb-1">
-              DPP Issuer
+              {t("DPP Issuer")}
             </label>
             <select
               id="issuer-select"
@@ -468,38 +472,38 @@ export default function AddDppFormClient({
               className={INPUT_CLASS}
               required
             >
-              <option value="">Select an organisation</option>
+              <option value="">{t("Select an organisation")}</option>
               {manufacturers.map((m) => (
                 <option key={m.id} value={m.id ?? ""}>
                   {m.name ?? m.id}
                 </option>
               ))}
-              <option value="__new__">+ Add a new organisation</option>
+              <option value="__new__">{t("+ Add a new organisation")}</option>
             </select>
           </div>
 
           {form.issuerMode === "new" && (
             <div className="grid grid-cols-2 gap-4 border-l-2 border-[var(--color-brand-blue-light)] pl-3">
               <FormField
-                label="Organisation Name"
+                label={t("Organisation Name")}
                 value={""}
                 onChange={(v) => set("issuerName", v)}
-                placeholder="e.g. Acme Corp"
+                placeholder={t("e.g. Acme Corp")}
                 required
               />
               <FormField
-                label="Website URL"
+                label={t("Website URL")}
                 value={""}
                 onChange={(v) => set("issuerUrl", v)}
                 type="url"
-                placeholder="https://example.com"
+                placeholder={t("https://example.com")}
               />
             </div>
           )}
 
           <div>
             <label htmlFor="product-select" className="block text-sm font-medium text-gray-700 mb-1">
-              Linked Product to this DPP
+              {t("Linked Product to this DPP")}
             </label>
             <select
               id="product-select"
@@ -508,7 +512,7 @@ export default function AddDppFormClient({
               className={INPUT_CLASS}
               required
             >
-              <option value="">— None —</option>
+              <option value="">{t("— None —")}</option>
               {products.map((p) => (
                 <option key={p.id} value={p.id ?? ""}>
                   {p.label ?? p.id}
@@ -518,12 +522,12 @@ export default function AddDppFormClient({
           </div>
         </CollapsibleSection>
 
-        <CollapsibleSection title="Product Supply Chain Information" defaultOpen>
+        <CollapsibleSection title={t("Product Supply Chain Information")} defaultOpen>
           <DataLayerGroup layer="Regulatory">
             <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
               <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
                 <span className="flex items-center justify-between">
-                  Product Traceability
+                  {t("Product Traceability")}
                   <svg
                     className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
                     fill="none"
@@ -537,9 +541,10 @@ export default function AddDppFormClient({
               </summary>
               <div className="space-y-4 px-4 pb-4 pt-2">
                 <EventArrayEditor
-                  label="Traceability Events"
+                  label={t("Traceability Events")}
                   events={form.traceabilityEvents}
                   onChange={(v) => set("traceabilityEvents", v)}
+                  t={t}
                 />
               </div>
             </details>
@@ -549,7 +554,7 @@ export default function AddDppFormClient({
             <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
               <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
                 <span className="flex items-center justify-between">
-                  Supply Chain Partners
+                  {t("Supply Chain Partners")}
                   <svg
                     className="w-4 h-4 text-gray-500 transition-transform group-open/extension:rotate-180"
                     fill="none"
@@ -563,14 +568,16 @@ export default function AddDppFormClient({
               </summary>
               <div className="space-y-4 px-4 pb-4 pt-2">
                 <ParticipantArrayEditor
-                  label="Recycling Partner"
+                  label={t("Recycling Partner")}
                   participants={form.recyclingPartners}
                   onChange={(v) => set("recyclingPartners", v)}
+                  t={t}
                 />
                 <ParticipantArrayEditor
-                  label="Customer Return Channel"
+                  label={t("Customer Return Channel")}
                   participants={form.customerReturnChannels}
                   onChange={(v) => set("customerReturnChannels", v)}
+                  t={t}
                 />
               </div>
             </details>
