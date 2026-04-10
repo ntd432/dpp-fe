@@ -84,7 +84,7 @@ export default function Footer() {
                 <TriplyLogo/>
               </Link>
               <Link href="https://erasmus-plus.ec.europa.eu" target="_blank" rel="noopener noreferrer" title="Erasmus+ Programme">
-                <Image width={180} height={60} style={{minHeight: '50px'}} sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" src="https://erasmus-plus.ec.europa.eu/themes/contrib/oe_theme/dist/ec/images/logo/positive/logo-ec--en.svg" className="w-auto eac-site-branding-logo translate-y-[-2px] translate-x-[10px]" alt="Erasmus" decoding="async"/>
+                <Image width={180} height={60} style={{minHeight: '50px'}} sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" src="https://erasmus-plus.ec.europa.eu/themes/contrib/oe_theme/dist/ec/images/logo/positive/logo-ec--en.svg" className="h-auto eac-site-branding-logo translate-y-[-2px] translate-x-[10px]" alt="Erasmus" decoding="async"/>
               </Link>
             </div>
           </section>
