@@ -41,10 +41,9 @@ async function loadProducts(): Promise<ProductOption[]> {
 
 export default async function AddDppPage() {
   const userAgent = (await headers()).get("user-agent") ?? "";
-  const locale = normalizeLocale((await cookies()).get(LOCALE_COOKIE_KEY)?.value);
 
   if (isPhoneUserAgent(userAgent)) {
-    return <UnsupportedDevicePage locale={locale} />;
+    return <UnsupportedDevicePage/>;
   }
 
   const [manufacturers, products] = await Promise.all([
