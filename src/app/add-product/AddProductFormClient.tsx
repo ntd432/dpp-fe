@@ -23,6 +23,8 @@ import { GuidelinesStep } from "@/app/add-product/steps/GuidelinesStep";
 import { AddEntryButton } from "@/components/form/AddEntryButton";
 import { CONSUMPTION_UNITS, FOOTPRINT_UNITS, IMPACT_UNITS, MASS_UNITS } from "@/config/master-data";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { MeasurementInput } from "./CommonInputComponents";
+import { MeasurementValue } from "./InputInterfaces";
 
 const INPUT_CLASS =
   "px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-blue-light)] focus:border-[var(--color-brand-blue-light)]";
@@ -47,6 +49,7 @@ interface ImportedLeaf {
 interface FieldMapping {
   targetField: string;
   targetKey: keyof FormState;
+  targetSubField?: string;
   sourcePath: string;
   value: string;
 }
@@ -84,12 +87,6 @@ interface SubstanceEntry {
   locationWithinProduct: string;
   safeUsageInstruction: string;
   disassemblyInstruction: string;
-}
-
-interface MeasurementValue {
-  value: string;
-  unit: string;
-  customUnit: string;
 }
 
 interface RegulationEntry {
@@ -168,15 +165,21 @@ function removeAt<T>(items: T[], index: number, onChange: (items: T[]) => void) 
   onChange(items.filter((_, j) => j !== index));
 }
 
+function arrayFieldKey(fieldPrefix: string | undefined, fieldName: string): string {
+  return fieldPrefix ? `${fieldPrefix}.${fieldName}` : fieldName;
+}
+
 function EventArrayEditor({
   label,
   events,
   onChange,
+  fieldPrefix,
   t,
 }: Readonly<{
   label: string;
   events: EventEntry[];
   onChange: (events: EventEntry[]) => void;
+  fieldPrefix?: string;
   t: Translator;
 }>) {
   return (
@@ -193,12 +196,16 @@ function EventArrayEditor({
               placeholder={t("Action name")}
               value={ev.actionName}
               onChange={(e) => updateAt(events, i, "actionName", e.target.value, onChange)}
+              name={fieldPrefix ? `${fieldPrefix}.actionName` : "actionName"}
+              data-field-key={fieldPrefix ? `${fieldPrefix}.actionName` : "actionName"}
               className={INPUT_CLASS}
             />
             <input
               type="datetime-local"
               value={ev.time}
               onChange={(e) => updateAt(events, i, "time", e.target.value, onChange)}
+              name={fieldPrefix ? `${fieldPrefix}.time` : "time"}
+              data-field-key={fieldPrefix ? `${fieldPrefix}.time` : "time"}
               className={INPUT_CLASS}
             />
             <input
@@ -206,6 +213,8 @@ function EventArrayEditor({
               placeholder={t("Action type")}
               value={ev.actionType}
               onChange={(e) => updateAt(events, i, "actionType", e.target.value, onChange)}
+              name={fieldPrefix ? `${fieldPrefix}.actionType` : "actionType"}
+              data-field-key={fieldPrefix ? `${fieldPrefix}.actionType` : "actionType"}
               className={INPUT_CLASS}
             />
             <input
@@ -213,6 +222,8 @@ function EventArrayEditor({
               placeholder={t("Location name")}
               value={ev.locationName}
               onChange={(e) => updateAt(events, i, "locationName", e.target.value, onChange)}
+              name={fieldPrefix ? `${fieldPrefix}.locationName` : "locationName"}
+              data-field-key={fieldPrefix ? `${fieldPrefix}.locationName` : "locationName"}
               className={INPUT_CLASS}
             />
             <input
@@ -220,8 +231,8 @@ function EventArrayEditor({
               placeholder={t("Actor name")}
               value={ev.actorName}
               onChange={(e) => updateAt(events, i, "actorName", e.target.value, onChange)}
-              name="actorName"
-              data-field-key="actorName"
+              name={fieldPrefix ? `${fieldPrefix}.actorName` : "actorName"}
+              data-field-key={fieldPrefix ? `${fieldPrefix}.actorName` : "actorName"}
               className="col-span-2 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-blue-light)] focus:border-[var(--color-brand-blue-light)]"
             />
           </div>
@@ -244,6 +255,7 @@ function ComponentArrayEditor({
   onChange,
   organizations = [],
   showPercentage = true,
+  fieldPrefix,
   t,
 }: Readonly<{
   label: string;
@@ -251,8 +263,19 @@ function ComponentArrayEditor({
   onChange: (items: ComponentEntry[]) => void;
   organizations?: ManufacturerOption[];
   showPercentage?: boolean;
+  fieldPrefix?: string;
   t: Translator;
 }>) {
+  const componentNameKey = arrayFieldKey(fieldPrefix, "componentName");
+  const componentReferenceKey = arrayFieldKey(fieldPrefix, "componentReference");
+  const componentUriKey = arrayFieldKey(fieldPrefix, "componentURI");
+  const componentSupplierKey = arrayFieldKey(fieldPrefix, "componentSupplierRef");
+  const modeKey = arrayFieldKey(fieldPrefix, "mode");
+  const componentPercentageKey = arrayFieldKey(fieldPrefix, "componentPercentage");
+  const componentCountValueKey = arrayFieldKey(fieldPrefix, "componentCountValue");
+  const componentCountUnitKey = arrayFieldKey(fieldPrefix, "componentCountUnit");
+  const componentCountCustomUnitKey = arrayFieldKey(fieldPrefix, "componentCountCustomUnit");
+
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
@@ -281,8 +304,8 @@ function ComponentArrayEditor({
               placeholder={t("Component name")}
               value={m.componentName}
               onChange={(e) => updateAt(items, i, "componentName", e.target.value, onChange)}
-              name="componentName"
-              data-field-key="componentName"
+              name={componentNameKey}
+              data-field-key={componentNameKey}
               className={INPUT_CLASS}
             />
             <input
@@ -290,8 +313,8 @@ function ComponentArrayEditor({
               placeholder={t("Component reference")}
               value={m.componentReference}
               onChange={(e) => updateAt(items, i, "componentReference", e.target.value, onChange)}
-              name="componentReference"
-              data-field-key="componentReference"
+              name={componentReferenceKey}
+              data-field-key={componentReferenceKey}
               className={INPUT_CLASS}
             />
             <input
@@ -299,15 +322,15 @@ function ComponentArrayEditor({
               placeholder={t("Component URI")}
               value={m.componentURI}
               onChange={(e) => updateAt(items, i, "componentURI", e.target.value, onChange)}
-              name="componentURI"
-              data-field-key="componentURI"
+              name={componentUriKey}
+              data-field-key={componentUriKey}
               className={INPUT_CLASS}
             />
             <div>
               <select
                 id={`component-supplier-${m._key}`}
-                name="componentSupplierRef"
-                data-field-key="componentSupplierRef"
+                name={componentSupplierKey}
+                data-field-key={componentSupplierKey}
                 value={m.componentSupplierRef}
                 onChange={(e) => updateAt(items, i, "componentSupplierRef", e.target.value, onChange)}
                 className={INPUT_CLASS}
@@ -328,8 +351,8 @@ function ComponentArrayEditor({
           {showPercentage && (
             <div className="grid grid-cols-1 md:grid-cols-4 gap-2 items-center">
               <select
-                name="mode"
-                data-field-key="mode"
+                name={modeKey}
+                data-field-key={modeKey}
                 value={m.mode}
                 onChange={(e) =>
                   updateAt(
@@ -353,8 +376,8 @@ function ComponentArrayEditor({
                   onChange={(e) =>
                     updateAt(items, i, "componentPercentage", e.target.value, onChange)
                   }
-                  name="componentPercentage"
-                  data-field-key="componentPercentage"
+                    name={componentPercentageKey}
+                    data-field-key={componentPercentageKey}
                   className={INPUT_CLASS}
                 />
               ) : (
@@ -367,13 +390,13 @@ function ComponentArrayEditor({
                     onChange={(e) =>
                       updateAt(items, i, "componentCountValue", e.target.value, onChange)
                     }
-                    name="componentCountValue"
-                    data-field-key="componentCountValue"
+                    name={componentCountValueKey}
+                    data-field-key={componentCountValueKey}
                     className={INPUT_CLASS}
                   />
                   <select
-                    name="componentCountUnit"
-                    data-field-key="componentCountUnit"
+                    name={componentCountUnitKey}
+                    data-field-key={componentCountUnitKey}
                     value={m.componentCountUnit}
                     onChange={(e) =>
                       updateAt(items, i, "componentCountUnit", e.target.value, onChange)
@@ -404,8 +427,8 @@ function ComponentArrayEditor({
                       onChange,
                     )
                   }
-                  name="componentCountCustomUnit"
-                  data-field-key="componentCountCustomUnit"
+                  name={componentCountCustomUnitKey}
+                  data-field-key={componentCountCustomUnitKey}
                   className={INPUT_CLASS}
                 />
               )}
@@ -431,13 +454,25 @@ function SubstanceArrayEditor({
   label,
   items,
   onChange,
+  fieldPrefix,
   t,
 }: Readonly<{
   label: string;
   items: SubstanceEntry[];
   onChange: (items: SubstanceEntry[]) => void;
+  fieldPrefix?: string;
   t: Translator;
 }>) {
+  const substanceNameKey = arrayFieldKey(fieldPrefix, "substanceName");
+  const iupacNameKey = arrayFieldKey(fieldPrefix, "iupacName");
+  const ecNumberKey = arrayFieldKey(fieldPrefix, "ecNumber");
+  const casNumberKey = arrayFieldKey(fieldPrefix, "casNumber");
+  const concentrationLevelKey = arrayFieldKey(fieldPrefix, "concentrationLevel");
+  const locationWithinProductKey = arrayFieldKey(fieldPrefix, "locationWithinProduct");
+  const substanceDescriptionKey = arrayFieldKey(fieldPrefix, "substanceDescription");
+  const safeUsageInstructionKey = arrayFieldKey(fieldPrefix, "safeUsageInstruction");
+  const disassemblyInstructionKey = arrayFieldKey(fieldPrefix, "disassemblyInstruction");
+
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
@@ -465,8 +500,8 @@ function SubstanceArrayEditor({
             placeholder={t("Substance name")}
             value={item.substanceName}
             onChange={(e) => updateAt(items, i, "substanceName", e.target.value, onChange)}
-            name="substanceName"
-            data-field-key="substanceName"
+            name={substanceNameKey}
+            data-field-key={substanceNameKey}
             className={INPUT_CLASS}
           />
           <input
@@ -474,8 +509,8 @@ function SubstanceArrayEditor({
             placeholder={t("IUPAC name")}
             value={item.iupacName}
             onChange={(e) => updateAt(items, i, "iupacName", e.target.value, onChange)}
-            name="iupacName"
-            data-field-key="iupacName"
+            name={iupacNameKey}
+            data-field-key={iupacNameKey}
             className={INPUT_CLASS}
           />
           <input
@@ -483,8 +518,8 @@ function SubstanceArrayEditor({
             placeholder={t("EC number")}
             value={item.ecNumber}
             onChange={(e) => updateAt(items, i, "ecNumber", e.target.value, onChange)}
-            name="ecNumber"
-            data-field-key="ecNumber"
+            name={ecNumberKey}
+            data-field-key={ecNumberKey}
             className={INPUT_CLASS}
           />
           <input
@@ -492,8 +527,8 @@ function SubstanceArrayEditor({
             placeholder={t("CAS number")}
             value={item.casNumber}
             onChange={(e) => updateAt(items, i, "casNumber", e.target.value, onChange)}
-            name="casNumber"
-            data-field-key="casNumber"
+            name={casNumberKey}
+            data-field-key={casNumberKey}
             className={INPUT_CLASS}
           />
           <input
@@ -501,8 +536,8 @@ function SubstanceArrayEditor({
             placeholder={t("Concentration level")}
             value={item.concentrationLevel}
             onChange={(e) => updateAt(items, i, "concentrationLevel", e.target.value, onChange)}
-            name="concentrationLevel"
-            data-field-key="concentrationLevel"
+            name={concentrationLevelKey}
+            data-field-key={concentrationLevelKey}
             className={INPUT_CLASS}
           />
           <input
@@ -510,8 +545,8 @@ function SubstanceArrayEditor({
             placeholder={t("Location within product")}
             value={item.locationWithinProduct}
             onChange={(e) => updateAt(items, i, "locationWithinProduct", e.target.value, onChange)}
-            name="locationWithinProduct"
-            data-field-key="locationWithinProduct"
+            name={locationWithinProductKey}
+            data-field-key={locationWithinProductKey}
             className={INPUT_CLASS}
           />
           <input
@@ -519,8 +554,8 @@ function SubstanceArrayEditor({
             placeholder={t("Substance description")}
             value={item.substanceDescription}
             onChange={(e) => updateAt(items, i, "substanceDescription", e.target.value, onChange)}
-            name="substanceDescription"
-            data-field-key="substanceDescription"
+            name={substanceDescriptionKey}
+            data-field-key={substanceDescriptionKey}
             className={INPUT_LARGE_CLASS}
           />    
           <input
@@ -528,8 +563,8 @@ function SubstanceArrayEditor({
             placeholder={t("Safe usage instruction")}
             value={item.safeUsageInstruction}
             onChange={(e) => updateAt(items, i, "safeUsageInstruction", e.target.value, onChange)}
-            name="safeUsageInstruction"
-            data-field-key="safeUsageInstruction"
+            name={safeUsageInstructionKey}
+            data-field-key={safeUsageInstructionKey}
             className={INPUT_LARGE_CLASS}
           />
           <input
@@ -537,8 +572,8 @@ function SubstanceArrayEditor({
             placeholder={t("Disassembly instruction")}
             value={item.disassemblyInstruction}
             onChange={(e) => updateAt(items, i, "disassemblyInstruction", e.target.value, onChange)}
-            name="disassemblyInstruction"
-            data-field-key="disassemblyInstruction"
+            name={disassemblyInstructionKey}
+            data-field-key={disassemblyInstructionKey}
             className={INPUT_LARGE_CLASS}
           />
           <div className="md:col-span-2 flex justify-end">
@@ -559,10 +594,12 @@ function SubstanceArrayEditor({
 function RegulationArrayEditor({
   items,
   onChange,
+  fieldPrefix = "regulations",
   t,
 }: Readonly<{
   items: RegulationEntry[];
   onChange: (items: RegulationEntry[]) => void;
+  fieldPrefix?: string;
   t: Translator;
 }>) {
   return (
@@ -578,8 +615,8 @@ function RegulationArrayEditor({
             placeholder={t("Regulation name")}
             value={entry.name}
             onChange={(e) => updateAt(items, i, "name", e.target.value, onChange)}
-            name="name"
-            data-field-key="name"
+            name={`${fieldPrefix}.name`}
+            data-field-key={`${fieldPrefix}.name`}
             className={`flex-1 ${INPUT_CLASS}`}
           />
           <input
@@ -587,8 +624,8 @@ function RegulationArrayEditor({
             placeholder={t("Regulation identifier")}
             value={entry.identifier}
             onChange={(e) => updateAt(items, i, "identifier", e.target.value, onChange)}
-            name="identifier"
-            data-field-key="identifier"
+            name={`${fieldPrefix}.identifier`}
+            data-field-key={`${fieldPrefix}.identifier`}
             className={`flex-1 ${INPUT_CLASS}`}
           />
           <button
@@ -608,6 +645,7 @@ function NameDescArrayEditor({
   label,
   items,
   onChange,
+  fieldPrefix,
   namePlaceholder = "Name",
   descPlaceholder = "Description",
   addLabel = "+ Add Entry",
@@ -616,6 +654,7 @@ function NameDescArrayEditor({
   label: string;
   items: NameDescEntry[];
   onChange: (items: NameDescEntry[]) => void;
+  fieldPrefix?: string;
   namePlaceholder?: string;
   descPlaceholder?: string;
   addLabel?: string;
@@ -634,8 +673,8 @@ function NameDescArrayEditor({
             placeholder={namePlaceholder}
             value={s.name}
             onChange={(e) => updateAt(items, i, "name", e.target.value, onChange)}
-            name="name"
-            data-field-key="name"
+            name={fieldPrefix ? `${fieldPrefix}.name` : "name"}
+            data-field-key={fieldPrefix ? `${fieldPrefix}.name` : "name"}
             className={`flex-1 ${INPUT_CLASS}`}
           />
           <input
@@ -643,8 +682,8 @@ function NameDescArrayEditor({
             placeholder={descPlaceholder}
             value={s.description}
             onChange={(e) => updateAt(items, i, "description", e.target.value, onChange)}
-            name="description"
-            data-field-key="description"
+            name={fieldPrefix ? `${fieldPrefix}.description` : "description"}
+            data-field-key={fieldPrefix ? `${fieldPrefix}.description` : "description"}
             className={`flex-1 ${INPUT_CLASS}`}
           />
           <button
@@ -663,10 +702,12 @@ function NameDescArrayEditor({
 function LabelArrayEditor({
   items,
   onChange,
+  fieldPrefix = "productLabels",
   t,
 }: Readonly<{
   items: LabelEntry[];
   onChange: (items: LabelEntry[]) => void;
+  fieldPrefix?: string;
   t: Translator;
 }>) {
   return (
@@ -684,8 +725,8 @@ function LabelArrayEditor({
             placeholder={t("Label name")}
             value={l.labelName}
             onChange={(e) => updateAt(items, i, "labelName", e.target.value, onChange)}
-            name="labelName"
-            data-field-key="labelName"
+            name={`${fieldPrefix}.labelName`}
+            data-field-key={`${fieldPrefix}.labelName`}
             className={INPUT_CLASS}
           />
           <input
@@ -693,8 +734,8 @@ function LabelArrayEditor({
             placeholder={t("Label value")}
             value={l.labelValue}
             onChange={(e) => updateAt(items, i, "labelValue", e.target.value, onChange)}
-            name="labelValue"
-            data-field-key="labelValue"
+            name={`${fieldPrefix}.labelValue`}
+            data-field-key={`${fieldPrefix}.labelValue`}
             className={INPUT_CLASS}
           />
           <input
@@ -702,8 +743,8 @@ function LabelArrayEditor({
             placeholder={t("Description")}
             value={l.labelDescription}
             onChange={(e) => updateAt(items, i, "labelDescription", e.target.value, onChange)}
-            name="labelDescription"
-            data-field-key="labelDescription"
+            name={`${fieldPrefix}.labelDescription`}
+            data-field-key={`${fieldPrefix}.labelDescription`}
             className={INPUT_CLASS}
           />
           <input
@@ -711,8 +752,8 @@ function LabelArrayEditor({
             placeholder={t("Documentation URL")}
             value={l.labelDocumentation}
             onChange={(e) => updateAt(items, i, "labelDocumentation", e.target.value, onChange)}
-            name="labelDocumentation"
-            data-field-key="labelDocumentation"
+            name={`${fieldPrefix}.labelDocumentation`}
+            data-field-key={`${fieldPrefix}.labelDocumentation`}
             className={INPUT_CLASS}
           />
           <button
@@ -731,10 +772,12 @@ function LabelArrayEditor({
 function EnvironmentalFootprintArrayEditor({
   items,
   onChange,
+  fieldPrefix = "environmentalFootprints",
   t,
 }: Readonly<{
   items: EnvironmentalFootprintEntry[];
   onChange: (items: EnvironmentalFootprintEntry[]) => void;
+  fieldPrefix?: string;
   t: Translator;
 }>) {
   return (
@@ -761,8 +804,8 @@ function EnvironmentalFootprintArrayEditor({
               onChange={(e) =>
                 updateAt(items, i, "environmentalFootprintType", e.target.value, onChange)
               }
-              name="environmentalFootprintType"
-              data-field-key="environmentalFootprintType"
+              name={`${fieldPrefix}.environmentalFootprintType`}
+              data-field-key={`${fieldPrefix}.environmentalFootprintType`}
               className={INPUT_CLASS}
             />
             <input
@@ -778,8 +821,8 @@ function EnvironmentalFootprintArrayEditor({
                   onChange,
                 )
               }
-              name="environmentalFootprintMeasuringMethod"
-              data-field-key="environmentalFootprintMeasuringMethod"
+              name={`${fieldPrefix}.environmentalFootprintMeasuringMethod`}
+              data-field-key={`${fieldPrefix}.environmentalFootprintMeasuringMethod`}
               className={INPUT_CLASS}
             />
           </div>
@@ -788,6 +831,7 @@ function EnvironmentalFootprintArrayEditor({
             measurement={item.measurement}
             unitOptions={FOOTPRINT_UNITS}
             onChange={(next) => updateAt(items, i, "measurement", next, onChange)}
+            fieldKey={`${fieldPrefix}.measurement`}
             t={t}
           />
           <div className="flex justify-end">
@@ -809,11 +853,13 @@ function ResourceConsumptionArrayEditor({
   label,
   items,
   onChange,
+  fieldPrefix,
   t,
 }: Readonly<{
   label: string;
   items: ResourceConsumptionEntry[];
   onChange: (items: ResourceConsumptionEntry[]) => void;
+  fieldPrefix?: string;
   t: Translator;
 }>) {
   return (
@@ -832,8 +878,8 @@ function ResourceConsumptionArrayEditor({
             placeholder={t("Resource")}
             value={item.resource}
             onChange={(e) => updateAt(items, i, "resource", e.target.value, onChange)}
-            name="resource"
-            data-field-key="resource"
+            name={fieldPrefix ? `${fieldPrefix}.resource` : "resource"}
+            data-field-key={fieldPrefix ? `${fieldPrefix}.resource` : "resource"}
             className={INPUT_CLASS}
           />
           <MeasurementInput
@@ -841,6 +887,7 @@ function ResourceConsumptionArrayEditor({
             measurement={item.measurement}
             unitOptions={CONSUMPTION_UNITS}
             onChange={(next) => updateAt(items, i, "measurement", next, onChange)}
+            fieldKey={fieldPrefix ? `${fieldPrefix}.measurement` : undefined}
             t={t}
           />
           <div className="flex justify-end">
@@ -861,10 +908,12 @@ function ResourceConsumptionArrayEditor({
 function EnvironmentalImpactArrayEditor({
   items,
   onChange,
+  fieldPrefix = "environmentalImpacts",
   t,
 }: Readonly<{
   items: EnvironmentalImpactEntry[];
   onChange: (items: EnvironmentalImpactEntry[]) => void;
+  fieldPrefix?: string;
   t: Translator;
 }>) {
   return (
@@ -891,8 +940,8 @@ function EnvironmentalImpactArrayEditor({
               placeholder={t("Impact category")}
               value={item.impactCategory}
               onChange={(e) => updateAt(items, i, "impactCategory", e.target.value, onChange)}
-              name="impactCategory"
-              data-field-key="impactCategory"
+              name={`${fieldPrefix}.impactCategory`}
+              data-field-key={`${fieldPrefix}.impactCategory`}
               className={INPUT_CLASS}
             />
             <input
@@ -900,8 +949,8 @@ function EnvironmentalImpactArrayEditor({
               placeholder={t("Method")}
               value={item.method}
               onChange={(e) => updateAt(items, i, "method", e.target.value, onChange)}
-              name="method"
-              data-field-key="method"
+              name={`${fieldPrefix}.method`}
+              data-field-key={`${fieldPrefix}.method`}
               className={INPUT_CLASS}
             />
             <input
@@ -909,8 +958,8 @@ function EnvironmentalImpactArrayEditor({
               placeholder={t("Characterization factor")}
               value={item.characterizationFactor}
               onChange={(e) => updateAt(items, i, "characterizationFactor", e.target.value, onChange)}
-              name="characterizationFactor"
-              data-field-key="characterizationFactor"
+              name={`${fieldPrefix}.characterizationFactor`}
+              data-field-key={`${fieldPrefix}.characterizationFactor`}
               className={INPUT_CLASS}
             />
             <input
@@ -918,8 +967,8 @@ function EnvironmentalImpactArrayEditor({
               placeholder={t("Characterization model")}
               value={item.characterizationModel}
               onChange={(e) => updateAt(items, i, "characterizationModel", e.target.value, onChange)}
-              name="characterizationModel"
-              data-field-key="characterizationModel"
+              name={`${fieldPrefix}.characterizationModel`}
+              data-field-key={`${fieldPrefix}.characterizationModel`}
               className={INPUT_CLASS}
             />
           </div>
@@ -928,6 +977,7 @@ function EnvironmentalImpactArrayEditor({
             measurement={item.impactIndicator}
             unitOptions={IMPACT_UNITS}
             onChange={(next) => updateAt(items, i, "impactIndicator", next, onChange)}
+            fieldKey={`${fieldPrefix}.impactIndicator`}
             t={t}
           />
           <div className="flex justify-end">
@@ -1508,61 +1558,6 @@ function JsonTree({
   );
 }
 
-function MeasurementInput({
-  label,
-  measurement,
-  unitOptions,
-  onChange,
-  t,
-}: Readonly<{
-  label: string;
-  measurement: MeasurementValue;
-  unitOptions: string[];
-  onChange: (next: MeasurementValue) => void;
-  t: Translator;
-}>) {
-  const isCustom = measurement.unit === "custom";
-  return (
-    <div className="space-y-2">
-      <span className="block text-sm font-medium text-gray-700">{label}</span>
-      <div className="grid grid-cols-2 gap-2">
-        <input
-          type="number"
-          step="any"
-          placeholder={t(`${label} value`)}
-          value={measurement.value}
-          onChange={(e) => onChange({ ...measurement, value: e.target.value })}
-          className={INPUT_CLASS}
-        />
-        <select
-          value={measurement.unit}
-          onChange={(e) => onChange({ ...measurement, unit: e.target.value })}
-          className={INPUT_CLASS}
-        >
-          <option value="">{t("Select unit")}</option>
-          {unitOptions.map((u) => (
-            <option key={u} value={u}>
-              {u}
-            </option>
-          ))}
-          <option value="custom">{t("Custom")}</option>
-        </select>
-      </div>
-      {isCustom && (
-        <input
-          type="text"
-          placeholder={t("Enter custom unit")}
-          value={measurement.customUnit}
-          onChange={(e) =>
-            onChange({ ...measurement, customUnit: e.target.value })
-          }
-          className={INPUT_CLASS}
-        />
-      )}
-    </div>
-  );
-}
-
 function renderExtensionSection(
   section: ExtensionSectionKey,
   form: FormState,
@@ -1622,6 +1617,7 @@ function renderExtensionSection(
                   return (
                     <div key={String(field.key)} className={wrapperClass}>
                       <MeasurementInput
+                        fieldKey={String(field.key)}
                         label={t(field.label)}
                         measurement={fieldValue as MeasurementValue}
                         unitOptions={field.unitOptions ?? []}
@@ -1683,6 +1679,7 @@ function renderExtensionSection(
                     type={field.kind === "number" || field.kind === "date" ? field.kind : "text"}
                     placeholder={field.placeholder}
                     fieldKey={String(field.key)}
+                    data-field-key={String(field.key)}
                   />
                 );
               })}
@@ -1693,6 +1690,12 @@ function renderExtensionSection(
       </div>
     </details>
   );
+}
+
+function extractNumericString(value: string): string | null {
+  const normalized = value.trim().replaceAll(",", ".");
+  const match = /-?\d+(?:\.\d+)?/.exec(normalized);
+  return match ? match[0] : null;
 }
 
 function setControlledElementValue(target: EventTarget | null, value: string): string | null {
@@ -1706,6 +1709,19 @@ function setControlledElementValue(target: EventTarget | null, value: string): s
       return null;
     }
     target.value = value;
+    target.dispatchEvent(new Event("change", { bubbles: true }));
+    return target.value;
+  }
+
+  if (target instanceof HTMLInputElement && target.type === "number") {
+    const numericValue = extractNumericString(value);
+    if (numericValue === null) {
+      return null;
+    }
+
+    const nativeSetter = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(target), "value")?.set;
+    nativeSetter?.call(target, numericValue);
+    target.dispatchEvent(new Event("input", { bubbles: true }));
     target.dispatchEvent(new Event("change", { bubbles: true }));
     return target.value;
   }
@@ -1754,9 +1770,61 @@ function normalizeJsonPath(path: string): string {
   return path.replaceAll(/\[\d+\]/g, "").replaceAll(/^root\.?/g, "");
 }
 
+function resolveMeasurementSubField(candidate: string): string | undefined {
+  const subPath = candidate.split(".").slice(1).join(".");
+  return subPath || undefined;
+}
+
+function resolveFormTargetCandidate(
+  candidate: string,
+  lookup: Map<string, keyof FormState>,
+  aliases: Record<string, keyof FormState>,
+): ResolvedFormTarget | null {
+  const [baseCandidate] = candidate.split(".");
+  const normalized = normalizeFieldIdentifier(candidate);
+  const normalizedBase = normalizeFieldIdentifier(baseCandidate);
+  const targetSubField = resolveMeasurementSubField(candidate);
+
+  if (!normalized && !normalizedBase) {
+    return null;
+  }
+
+  const alias = aliases[normalized];
+  if (alias) {
+    return { targetKey: alias, targetSubField };
+  }
+
+  const direct = lookup.get(normalized);
+  if (direct) {
+    return { targetKey: direct, targetSubField };
+  }
+
+  const aliasFromBase = aliases[normalizedBase];
+  if (aliasFromBase) {
+    return { targetKey: aliasFromBase, targetSubField };
+  }
+
+  const directFromBase = lookup.get(normalizedBase);
+  if (directFromBase) {
+    return { targetKey: directFromBase, targetSubField };
+  }
+
+  return null;
+}
+
 const DRAG_MIME = "application/x-dpp-json-leaf";
 type ImportMode = "json" | "table";
 type TabularRow = Record<string, string>;
+
+interface ResolvedFormTarget {
+  targetKey: keyof FormState;
+  targetSubField?: string;
+}
+
+interface MappingLogContext {
+  source: "drag-drop" | "click-map";
+  sourcePath: string;
+}
 
 function coerceMappedValue(raw: string, sampleValue: unknown): unknown {
   if (Array.isArray(sampleValue)) {
@@ -1764,6 +1832,10 @@ function coerceMappedValue(raw: string, sampleValue: unknown): unknown {
   }
 
   if (sampleValue && typeof sampleValue === "object") {
+    if (isMeasurementValue(sampleValue)) {
+      return coerceMappedMeasurementValue(raw, sampleValue);
+    }
+
     return coerceMappedObjectValue(raw, sampleValue as Record<string, unknown>);
   }
 
@@ -1777,6 +1849,42 @@ function coerceMappedValue(raw: string, sampleValue: unknown): unknown {
   }
 
   return raw;
+}
+
+function isMeasurementValue(value: unknown): value is MeasurementValue {
+  return Boolean(
+    value &&
+      typeof value === "object" &&
+      "value" in value &&
+      "unit" in value &&
+      "customUnit" in value,
+  );
+}
+
+function coerceMappedMeasurementValue(raw: string, sampleValue: MeasurementValue): MeasurementValue {
+  const trimmed = raw.trim();
+  if (!trimmed) {
+    return sampleValue;
+  }
+
+  try {
+    const parsed = JSON.parse(trimmed) as unknown;
+    if (parsed && typeof parsed === "object") {
+      const next = parsed as Partial<MeasurementValue>;
+      return {
+        value: next.value ?? sampleValue.value,
+        unit: next.unit ?? sampleValue.unit,
+        customUnit: next.customUnit ?? sampleValue.customUnit,
+      };
+    }
+  } catch {
+    // Fall through and treat the cell as the measurement value.
+  }
+
+  return {
+    ...sampleValue,
+    value: raw,
+  };
 }
 
 function coerceMappedArrayValue(raw: string): unknown {
@@ -1801,6 +1909,85 @@ function coerceMappedObjectValue(raw: string, sampleValue: Record<string, unknow
   } catch {
     return sampleValue;
   }
+}
+
+function setNestedObjectValue(
+  target: Record<string, unknown>,
+  path: string,
+  value: string,
+): Record<string, unknown> {
+  const [head, ...rest] = path.split(".");
+  if (!head) {
+    return target;
+  }
+
+  if (rest.length === 0) {
+    return { ...target, [head]: value };
+  }
+
+  const existingNested = target[head];
+  const nestedObject =
+    existingNested && typeof existingNested === "object" && !Array.isArray(existingNested)
+      ? (existingNested as Record<string, unknown>)
+      : {};
+
+  return {
+    ...target,
+    [head]: setNestedObjectValue(nestedObject, rest.join("."), value),
+  };
+}
+
+function applyMappedArrayValue(
+  currentValue: unknown[],
+  rawValue: string,
+  targetSubField: string,
+): unknown[] {
+  const trimmed = rawValue.trim();
+  if (!trimmed) {
+    return currentValue;
+  }
+
+  const firstItem = currentValue[0];
+  const baseItem =
+    firstItem && typeof firstItem === "object" && !Array.isArray(firstItem)
+      ? (firstItem as Record<string, unknown>)
+      : {};
+
+  const updatedFirstItem = setNestedObjectValue(baseItem, targetSubField, rawValue);
+
+  return currentValue.length === 0
+    ? [updatedFirstItem]
+    : [updatedFirstItem, ...currentValue.slice(1)];
+}
+
+function applyMappedValueToField(
+  currentValue: unknown,
+  rawValue: string,
+  targetSubField?: string,
+): unknown {
+  if (Array.isArray(currentValue) && targetSubField) {
+    return applyMappedArrayValue(currentValue, rawValue, targetSubField);
+  }
+
+  if (isMeasurementValue(currentValue)) {
+    const trimmed = rawValue.trim();
+
+    if (!trimmed) {
+      return currentValue;
+    }
+
+    if (targetSubField === "unit") {
+      return { ...currentValue, unit: rawValue };
+    }
+
+    if (targetSubField === "customUnit") {
+      return { ...currentValue, unit: "custom", customUnit: rawValue };
+    }
+
+    return { ...currentValue, value: rawValue };
+  }
+
+  return coerceMappedValue(rawValue, currentValue);
 }
 
 function stringifyWorksheetValue(value: unknown): string {
@@ -2189,6 +2376,8 @@ export default function AddProductFormClient({
   const [tabularRows, setTabularRows] = useState<TabularRow[]>([]);
   const [importError, setImportError] = useState<string | null>(null);
   const [mappings, setMappings] = useState<FieldMapping[]>([]);
+  const formStateRef = useRef<FormState>(initialState);
+  formStateRef.current = form;
   const sectionSteps = [
     "Product Information",
     "Sustainability",
@@ -2351,7 +2540,7 @@ export default function AddProductFormClient({
     onerelatedobjecturiidperline: "relatedObjectsRaw",
   };
 
-  const resolveFormKeyFromElement = (target: EventTarget | null): keyof FormState | null => {
+  const resolveFormTargetFromElement = (target: EventTarget | null): ResolvedFormTarget | null => {
     if (!(target instanceof HTMLElement)) return null;
 
     const inputElement = target.closest("input, textarea, select");
@@ -2367,14 +2556,10 @@ export default function AddProductFormClient({
     ];
 
     for (const candidate of candidates) {
-      const normalized = normalizeFieldIdentifier(candidate);
-      if (!normalized) continue;
-
-      const alias = formKeyAliases[normalized];
-      if (alias) return alias;
-
-      const direct = formKeyLookup.get(normalized);
-      if (direct) return direct;
+      const resolved = resolveFormTargetCandidate(candidate, formKeyLookup, formKeyAliases);
+      if (resolved) {
+        return resolved;
+      }
     }
 
     return null;
@@ -2456,13 +2641,31 @@ export default function AddProductFormClient({
     [importedJson],
   );
 
-  const addOrReplaceMapping = (next: FieldMapping) => {
+  const logCsvMapping = (mapping: FieldMapping, context: MappingLogContext) => {
+    globalThis.requestAnimationFrame(() => {
+      const clonedFormState = globalThis.structuredClone(formStateRef.current);
+
+      console.groupCollapsed(
+        `[CSV Mapping] ${context.source} :: ${String(mapping.targetKey)}${
+          mapping.targetSubField ? `.${mapping.targetSubField}` : ""
+        }`,
+      );
+      console.log("Source path:", context.sourcePath);
+      console.log("Target field:", mapping.targetField);
+      console.log("Mapped value:", mapping.value);
+      console.log("FormState snapshot:", clonedFormState);
+      console.groupEnd();
+    });
+  };
+
+  const addOrReplaceMapping = (next: FieldMapping, context: MappingLogContext) => {
     setMappings((prev) => {
       const withoutTarget = prev.filter(
         (mapping) => mapping.targetKey !== next.targetKey || mapping.sourcePath !== next.sourcePath,
       );
       return [...withoutTarget, next];
     });
+
   };
 
   const clearMappedValueFromForm = (mapping: FieldMapping) => {
@@ -2575,8 +2778,8 @@ export default function AddProductFormClient({
       return;
     }
 
-    const targetKey = resolveFormKeyFromElement(activeElement);
-    if (!targetKey) {
+    const target = resolveFormTargetFromElement(activeElement);
+    if (!target) {
       setImportError("Cannot map this target field. Please drop onto a supported form input field.");
       return;
     }
@@ -2584,9 +2787,13 @@ export default function AddProductFormClient({
     setImportError(null);
     addOrReplaceMapping({
       targetField,
-      targetKey,
+      targetKey: target.targetKey,
+      targetSubField: target.targetSubField,
       sourcePath: leaf.path,
       value: writtenValue,
+    }, {
+      source: "click-map",
+      sourcePath: leaf.path,
     });
   };
 
@@ -2616,8 +2823,8 @@ export default function AddProductFormClient({
       return;
     }
 
-    const targetKey = resolveFormKeyFromElement(event.target);
-    if (!targetKey) {
+    const target = resolveFormTargetFromElement(event.target);
+    if (!target) {
       setImportError("Cannot map this target field. Please drop onto a supported form input field.");
       return;
     }
@@ -2625,9 +2832,13 @@ export default function AddProductFormClient({
     setImportError(null);
     addOrReplaceMapping({
       targetField,
-      targetKey,
+      targetKey: target.targetKey,
+      targetSubField: target.targetSubField,
       sourcePath: parsed.path,
       value: writtenValue,
+    }, {
+      source: "drag-drop",
+      sourcePath: parsed.path,
     });
   };
 
@@ -2677,11 +2888,14 @@ export default function AddProductFormClient({
             const targetKey = mapping.targetKey;
             const sourceKey = normalizeJsonPath(mapping.sourcePath);
             const rawValue = row[mapping.sourcePath] ?? row[sourceKey] ?? "";
-            const templateValue = initialState[targetKey];
+            const currentValue =
+              (rowForm as unknown as Record<string, unknown>)[targetKey] ??
+              initialState[targetKey];
 
-            (rowForm as unknown as Record<string, unknown>)[targetKey] = coerceMappedValue(
+            (rowForm as unknown as Record<string, unknown>)[targetKey] = applyMappedValueToField(
+              currentValue,
               rawValue,
-              templateValue,
+              mapping.targetSubField,
             );
           }
 

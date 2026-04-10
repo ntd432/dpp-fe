@@ -23,6 +23,7 @@ export function ComplianceStep({ shared }: Readonly<{ shared: any }>) {
           <RegulationArrayEditor
             items={form.regulations}
             onChange={(v: typeof form.regulations) => set("regulations", v)}
+            fieldPrefix="regulations"
             t={t}
           />
         </DataPointComponent>
@@ -31,6 +32,7 @@ export function ComplianceStep({ shared }: Readonly<{ shared: any }>) {
           <LabelArrayEditor
             items={form.productLabels}
             onChange={(v: typeof form.productLabels) => set("productLabels", v)}
+            fieldPrefix="productLabels"
             t={t}
           />
         </DataPointComponent>
@@ -54,6 +56,7 @@ export function ComplianceStep({ shared }: Readonly<{ shared: any }>) {
             label={t("Certifications")}
             items={form.certifications}
             onChange={(v: typeof form.certifications) => set("certifications", v)}
+            fieldPrefix="certifications"
             namePlaceholder={t("Certification name")}
             t={t}
           />

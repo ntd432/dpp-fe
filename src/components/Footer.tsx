@@ -78,13 +78,13 @@ export default function Footer() {
             <h2 className="text-base font-semibold text-gray-900">{t("footer.supportedBy")}</h2>
             <div className="flex items-center gap-3">
               <Link href="https://se4gd.lutsoftware.com" target="_blank" rel="noopener noreferrer" title="SE4GD - Software engineering with a purpose">
-                <Image width={60} height={40} style={{minWidth: '50px'}} sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" src="https://se4gd.lutsoftware.com/wp-content/uploads/2020/10/cropped-logo.png" className="custom-logo" alt="SE4GD" decoding="async"/>
+                <Image width={60} height={40} style={{minWidth: '50px'}} sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" src="https://se4gd.lutsoftware.com/wp-content/uploads/2020/10/cropped-logo.png" className="custom-logo w-auto" alt="SE4GD" decoding="async"/>
               </Link>
               <Link href="https://triply.cc" target="_blank" rel="noopener noreferrer" title="Unlock the potential of your data with Triply">
                 <TriplyLogo/>
               </Link>
               <Link href="https://erasmus-plus.ec.europa.eu" target="_blank" rel="noopener noreferrer" title="Erasmus+ Programme">
-                <Image width={180} height={60} style={{minHeight: '50px'}} sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" src="https://erasmus-plus.ec.europa.eu/themes/contrib/oe_theme/dist/ec/images/logo/positive/logo-ec--en.svg" className="eac-site-branding-logo translate-y-[-2px] translate-x-[10px]" alt="Erasmus" decoding="async"/>
+                <Image width={180} height={60} style={{minHeight: '50px'}} sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" src="https://erasmus-plus.ec.europa.eu/themes/contrib/oe_theme/dist/ec/images/logo/positive/logo-ec--en.svg" className="w-auto eac-site-branding-logo translate-y-[-2px] translate-x-[10px]" alt="Erasmus" decoding="async"/>
               </Link>
             </div>
           </section>

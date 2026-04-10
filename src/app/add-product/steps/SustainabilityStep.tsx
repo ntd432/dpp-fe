@@ -24,12 +24,14 @@ export function SustainabilityStep({ shared }: Readonly<{ shared: any }>) {
           <EnvironmentalFootprintArrayEditor
             items={form.environmentalFootprints}
             onChange={(v: any[]) => set("environmentalFootprints", v)}
+            fieldPrefix="environmentalFootprints"
             t={t}
           />
           <ResourceConsumptionArrayEditor
             label={t("Resource Consumption")}
             items={form.resourceConsumptions}
             onChange={(v: any[]) => set("resourceConsumptions", v)}
+            fieldPrefix="resourceConsumptions"
             t={t}
           />
           <TextAreaField
@@ -65,6 +67,7 @@ export function SustainabilityStep({ shared }: Readonly<{ shared: any }>) {
             label={t("Critical Raw Components")}
             items={form.criticalRawMaterials}
             onChange={(v: any[]) => set("criticalRawMaterials", v)}
+            fieldPrefix="criticalRawMaterials"
             t={t}
           />
         </DataPointComponent>
@@ -80,6 +83,7 @@ export function SustainabilityStep({ shared }: Readonly<{ shared: any }>) {
           <EnvironmentalImpactArrayEditor
             items={form.environmentalImpacts}
             onChange={(v: any[]) => set("environmentalImpacts", v)}
+            fieldPrefix="environmentalImpacts"
             t={t}
           />
         </DataPointComponent>
@@ -91,6 +95,7 @@ export function SustainabilityStep({ shared }: Readonly<{ shared: any }>) {
             label={t("Components")}
             items={form.renewableNonRenewableContent}
             onChange={(v: any[]) => set("renewableNonRenewableContent", v)}
+            fieldPrefix="renewableNonRenewableContent"
             t={t}
           />
         </DataPointComponent>
@@ -119,12 +124,14 @@ export function SustainabilityStep({ shared }: Readonly<{ shared: any }>) {
               label={t("Resource Consumption When Using")}
               items={form.usingResourceConsumptions}
               onChange={(v: any[]) => set("usingResourceConsumptions", v)}
+              fieldPrefix="usingResourceConsumptions"
               t={t}
             />
             <ResourceConsumptionArrayEditor
               label={t("Resource Consumption When Recovering")}
               items={form.recoveringResourceConsumptions}
               onChange={(v: any[]) => set("recoveringResourceConsumptions", v)}
+              fieldPrefix="recoveringResourceConsumptions"
               t={t}
             />
           </div>
