@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
 type NavItem = {
@@ -10,11 +11,33 @@ type NavItem = {
 
 export default function NavbarLinks({ items }: Readonly<{ items: ReadonlyArray<NavItem> }>) {
   const pathname = usePathname();
+  const [isPhoneDevice, setIsPhoneDevice] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = globalThis.matchMedia("(max-width: 767px)");
+
+    const syncDeviceType = () => {
+      setIsPhoneDevice(mediaQuery.matches);
+    };
+
+    syncDeviceType();
+    mediaQuery.addEventListener("change", syncDeviceType);
+
+    return () => {
+      mediaQuery.removeEventListener("change", syncDeviceType);
+    };
+  }, []);
+
+  const isMobileRestrictedRoute = (href: string): boolean => href === "/add-product" || href === "/add-dpp";
+  const visibleItems = isPhoneDevice
+    ? items.filter((item) => !isMobileRestrictedRoute(item.href))
+    : items;
 
   return (
     <div className="flex space-x-1">
-      {items.map((item) => {
+      {visibleItems.map((item) => {
         const isActive = pathname === item.href;
+
         return (
           <Link
             key={item.href}
