@@ -30,10 +30,9 @@ async function loadManufacturers(): Promise<ManufacturerOption[]> {
 
 export default async function AddProductPage() {
   const userAgent = (await headers()).get("user-agent") ?? "";
-  const locale = normalizeLocale((await cookies()).get(LOCALE_COOKIE_KEY)?.value);
 
   if (isPhoneUserAgent(userAgent)) {
-    return <UnsupportedDevicePage locale={locale} />;
+    return <UnsupportedDevicePage/>;
   }
 
   const manufacturers = await loadManufacturers();
