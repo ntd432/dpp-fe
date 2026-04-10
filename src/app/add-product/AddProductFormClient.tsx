@@ -2445,6 +2445,7 @@ export default function AddProductFormClient({
     LabelArrayEditor,
     NameDescArrayEditor,
     EnvironmentalFootprintArrayEditor,
+    EnvironmentalImpactArrayEditor,
     ResourceConsumptionArrayEditor,
     EventArrayEditor,
     CustomFieldsEditor,
