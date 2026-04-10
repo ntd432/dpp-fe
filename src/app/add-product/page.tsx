@@ -1,5 +1,9 @@
 import { TriplyDBClient } from "@/lib/triplydb-client";
 import AddProductFormClient from "./AddProductFormClient";
+import { cookies, headers } from "next/headers";
+import UnsupportedDevicePage from "@/components/UnsupportedDevicePage";
+import { LOCALE_COOKIE_KEY, normalizeLocale } from "@/i18n/locale";
+import { isPhoneUserAgent } from "@/lib/device";
 
 interface ManufacturerOption {
   id?: string;
@@ -25,6 +29,13 @@ async function loadManufacturers(): Promise<ManufacturerOption[]> {
 }
 
 export default async function AddProductPage() {
+  const userAgent = (await headers()).get("user-agent") ?? "";
+  const locale = normalizeLocale((await cookies()).get(LOCALE_COOKIE_KEY)?.value);
+
+  if (isPhoneUserAgent(userAgent)) {
+    return <UnsupportedDevicePage locale={locale} />;
+  }
+
   const manufacturers = await loadManufacturers();
 
   return <AddProductFormClient initialManufacturers={manufacturers} />;

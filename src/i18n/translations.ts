@@ -21,6 +21,10 @@ export const messages: Record<Locale, Messages> = {
     "navbar.addProduct": "Add Product",
     "navbar.registerDpp": "Register DPP",
     "navbar.viewDpp": "View DPP",
+    "unsupportedDevice.title": "Unsupported Device",
+    "unsupportedDevice.message": "This function is not supported on phone-sized devices. Please use a tablet or desktop.",
+    "unsupportedDevice.backToDashboard": "Back to dashboard",
+    "mobile.unsupportedFeature": "This feature is not supported on phones. Please use a tablet or desktop device.",
 
     "footer.title": "Digital Product Passport",
     "footer.thesis": "Master's thesis project by James Nguyen",
@@ -72,6 +76,9 @@ export const messages: Record<Locale, Messages> = {
     "navbar.addProduct": "Product toevoegen",
     "navbar.registerDpp": "DPP registreren",
     "navbar.viewDpp": "DPP bekijken",
+    "unsupportedDevice.title": "Niet-ondersteund apparaat",
+    "unsupportedDevice.message": "Deze functie wordt niet ondersteund op apparaten met telefoongrootte. Gebruik een tablet of desktop.",
+    "unsupportedDevice.backToDashboard": "Terug naar dashboard",
 
     "footer.title": "Digitaal Productpaspoort",
     "footer.thesis": "Masterthesisproject van James Nguyen",
@@ -123,6 +130,9 @@ export const messages: Record<Locale, Messages> = {
     "navbar.addProduct": "Produkt hinzufugen",
     "navbar.registerDpp": "DPP registrieren",
     "navbar.viewDpp": "DPP anzeigen",
+    "unsupportedDevice.title": "Nicht unterstutztes Gerat",
+    "unsupportedDevice.message": "Diese Funktion wird auf telefongrossen Geraten nicht unterstutzt. Bitte verwenden Sie ein Tablet oder einen Desktop.",
+    "unsupportedDevice.backToDashboard": "Zuruck zum Dashboard",
 
     "footer.title": "Digitaler Produktpass",
     "footer.thesis": "Masterarbeitsprojekt von James Nguyen",
@@ -174,6 +184,9 @@ export const messages: Record<Locale, Messages> = {
     "navbar.addProduct": "Ajouter un produit",
     "navbar.registerDpp": "Enregistrer DPP",
     "navbar.viewDpp": "Voir DPP",
+    "unsupportedDevice.title": "Appareil non pris en charge",
+    "unsupportedDevice.message": "Cette fonction n'est pas prise en charge sur les appareils de taille telephone. Veuillez utiliser une tablette ou un ordinateur.",
+    "unsupportedDevice.backToDashboard": "Retour au tableau de bord",
 
     "footer.title": "Passeport Numerique Produit",
     "footer.thesis": "Projet de memoire de master par James Nguyen",
@@ -225,6 +238,9 @@ export const messages: Record<Locale, Messages> = {
     "navbar.addProduct": "Agregar producto",
     "navbar.registerDpp": "Registrar DPP",
     "navbar.viewDpp": "Ver DPP",
+    "unsupportedDevice.title": "Dispositivo no compatible",
+    "unsupportedDevice.message": "Esta funcion no es compatible en dispositivos de tamano telefono. Utilice una tableta o un ordenador.",
+    "unsupportedDevice.backToDashboard": "Volver al panel",
 
     "footer.title": "Pasaporte Digital de Producto",
     "footer.thesis": "Proyecto de tesis de maestria por James Nguyen",
@@ -276,6 +292,9 @@ export const messages: Record<Locale, Messages> = {
     "navbar.addProduct": "製品を追加",
     "navbar.registerDpp": "DPPを登録",
     "navbar.viewDpp": "DPPを表示",
+    "unsupportedDevice.title": "未対応のデバイス",
+    "unsupportedDevice.message": "この機能はスマートフォンサイズの端末ではサポートされていません。タブレットまたはデスクトップをご利用ください。",
+    "unsupportedDevice.backToDashboard": "ダッシュボードに戻る",
 
     "footer.title": "デジタル製品パスポート",
     "footer.thesis": "James Nguyenによる修士論文プロジェクト",

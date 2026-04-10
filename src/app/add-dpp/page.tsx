@@ -2,7 +2,11 @@ import AddDppFormClient, {
   ManufacturerOption,
   ProductOption,
 } from "./AddDppFormClient";
+import { cookies, headers } from "next/headers";
+import UnsupportedDevicePage from "@/components/UnsupportedDevicePage";
+import { LOCALE_COOKIE_KEY, normalizeLocale } from "@/i18n/locale";
 import { TriplyDBClient } from "@/lib/triplydb-client";
+import { isPhoneUserAgent } from "@/lib/device";
 import { Product } from "@/types";
 
 async function loadManufacturers(): Promise<ManufacturerOption[]> {
@@ -36,6 +40,13 @@ async function loadProducts(): Promise<ProductOption[]> {
 }
 
 export default async function AddDppPage() {
+  const userAgent = (await headers()).get("user-agent") ?? "";
+  const locale = normalizeLocale((await cookies()).get(LOCALE_COOKIE_KEY)?.value);
+
+  if (isPhoneUserAgent(userAgent)) {
+    return <UnsupportedDevicePage locale={locale} />;
+  }
+
   const [manufacturers, products] = await Promise.all([
     loadManufacturers(),
     loadProducts(),
