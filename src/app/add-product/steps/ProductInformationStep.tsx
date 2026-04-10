@@ -165,6 +165,7 @@ export function ProductInformationStep({ shared }: Readonly<{ shared: any }>) {
             items={form.componentComposition}
             onChange={(v: any) => set("componentComposition", v)}
             organizations={manufacturers}
+            fieldPrefix="componentComposition"
             t={t}
             showPercentage
           />
@@ -180,6 +181,7 @@ export function ProductInformationStep({ shared }: Readonly<{ shared: any }>) {
             items={form.recycledReusedContent}
             onChange={(v: any) => set("recycledReusedContent", v)}
             organizations={manufacturers}
+            fieldPrefix="recycledReusedContent"
             t={t}
           />
         </DataPointComponent>
@@ -198,6 +200,7 @@ export function ProductInformationStep({ shared }: Readonly<{ shared: any }>) {
             label={t("Hazardous Substances")}
             items={form.hazardousSubstances}
             onChange={(v: any) => set("hazardousSubstances", v)}
+            fieldPrefix="hazardousSubstances"
             t={t}
           />
         </DataPointComponent>
@@ -207,6 +210,7 @@ export function ProductInformationStep({ shared }: Readonly<{ shared: any }>) {
             label={t("Substances of Concern")}
             items={form.substancesOfConcern}
             onChange={(v: any) => set("substancesOfConcern", v)}
+            fieldPrefix="substancesOfConcern"
             t={t}
           />
         </DataPointComponent>

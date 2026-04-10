@@ -95,6 +95,7 @@ export function EndOfLifeStep({ shared }: Readonly<{ shared: any }>) {
                   label={t("End-of-Life History Events")}
                   events={form.endOfLifeHistory}
                   onChange={(v: any) => set("endOfLifeHistory", v)}
+                  fieldPrefix="endOfLifeHistory"
                   t={t}
                 />
               </DataPointComponent>
