@@ -39,6 +39,7 @@ export function InfoCardWithLink({ label, value, link }: Readonly<InfoCardProps>
           {label}
         </span>
       )}
+      {link ? (
         <a
           href={link}
           target="_blank"
@@ -47,6 +48,10 @@ export function InfoCardWithLink({ label, value, link }: Readonly<InfoCardProps>
         >
           {value}
         </a>
+      ) : (
+        <span className="text-gray-900 text-sm leading-relaxed">{value}</span>
+      )}
+
     </div>
   );
 }

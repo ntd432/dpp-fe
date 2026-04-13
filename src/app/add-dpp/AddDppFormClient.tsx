@@ -6,6 +6,7 @@ import { FormField } from "@/components/form/FormField";
 import { CollapsibleSection, DataLayerGroup } from "@/components/form/CollapsibleSection";
 import { AddEntryButton } from "@/components/form/AddEntryButton";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { Utils } from "@/lib/Utils";
 
 const INPUT_CLASS =
   "px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-blue-light)] focus:border-[var(--color-brand-blue-light)] w-full";
@@ -324,7 +325,7 @@ export default function AddDppFormClient({
       customerReturnChannel: buildParticipants(form.customerReturnChannels),
     };
 
-    return dpp;
+    return Utils.pruneEmpty(dpp);
   }
 
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
