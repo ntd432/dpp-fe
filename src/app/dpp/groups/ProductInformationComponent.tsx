@@ -142,7 +142,7 @@ export function ProductInformationComponent({
           <ComponentListCard label="Component Composition" componentList={componentInfo?.componentComposition || []} />
           <InfoCardWithLink
             label="Component Bills"
-            value={componentInfo?.componentBills || "N/A"}
+            value={componentInfo?.componentBills || "No data"}
             link={componentInfo?.componentBills}
           />
           <ComponentListCard label="Recycled/Reused Content" componentList={componentInfo?.recycledReusedContent || []} />

@@ -16,15 +16,13 @@ export const EXTENSION_TYPES = new Set([
 
 export const ARRAY_TYPES = new Set([
     "endOfLifeHistory",
-    "hazardousSubstances",
-    "substancesOfConcern",
-    "relatedObjects",
-    "criticalRawMaterial",
-    "renewableNonRenewableContent",
+    "hazardousSubstances", "substancesOfConcern", "relatedObjects",
+    "criticalRawMaterial", "renewableNonRenewableContent",
     "regulation", "productLabel", "certification",
     "environmentalImpact", "environmentalFootprint", "resourceConsumption", "resourceConsumptionWhenUsing", "resourceConsumptionWhenRecovering",
     "incidentsAndErrors", "maintenanceLog", "usageHistory",
-    "recyclingPartner", "customerReturnChannel",
+    "recyclingPartner", "customerReturnChannel", "traceabilityEvent",
+    "componentComposition"
 ]);
 
 export const TEST_DPP = {

@@ -58,7 +58,7 @@ const TYPES_TO_FIELDNAMES: Record<string, string> = {
 
 export async function transformDataGroupJson(describeResult: Record<string, any>): Promise<Record<string, any>> {
     let result: Record<string, any> = {};
-    const dataPoints = describeResult.dataPoint || [];
+    const dataPoints = Array.isArray(describeResult.dataPoint) ? describeResult.dataPoint : (describeResult.dataPoint ? [describeResult.dataPoint] : []);
     for (const dataPoint of dataPoints) {
         const type = dataPoint.type;
 

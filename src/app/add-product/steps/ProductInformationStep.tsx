@@ -60,26 +60,7 @@ export function ProductInformationStep({ shared }: Readonly<{ shared: any }>) {
             />
             <FormField label={t("GTIN")} value={form.gtin} onChange={(v) => set("gtin", v)} fieldKey="gtin" required />
             <FormField label={t("TARIC Code")} value={form.taricCode} onChange={(v) => set("taricCode", v)} fieldKey="taricCode" />
-            <div>
-              <label htmlFor="country-origin" className="block text-sm font-medium text-gray-700 mb-1">
-                {t("Country of Origin")}
-              </label>
-              <select
-                id="country-origin"
-                name="countryOfOrigin"
-                data-field-key="countryOfOrigin"
-                value={form.countryOfOrigin}
-                onChange={(e) => set("countryOfOrigin", e.target.value)}
-                className={INPUT_CLASS}
-              >
-                <option value="">{t("Select country")}</option>
-                {COUNTRIES.map((country) => (
-                  <option key={country} value={country}>
-                    {country}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <FormField label={t("Country of Origin")} value={form.countryOfOrigin} onChange={(v) => set("countryOfOrigin", v)} fieldKey="countryOfOrigin" />
             <FormField
               label={t("Production Date")}
               value={form.productionDate}
