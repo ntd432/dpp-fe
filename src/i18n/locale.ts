@@ -9,6 +9,7 @@ export const LOCALE_NATIVE_LABELS: Record<Locale, string> = {
   fr: "Français",
   es: "Español",
   ja: "日本語",
+  vi: "Tiếng Việt",
 };
 
 export function isLocale(value: string): value is Locale {
