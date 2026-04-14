@@ -3264,7 +3264,7 @@ export default function AddProductFormClient({
                   clipRule="evenodd"
                 />
               </svg>
-              {t("Product added successfully! Redirecting…")}
+              {t("Added successfully! Redirecting…")}
             </div>
           )}
           </div>
