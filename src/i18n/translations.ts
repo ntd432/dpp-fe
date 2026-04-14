@@ -1,4 +1,4 @@
-export const SUPPORTED_LOCALES = ["en", "nl", "de", "fr", "es", "ja"] as const;
+export const SUPPORTED_LOCALES = ["en", "nl", "de", "fr", "es", "ja", "vi"] as const;
 
 export type Locale = (typeof SUPPORTED_LOCALES)[number];
 
@@ -8,14 +8,6 @@ type Messages = Record<string, string>;
 
 export const messages: Record<Locale, Messages> = {
   en: {
-    "language.label": "Language",
-    "language.en": "English",
-    "language.nl": "Dutch",
-    "language.de": "German",
-    "language.fr": "French",
-    "language.es": "Spanish",
-    "language.ja": "Japanese",
-
     "navbar.brand": "Digital Product Passport",
     "navbar.dashboard": "Dashboard",
     "navbar.addProduct": "Add Product",
@@ -63,14 +55,6 @@ export const messages: Record<Locale, Messages> = {
   },
 
   nl: {
-    "language.label": "Taal",
-    "language.en": "Engels",
-    "language.nl": "Nederlands",
-    "language.de": "Duits",
-    "language.fr": "Frans",
-    "language.es": "Spaans",
-    "language.ja": "Japans",
-
     "navbar.brand": "Digitaal Productpaspoort",
     "navbar.dashboard": "Dashboard",
     "navbar.addProduct": "Product toevoegen",
@@ -117,14 +101,6 @@ export const messages: Record<Locale, Messages> = {
   },
 
   de: {
-    "language.label": "Sprache",
-    "language.en": "Englisch",
-    "language.nl": "Niederlandisch",
-    "language.de": "Deutsch",
-    "language.fr": "Franzosisch",
-    "language.es": "Spanisch",
-    "language.ja": "Japanisch",
-
     "navbar.brand": "Digitaler Produktpass",
     "navbar.dashboard": "Dashboard",
     "navbar.addProduct": "Produkt hinzufugen",
@@ -171,14 +147,6 @@ export const messages: Record<Locale, Messages> = {
   },
 
   fr: {
-    "language.label": "Langue",
-    "language.en": "Anglais",
-    "language.nl": "Neerlandais",
-    "language.de": "Allemand",
-    "language.fr": "Francais",
-    "language.es": "Espagnol",
-    "language.ja": "Japonais",
-
     "navbar.brand": "Passeport Numerique Produit",
     "navbar.dashboard": "Tableau de bord",
     "navbar.addProduct": "Ajouter un produit",
@@ -225,14 +193,6 @@ export const messages: Record<Locale, Messages> = {
   },
 
   es: {
-    "language.label": "Idioma",
-    "language.en": "Ingles",
-    "language.nl": "Neerlandes",
-    "language.de": "Aleman",
-    "language.fr": "Frances",
-    "language.es": "Espanol",
-    "language.ja": "Japones",
-
     "navbar.brand": "Pasaporte Digital de Producto",
     "navbar.dashboard": "Panel",
     "navbar.addProduct": "Agregar producto",
@@ -279,14 +239,6 @@ export const messages: Record<Locale, Messages> = {
   },
 
   ja: {
-    "language.label": "言語",
-    "language.en": "英語",
-    "language.nl": "オランダ語",
-    "language.de": "ドイツ語",
-    "language.fr": "フランス語",
-    "language.es": "スペイン語",
-    "language.ja": "日本語",
-
     "navbar.brand": "デジタル製品パスポート",
     "navbar.dashboard": "ダッシュボード",
     "navbar.addProduct": "製品を追加",
@@ -330,5 +282,52 @@ export const messages: Record<Locale, Messages> = {
     "dashboard.guidelines.desc": "エンドユーザー向け安全指示から輸送ガイドラインまで、サプライチェーン全体の製品マニュアルと指針。",
     "dashboard.compliance.title": "コンプライアンス",
     "dashboard.compliance.desc": "規制、認証、ラベル、データ管理手法。",
+  },
+
+  vi: {
+    "navbar.brand": "Hộ chiếu sản phẩm số",
+    "navbar.dashboard": "Bảng điều khiển",
+    "navbar.addProduct": "Thêm sản phẩm",
+    "navbar.registerDpp": "Đăng ký DPP",
+    "navbar.viewDpp": "Xem DPP",
+    "unsupportedDevice.title": "Thiết bị không hỗ trợ",
+    "unsupportedDevice.message": "Tính năng này không được hỗ trợ trên thiết bị cỡ điện thoại. Vui lòng dùng máy tính bảng hoặc máy tính để bàn.",
+    "unsupportedDevice.backToDashboard": "Quay lại bảng điều khiển",
+    "mobile.unsupportedFeature": "Tính năng này không được hỗ trợ trên điện thoại. Vui lòng dùng máy tính bảng hoặc máy tính để bàn.",
+
+    "footer.title": "Hộ chiếu sản phẩm số",
+    "footer.thesis": "Dự án luận văn thạc sĩ bởi Nguyễn Tiến Dũng",
+    "footer.programme": "Chương trình Erasmus Mundus Software Engineering for Green Deals (SE4GD), Khóa 4, 2024-2026",
+    "footer.quickLinks": "Liên kết nhanh",
+    "footer.addProduct": "Thêm sản phẩm",
+    "footer.registerDpp": "Đăng ký DPP",
+    "footer.viewDpp": "Xem DPP",
+    "footer.supportedBy": "Dự án này tự hào được hỗ trợ bởi",
+    "footer.rights": "Đã đăng ký bản quyền.",
+
+    "dashboard.title": "Hộ chiếu sản phẩm số",
+    "dashboard.subtitle": "Truy cập thông tin sản phẩm toàn diện, bao gồm nhận dạng, tuân thủ quy định và dữ liệu bền vững môi trường.",
+    "dashboard.whatIsTitle": "Hộ chiếu sản phẩm số là gì?",
+    "dashboard.whatIsBody": "Hộ chiếu Sản phẩm Số (DPP) là hồ sơ kỹ thuật số có cấu trúc theo sản phẩm trong suốt vòng đời. Hồ sơ kết nối các thông tin quan trọng như danh tính, vật liệu, tuân thủ, bền vững, lịch sử bảo trì và hướng dẫn cuối vòng đời để mọi bên trong chuỗi giá trị có thể truy cập dữ liệu đáng tin cậy.",
+    "dashboard.whatSeeTitle": "Bạn có thể xem gì trong Hộ chiếu Sản phẩm Số?",
+    "dashboard.whatSeeBody": "Bạn có thể khám phá thông tin nhận dạng sản phẩm, thông tin kỹ thuật và thương mại, hiệu suất môi trường, lịch sử sử dụng và sửa chữa, bằng chứng tuân thủ, các bên trong chuỗi cung ứng và hướng dẫn thu hồi cuối vòng đời tại một nơi.",
+    "dashboard.viewDetails": "Xem chi tiết",
+
+    "dashboard.passportInfo.title": "Thông tin hộ chiếu",
+    "dashboard.passportInfo.desc": "Mã hộ chiếu, mức độ chi tiết, định dạng vật mang dữ liệu, tổ chức phát hành, lô sản phẩm và số serial.",
+    "dashboard.productInfo.title": "Thông tin sản phẩm",
+    "dashboard.productInfo.desc": "Tên sản phẩm, số serial, GTIN, nước xuất xứ và ngày sản xuất.",
+    "dashboard.sustainability.title": "Bền vững",
+    "dashboard.sustainability.desc": "Dấu chân môi trường, mức tiêu thụ tài nguyên và các tuyên bố bền vững.",
+    "dashboard.usage.title": "Sử dụng và bảo trì",
+    "dashboard.usage.desc": "Lịch sử sử dụng và lịch sử sửa chữa/bảo trì.",
+    "dashboard.eol.title": "Cuối vòng đời và thu hồi",
+    "dashboard.eol.desc": "Tiềm năng tái sử dụng, tái chế, v.v. của sản phẩm. Tài liệu về thu gom, phân loại và xử lý khi kết thúc vòng đời.",
+    "dashboard.supply.title": "Dữ liệu chuỗi cung ứng",
+    "dashboard.supply.desc": "Thông tin về các đối tác trong chuỗi giá trị, từ nhà cung cấp đầu vào đến đối tác tái chế đầu ra, bao gồm các hoạt động chuỗi cung ứng.",
+    "dashboard.guidelines.title": "Hướng dẫn và sổ tay",
+    "dashboard.guidelines.desc": "Sổ tay và hướng dẫn sản phẩm trong toàn bộ chuỗi cung ứng, từ hướng dẫn an toàn cho người dùng cuối đến hướng dẫn vận chuyển.",
+    "dashboard.compliance.title": "Tuân thủ",
+    "dashboard.compliance.desc": "Quy định, chứng nhận, nhãn và phương pháp quản lý dữ liệu.",
   },
 };
