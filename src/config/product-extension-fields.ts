@@ -1,4 +1,4 @@
-import { ELECTRONIC_EXTENSION_FIELDS } from "./electronics-extension-fields";
+import { ELECTRONIC_EXTENSION_FIELDS } from "@/app/add-product/extensions/ElectronicExtension";
 
 export type ExtensionSectionKey =
   | "sectorRequiredInformation"
