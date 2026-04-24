@@ -24,7 +24,8 @@ import { AddEntryButton } from "@/components/form/AddEntryButton";
 import { CONSUMPTION_UNITS, FOOTPRINT_UNITS, IMPACT_UNITS, MASS_UNITS } from "@/config/master-data";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { MeasurementInput } from "./CommonInputComponents";
-import { MeasurementValue } from "./InputInterfaces";
+import { BaseFormState, ComponentEntry, CustomFieldEntry, EnvironmentalFootprintEntry, EnvironmentalImpactEntry, EventEntry, ExtensionPayload, ExtensionPayloadBuildDependencies, FormState, LabelEntry, MeasurementValue, NameDescEntry, RegulationEntry, ResourceConsumptionEntry, SubstanceEntry } from "./InputInterfaces";
+import { buildElectronicExtensionPayload, createElectronicExtensionFormState } from "./extensions/ElectronicExtension";
 
 const INPUT_CLASS =
   "px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-blue-light)] focus:border-[var(--color-brand-blue-light)]";
@@ -52,90 +53,6 @@ interface FieldMapping {
   targetSubField?: string;
   sourcePath: string;
   value: string;
-}
-
-interface EventEntry {
-  _key: string;
-  actionName: string;
-  actionType: string;
-  time: string;
-  locationName: string;
-  actorName: string;
-}
-
-interface ComponentEntry {
-  _key: string;
-  componentName: string;
-  mode: "percentage" | "mass";
-  componentPercentage: string;
-  componentCountValue: string;
-  componentCountUnit: string;
-  componentCountCustomUnit: string;
-  componentReference: string;
-  componentURI: string;
-  componentSupplierRef: string;
-}
-
-interface SubstanceEntry {
-  _key: string;
-  substanceName: string;
-  substanceDescription: string;
-  iupacName: string;
-  ecNumber: string;
-  casNumber: string;
-  concentrationLevel: string;
-  locationWithinProduct: string;
-  safeUsageInstruction: string;
-  disassemblyInstruction: string;
-}
-
-interface RegulationEntry {
-  _key: string;
-  name: string;
-  identifier: string;
-}
-
-interface NameDescEntry {
-  _key: string;
-  name: string;
-  description: string;
-}
-
-interface LabelEntry {
-  _key: string;
-  labelName: string;
-  labelValue: string;
-  labelDescription: string;
-  labelDocumentation: string;
-}
-
-interface EnvironmentalFootprintEntry {
-  _key: string;
-  environmentalFootprintType: string;
-  environmentalFootprintMeasuringMethod: string;
-  measurement: MeasurementValue;
-}
-
-interface ResourceConsumptionEntry {
-  _key: string;
-  resource: string;
-  measurement: MeasurementValue;
-}
-
-interface EnvironmentalImpactEntry {
-  _key: string;
-  impactCategory: string;
-  method: string;
-  characterizationFactor: string;
-  characterizationModel: string;
-  impactIndicator: MeasurementValue;
-}
-
-interface CustomFieldEntry {
-  _key: string;
-  key: string;
-  value: string;
-  sourcePath?: string;
 }
 
 const emptyEvent = (): EventEntry => ({
@@ -1185,140 +1102,10 @@ function uid(): string {
   return `item-${nextId++}`;
 }
 
-interface FormState {
-  sector: string;
-  sectorType: string;
-  // Product Information - Identification
-  gtin: string;
-  taricCode: string;
-  productName: string;
-  description: string;
-  documentation: string;
-  countryOfOrigin: string;
-  productionDate: string;
-  // Product Information - Manufacturer
-  manufacturerMode: "existing" | "new";
-  manufacturerName: string;
-  manufacturerUrl: string;
-  manufacturerId: string;
-  // Product Information - Material
-  componentComposition: ComponentEntry[];
-  componentBills: string;
-  recycledReusedContent: ComponentEntry[];
-  // Product Information - Other
-  sparePartsAvailability: string;
-  hazardousSubstances: SubstanceEntry[];
-  substancesOfConcern: SubstanceEntry[];
-  // Product Information - Sector Required (Extension)
-  sectorRequiredAssemblyDesc: string;
-  sectorRequiredAssemblyAutomationLevel: string;
-  sectorRequiredAssemblyLocationName: string;
-  sectorRequiredAssemblyLocationAddress: string;
-  sectorRequiredProductionDesc: string;
-  sectorRequiredManufacturingTechnology: string;
-  sectorRequiredProcessCertification: string;
-  sectorNonRequiredExpectedEndCondition: string;
-  sectorNonRequiredRenewableEnergyProductionValue: string;
-  sectorNonRequiredRenewableEnergyType: string;
-  sectorNonRequiredRenewableEnergyOutput: MeasurementValue;
-  sectorNonRequiredSeparabilityScore: string;
-  sectorNonRequiredSeparabilityMethod: string;
-  sectorNonRequiredModularityScore: string;
-  sectorNonRequiredReplaceableComponent: string;
-  sectorNonRequiredProductDesign: string;
-  sectorNonRequiredDesignForDisassembly: string;
-  sectorNonRequiredAppliedStandardName: string;
-  sectorNonRequiredAppliedStandardIdentifier: string;
-  sectorNonRequiredStandardReference: string;
-  relatedObjectsRaw: string;
-  // Product Information - Product Specification (Extension)
-  specHeight: MeasurementValue;
-  specWidth: MeasurementValue;
-  specDepth: MeasurementValue;
-  specWeight: MeasurementValue;
-  specIngressProtection: string;
-  specNetworkConnectivity: string;
-  specBatteryCapacity: MeasurementValue;
-  specVolume: MeasurementValue;
-  specChargingInterface: string;
-  specCrossCompatibilityDetails: string;
-  specCompatibleInterfaceStandard: string;
-  specCompatibilityLevel: string;
-  specComponentDescription: string;
-  specComponentCount: string;
-  specInstalledSoftwareName: string;
-  specInstalledSoftwareVersion: string;
-  specSoftwareSupportEndDate: string;
-  // Product Information - Test Report
-  testReport: string;
-  // Product Information - Commercial
-  imageUrl: string;
-  lifetimeExpectancy: string;
-  warrantyPeriod: string;
-  takebackOption: string;
-  qualityAssessment: string;
-  identifiedRisk: string;
-  // Compliance
-  regulations: RegulationEntry[];
-  productLabels: LabelEntry[];
-  productStatusAssessment: string;
-  certifications: NameDescEntry[];
-  dmmName: string;
-  dmmIdentifier: string;
-  // Sustainability
-  environmentalFootprints: EnvironmentalFootprintEntry[];
-  resourceConsumptions: ResourceConsumptionEntry[];
-  plasticsRelease: string;
-  decomposability: string;
-  sectorSustainabilityIndicatorsText: string;
-  criticalRawMaterials: ComponentEntry[];
-  lifeCycleAssessmentReport: string;
-  environmentalImpacts: EnvironmentalImpactEntry[];
-  renewableNonRenewableContent: ComponentEntry[];
-  circularEconomyIndicatorText: string;
-  labourConditions: string;
-  usingResourceConsumptions: ResourceConsumptionEntry[];
-  recoveringResourceConsumptions: ResourceConsumptionEntry[];
-  environmentDeclaration: string;
-  // End of Life
-  recyclingReusePotential: string;
-  disposalOptions: string;
-  unsoldProductsInformation: string;
-  expectedWaste: string;
-  reusability: string;
-  repairability: string;
-  refurbishability: string;
-  upgradeOptions: string;
-  endOfLifeHistory: EventEntry[];
-  numberOfLifecycles: string;
-  wastePrevention: string;
-  separateCollection: string;
-  collectionInformation: string;
-  endOfLifeReport: string;
-  // Guidelines
-  assemblyGuidelineUrl: string;
-  disassemblyGuidelineUrl: string;
-  productManualUrl: string;
-  storageGuidelineUrl: string;
-  safetyInstructionUrl: string;
-  maintenanceInstructionUrl: string;
-  wasteSortingInstructionUrl: string;
-  accessibility: string;
-  utilizationCharacteristic: string;
-  // Usage
-  maintenanceLog: EventEntry[];
-  usageHistory: EventEntry[];
-  incidentsAndErrors: EventEntry[];
-  productInfoCustomFields: CustomFieldEntry[];
-  complianceCustomFields: CustomFieldEntry[];
-  sustainabilityCustomFields: CustomFieldEntry[];
-  endOfLifeCustomFields: CustomFieldEntry[];
-  guidelinesCustomFields: CustomFieldEntry[];
-}
-
-const initialState: FormState = {
-  sector: "Electronics",
-  sectorType: "ElectronicExtension",
+const BASE_FORM_STATE: BaseFormState = {
+  sector: "",
+  sectorType: "",
+  extensionData: {},
   gtin: "",
   taricCode: "",
   productName: "",
@@ -1336,44 +1123,7 @@ const initialState: FormState = {
   sparePartsAvailability: "",
   hazardousSubstances: [],
   substancesOfConcern: [],
-  sectorRequiredAssemblyDesc: "",
-  sectorRequiredAssemblyAutomationLevel: "",
-  sectorRequiredAssemblyLocationName: "",
-  sectorRequiredAssemblyLocationAddress: "",
-  sectorRequiredProductionDesc: "",
-  sectorRequiredManufacturingTechnology: "",
-  sectorRequiredProcessCertification: "",
-  sectorNonRequiredExpectedEndCondition: "",
-  sectorNonRequiredRenewableEnergyProductionValue: "",
-  sectorNonRequiredRenewableEnergyType: "",
-  sectorNonRequiredRenewableEnergyOutput: { value: "", unit: "", customUnit: "" },
-  sectorNonRequiredSeparabilityScore: "",
-  sectorNonRequiredSeparabilityMethod: "",
-  sectorNonRequiredModularityScore: "",
-  sectorNonRequiredReplaceableComponent: "",
-  sectorNonRequiredProductDesign: "",
-  sectorNonRequiredDesignForDisassembly: "",
-  sectorNonRequiredAppliedStandardName: "",
-  sectorNonRequiredAppliedStandardIdentifier: "",
-  sectorNonRequiredStandardReference: "",
   relatedObjectsRaw: "",
-  specHeight: { value: "", unit: "", customUnit: "" },
-  specWidth: { value: "", unit: "", customUnit: "" },
-  specDepth: { value: "", unit: "", customUnit: "" },
-  specWeight: { value: "", unit: "", customUnit: "" },
-  specIngressProtection: "",
-  specNetworkConnectivity: "",
-  specBatteryCapacity: { value: "", unit: "", customUnit: "" },
-  specVolume: { value: "", unit: "", customUnit: "" },
-  specChargingInterface: "",
-  specCrossCompatibilityDetails: "",
-  specCompatibleInterfaceStandard: "",
-  specCompatibilityLevel: "",
-  specComponentDescription: "",
-  specComponentCount: "",
-  specInstalledSoftwareName: "",
-  specInstalledSoftwareVersion: "",
-  specSoftwareSupportEndDate: "",
   testReport: "",
   imageUrl: "",
   lifetimeExpectancy: "",
@@ -1433,6 +1183,30 @@ const initialState: FormState = {
   endOfLifeCustomFields: [],
   guidelinesCustomFields: [],
 };
+
+function createExtensionFormState(sectorType: string): Partial<FormState> {
+  switch (sectorType) {
+    case "ElectronicExtension":
+      return createElectronicExtensionFormState();
+    default:
+      return {};
+  }
+}
+
+function buildFormState(sector: string, sectorType: string): FormState {
+  const extensionFields = createExtensionFormState(sectorType);
+  return {
+    ...BASE_FORM_STATE,
+    sector,
+    sectorType,
+    extensionData: {
+      [sectorType]: extensionFields as Record<string, unknown>,
+    },
+    ...extensionFields,
+  };
+}
+
+const initialState: FormState = buildFormState("Electronics", "ElectronicExtension");
 
 function JsonTree({
   value,
@@ -2032,6 +1806,29 @@ function parseWorksheetRows(buffer: ArrayBuffer): TabularRow[] {
     .filter((row) => Object.values(row).some((value) => value.trim() !== ""));
 }
 
+function buildDefaultExtensionPayload(extensionType: string): ExtensionPayload {
+  return {
+    sectorRequiredInformation: { extensionType },
+    sectorNonRequiredInformation: { extensionType },
+    productSpecification: { extensionType },
+  };
+}
+
+const EXTENSION_PAYLOAD_BUILDERS: Record<
+  string,
+  (form: FormState, deps: ExtensionPayloadBuildDependencies) => ExtensionPayload
+> = {
+  ElectronicExtension: buildElectronicExtensionPayload,
+};
+
+function buildExtensionPayload(
+  form: FormState,
+  deps: ExtensionPayloadBuildDependencies,
+): ExtensionPayload {
+  const builder = EXTENSION_PAYLOAD_BUILDERS[form.sectorType];
+  return builder ? builder(form, deps) : buildDefaultExtensionPayload(form.sectorType);
+}
+
 function buildPayload(
   f: FormState,
   organizations: ManufacturerOption[] = [],
@@ -2151,6 +1948,12 @@ function buildPayload(
       return acc;
     }, {});
 
+  const extensionPayload = buildExtensionPayload(f, {
+    toBoolean,
+    toMeasurementEntry,
+    toValueUnitObject,
+  });
+
   const product: Record<string, unknown> = {
     productSector: f.sector,
     productInfo: {
@@ -2178,88 +1981,13 @@ function buildPayload(
       sparePartsAvailability: f.sparePartsAvailability,
       hazardousSubstances: f.hazardousSubstances.map(toSubstance),
       substancesOfConcern: f.substancesOfConcern.map(toSubstance),
-      sectorRequiredInformation: {
-        extensionType: f.sectorType,
-        assemblyProcess: {
-          assemblyProcessDescription: f.sectorRequiredAssemblyDesc,
-          assemblyAutomationLevel: f.sectorRequiredAssemblyAutomationLevel,
-          assemblyLocation: {
-            name: f.sectorRequiredAssemblyLocationName,
-            address: f.sectorRequiredAssemblyLocationAddress,
-          },
-        },
-        productionMethod: {
-          productionMethodDescription: f.sectorRequiredProductionDesc,
-          manufacturingTechnology: f.sectorRequiredManufacturingTechnology,
-          processCertification: f.sectorRequiredProcessCertification,
-        },
-      },
-      sectorNonRequiredInformation: {
-        extensionType: f.sectorType,
-        expectedEndConditionInfo: {
-          expectedEndCondition: f.sectorNonRequiredExpectedEndCondition,
-        },
-        renewableEnergyProductionInfo: {
-          renewableEnergyProductionValue: toBoolean(
-            f.sectorNonRequiredRenewableEnergyProductionValue,
-          ),
-          renewableEnergyType: f.sectorNonRequiredRenewableEnergyType,
-          ...toValueUnitObject(
-            f.sectorNonRequiredRenewableEnergyOutput,
-            "renewableEnergyOutput",
-            "renewableEnergyOutputUnit",
-          ),
-        },
-        materialSeparability: {
-          separabilityScore: f.sectorNonRequiredSeparabilityScore
-            ? Number(f.sectorNonRequiredSeparabilityScore)
-            : "",
-          separabilityMethod: f.sectorNonRequiredSeparabilityMethod,
-        },
-        componentModularity: {
-          modularityScore: f.sectorNonRequiredModularityScore
-            ? Number(f.sectorNonRequiredModularityScore)
-            : "",
-          replaceableComponent: f.sectorNonRequiredReplaceableComponent,
-        },
-        productDesignInfo: {
-          productDesign: f.sectorNonRequiredProductDesign,
-          designForDisassembly: toBoolean(f.sectorNonRequiredDesignForDisassembly),
-        },
-        appliedStandardsAndNorms: {
-          appliedStandard: {
-            name: f.sectorNonRequiredAppliedStandardName,
-            identifier: f.sectorNonRequiredAppliedStandardIdentifier,
-          },
-          standardReference: f.sectorNonRequiredStandardReference,
-        },
-      },
+      sectorRequiredInformation: extensionPayload.sectorRequiredInformation,
+      sectorNonRequiredInformation: extensionPayload.sectorNonRequiredInformation,
       relatedObjects: f.relatedObjectsRaw
         .split("\n")
         .map((s) => s.trim())
         .filter(Boolean),
-      productSpecification: {
-        extensionType: f.sectorType,
-        height: toMeasurementEntry(f.specHeight),
-        width: toMeasurementEntry(f.specWidth),
-        depth: toMeasurementEntry(f.specDepth),
-        weight: toMeasurementEntry(f.specWeight),
-        ingressProtection: f.specIngressProtection,
-        networkConnectivity: f.specNetworkConnectivity,
-        batteryCapacity: toMeasurementEntry(f.specBatteryCapacity),
-        volume: toMeasurementEntry(f.specVolume),
-        chargingInterface: f.specChargingInterface,
-        crossCompatibility: {
-          crossCompatibilityDetails: f.specCrossCompatibilityDetails,
-          compatibleInterfaceStandard: f.specCompatibleInterfaceStandard,
-          compatibilityLevel: f.specCompatibilityLevel,
-        },
-        installedSoftware: {
-          installedSoftwareName: f.specInstalledSoftwareName,
-          installedSoftwareVersion: f.specInstalledSoftwareVersion,
-          softwareSupportEndDate: f.specSoftwareSupportEndDate,
-        },
-      },
+      productSpecification: extensionPayload.productSpecification,
       testReport: f.testReport,
       commercialInformation: {
         image: { url: f.imageUrl },
@@ -2417,44 +2145,7 @@ export default function AddProductFormClient({
       "sparePartsAvailability",
       "hazardousSubstances",
       "substancesOfConcern",
-      "sectorRequiredAssemblyDesc",
-      "sectorRequiredAssemblyAutomationLevel",
-      "sectorRequiredAssemblyLocationName",
-      "sectorRequiredAssemblyLocationAddress",
-      "sectorRequiredProductionDesc",
-      "sectorRequiredManufacturingTechnology",
-      "sectorRequiredProcessCertification",
-      "sectorNonRequiredExpectedEndCondition",
-      "sectorNonRequiredRenewableEnergyProductionValue",
-      "sectorNonRequiredRenewableEnergyType",
-      "sectorNonRequiredRenewableEnergyOutput",
-      "sectorNonRequiredSeparabilityScore",
-      "sectorNonRequiredSeparabilityMethod",
-      "sectorNonRequiredModularityScore",
-      "sectorNonRequiredReplaceableComponent",
-      "sectorNonRequiredProductDesign",
-      "sectorNonRequiredDesignForDisassembly",
-      "sectorNonRequiredAppliedStandardName",
-      "sectorNonRequiredAppliedStandardIdentifier",
-      "sectorNonRequiredStandardReference",
       "relatedObjectsRaw",
-      "specHeight",
-      "specWidth",
-      "specDepth",
-      "specWeight",
-      "specIngressProtection",
-      "specNetworkConnectivity",
-      "specBatteryCapacity",
-      "specVolume",
-      "specChargingInterface",
-      "specCrossCompatibilityDetails",
-      "specCompatibleInterfaceStandard",
-      "specCompatibilityLevel",
-      "specComponentDescription",
-      "specComponentCount",
-      "specInstalledSoftwareName",
-      "specInstalledSoftwareVersion",
-      "specSoftwareSupportEndDate",
       "testReport",
       "imageUrl",
       "lifetimeExpectancy",
@@ -2521,6 +2212,38 @@ export default function AddProductFormClient({
     ],
   };
 
+  const extensionSectionsForProductInfo: ExtensionSectionKey[] = [
+    "sectorRequiredInformation",
+    "productSpecification",
+    "sectorNonRequiredInformation",
+  ];
+
+  const extensionFieldKeysForSector = (sectorType: string): Array<keyof FormState> => {
+    const extensionConfig = EXTENSION_FIELD_CONFIG[sectorType];
+    if (!extensionConfig) {
+      return [];
+    }
+
+    const keys = extensionSectionsForProductInfo.flatMap((section) =>
+      Object.values(extensionConfig[section] ?? {}).flatMap((group) =>
+        group.map((field) => field.key as keyof FormState),
+      ),
+    );
+
+    return [...new Set(keys)];
+  };
+
+  const currentStepFields = (): Array<keyof FormState> => {
+    const step = sectionSteps[currentSectionStep];
+    const baseFields = fieldsByStep[step] ?? [];
+
+    if (step !== "Product Information") {
+      return baseFields;
+    }
+
+    return [...baseFields, ...extensionFieldKeysForSector(form.sectorType)];
+  };
+
   const formKeyLookup = useMemo(() => {
     const lookup = new Map<string, keyof FormState>();
     const keys = Object.keys(initialState) as Array<keyof FormState>;
@@ -2574,6 +2297,20 @@ export default function AddProductFormClient({
 
   const setField: FormSetter = (key, value) => set(key, value as never);
 
+  const setSectorContext = (sector: string, sectorType: string) => {
+    const extensionFields = createExtensionFormState(sectorType);
+    setForm((prev) => ({
+      ...prev,
+      sector,
+      sectorType,
+      extensionData: {
+        ...prev.extensionData,
+        [sectorType]: extensionFields as Record<string, unknown>,
+      },
+      ...extensionFields,
+    }));
+  };
+
   const customFieldSourcePaths = useMemo(() => {
     const groups: CustomFieldEntry[][] = [
       form.productInfoCustomFields,
@@ -2619,6 +2356,7 @@ export default function AddProductFormClient({
     form,
     set,
     setField,
+    setSectorContext,
     manufacturers,
     canUseLeaf,
     setCustomGroupFields,
@@ -2850,10 +2588,16 @@ export default function AddProductFormClient({
   };
 
   const clearCurrentStep = () => {
-    const fields = fieldsByStep[sectionSteps[currentSectionStep]] ?? [];
+    const fields = currentStepFields();
+    const extensionDefaults = createExtensionFormState(form.sectorType) as Record<string, unknown>;
     setForm((prev) => {
       const next = { ...prev } as FormState;
       for (const field of fields) {
+        if (Object.hasOwn(extensionDefaults, field)) {
+          (next as unknown as Record<string, unknown>)[field] = extensionDefaults[field];
+          continue;
+        }
+
         (next as unknown as Record<string, unknown>)[field] = initialState[field] as unknown;
       }
       return next;
@@ -2864,6 +2608,7 @@ export default function AddProductFormClient({
   };
 
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
+    console.log(form);
     e.preventDefault();
     setSubmitting(true);
     setError(null);

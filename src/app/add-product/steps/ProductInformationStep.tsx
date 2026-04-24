@@ -2,7 +2,6 @@ import React from "react";
 import { FormField, TextAreaField } from "@/components/form/FormField";
 import { CollapsibleSection, DataLayerGroup } from "@/components/form/CollapsibleSection";
 import DataPointComponent from "@/components/DataPointComponent";
-import { COUNTRIES } from "@/config/countries";
 import { SECTORS } from "@/config/sectors";
 
 export function ProductInformationStep({ shared }: Readonly<{ shared: any }>) {
@@ -11,6 +10,7 @@ export function ProductInformationStep({ shared }: Readonly<{ shared: any }>) {
     form,
     set,
     setField,
+    setSectorContext,
     manufacturers,
     canUseLeaf,
     setCustomGroupFields,
@@ -34,8 +34,7 @@ export function ProductInformationStep({ shared }: Readonly<{ shared: any }>) {
           value={form.sectorType}
           onChange={(e) => {
             const selected = SECTORS.find((s) => s.extensionType === e.target.value);
-            set("sectorType", selected?.extensionType ?? "");
-            set("sector", selected?.label ?? "");
+            setSectorContext(selected?.label ?? "", selected?.extensionType ?? "");
           }}
           className="w-full max-w-xs px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-blue-light)] focus:border-[var(--color-brand-blue-light)]"
         >
