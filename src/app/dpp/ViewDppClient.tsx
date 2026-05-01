@@ -20,6 +20,14 @@ type MediaDevicesLike = {
   getUserMedia: (constraints: MediaStreamConstraints) => Promise<MediaStream>;
 };
 
+type DppItem = {
+  id: string;
+  name: string;
+  granularity: string;
+  serial: string;
+  batch: string;
+};
+
 const SCAN_FORMATS = ["qr_code"];
 
 function extractDppId(raw: string): string {
@@ -60,6 +68,9 @@ export default function ViewDppClient() {
   const [inputValue, setInputValue] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isScanning, setIsScanning] = useState(false);
+  const [dppList, setDppList] = useState<DppItem[]>([]);
+  const [isLoadingDpps, setIsLoadingDpps] = useState(false);
+  const [dppError, setDppError] = useState<string | null>(null);
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -102,6 +113,29 @@ export default function ViewDppClient() {
     return () => {
       stopScan();
     };
+  }, []);
+
+  useEffect(() => {
+    const fetchDpps = async () => {
+      setIsLoadingDpps(true);
+      setDppError(null);
+      try {
+        const response = await fetch("/api/dpp?all=true");
+        if (!response.ok) {
+          throw new Error(`Failed to fetch DPPs: ${response.statusText}`);
+        }
+        const dpps = await response.json();
+        setDppList(dpps);
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : "Failed to fetch DPPs";
+        setDppError(errorMessage);
+        console.error("Error fetching DPPs:", err);
+      } finally {
+        setIsLoadingDpps(false);
+      }
+    };
+
+    void fetchDpps();
   }, []);
 
   const goToDpp = (raw: string) => {
@@ -246,6 +280,57 @@ export default function ViewDppClient() {
           </DataLayerGroup>
         </CollapsibleSection>
       )}
+
+      <CollapsibleSection title={t("viewDpp.registeredSection")} defaultOpen>
+        {isLoadingDpps ? (
+          <div className="text-center py-8">
+            <p className="text-gray-600">{t("viewDpp.loadingDpps")}</p>
+          </div>
+        ) : dppError ? (
+          <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            {t("viewDpp.loadDppsError")} {dppError}
+          </div>
+        ) : dppList.length === 0 ? (
+          <div className="text-center py-8">
+            <p className="text-gray-600">{t("viewDpp.noDppsFound")}</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse border border-gray-300">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="border border-gray-300 px-4 py-2 text-left font-semibold">{t("viewDpp.idColumn")}</th>
+                  <th className="border border-gray-300 px-4 py-2 text-left font-semibold">{t("viewDpp.productNameColumn")}</th>
+                  <th className="border border-gray-300 px-4 py-2 text-left font-semibold">{t("viewDpp.granularityColumn")}</th>
+                  <th className="border border-gray-300 px-4 py-2 text-left font-semibold">{t("viewDpp.serialColumn")}</th>
+                  <th className="border border-gray-300 px-4 py-2 text-left font-semibold">{t("viewDpp.batchColumn")}</th>
+                  <th className="border border-gray-300 px-4 py-2 text-center font-semibold">{t("viewDpp.actionColumn")}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {dppList.map((dpp) => (
+                  <tr key={dpp.id} className="hover:bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-2 text-sm font-mono">{dpp.id}</td>
+                    <td className="border border-gray-300 px-4 py-2 text-sm">{dpp.name}</td>
+                    <td className="border border-gray-300 px-4 py-2 text-sm">{dpp.granularity}</td>
+                    <td className="border border-gray-300 px-4 py-2 text-sm">{dpp.serial}</td>
+                    <td className="border border-gray-300 px-4 py-2 text-sm">{dpp.batch}</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">
+                      <button
+                        type="button"
+                        onClick={() => goToDpp(dpp.id)}
+                        className="inline-flex items-center gap-1 px-3 py-1 rounded bg-[var(--color-brand-pink)] text-white text-xs font-semibold hover:brightness-110 hover:cursor-pointer"
+                      >
+                        {t("viewDpp.viewAction")}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </CollapsibleSection>
     </main>
   );
 }
