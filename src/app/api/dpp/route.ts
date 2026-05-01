@@ -5,7 +5,20 @@ import { getContext, transformNestedObjects } from "@/lib/transforms-jsonld/dpp"
 
 export async function GET(request: NextRequest) {
   const dppId = request.nextUrl.searchParams.get("id");
-  if (dppId) {
+  const getAllDpps = request.nextUrl.searchParams.get("all");
+  
+  if (getAllDpps === "true") {
+    try {
+      const dpps = await TriplyDBClient.fetchFromAPI<any>("get-dpp");
+      return NextResponse.json(dpps);
+    } catch (error) {
+      console.error("Failed to fetch all DPPs:", error);
+      return NextResponse.json(
+        { error: "Failed to fetch DPPs" },
+        { status: 500 },
+      );
+    }
+  } else if (dppId) {
     try {
       const describeResult = await TriplyDBClient.describeSubjectFromTriplyDB(`urn:dpp:${dppId}`);
       const dppData = await transformToJsonFromDescribeResult(describeResult);
@@ -19,7 +32,7 @@ export async function GET(request: NextRequest) {
     }
   } else {
     return NextResponse.json(
-      { error: "Missing DPP ID. Use /api/dpp/{dppId} or /api/dpp?id={dppId}." },
+      { error: "Missing DPP ID. Use /api/dpp/{dppId} or /api/dpp?id={dppId} or /api/dpp?all=true." },
       { status: 400 },
     );
   }

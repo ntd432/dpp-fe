@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { DataLayerBadge } from "./DataLayerBadge";
 
 interface CollapsibleSectionProps {
@@ -16,8 +16,14 @@ export function CollapsibleSection({
   showCollapseButton = false,
   defaultOpen = true,
 }: Readonly<CollapsibleSectionProps>) {
-  const [isOpen, setIsOpen] = useState(defaultOpen);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const bgColor = 'bg-[var(--color-brand-blue)]/20';
+
+  useEffect(() => {
+    setIsOpen(defaultOpen);
+    setIsMounted(true);
+  }, [defaultOpen]);
 
   return (
     <div className={`border-l-4 border-[var(--color-brand-blue)] bg-white rounded-lg shadow-sm overflow-hidden`}>
@@ -42,7 +48,7 @@ export function CollapsibleSection({
           <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
         </div>
       )}
-      {isOpen && <div className="px-6 py-4 space-y-6">{children}</div>}
+      {isMounted && isOpen && <div className="px-6 py-4 space-y-6">{children}</div>}
     </div>
   );
 }
@@ -54,6 +60,11 @@ interface DataLayerGroupProps {
 
 export function DataLayerGroup({ layer, children }: Readonly<DataLayerGroupProps>) {
   const [isOpen, setIsOpen] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   return (
     <div className="space-y-4">
@@ -73,7 +84,7 @@ export function DataLayerGroup({ layer, children }: Readonly<DataLayerGroupProps
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
-      {isOpen && <div className="space-y-4 pl-2">{children}</div>}
+      {isMounted && isOpen && <div className="space-y-4 pl-2">{children}</div>}
     </div>
   );
 }
