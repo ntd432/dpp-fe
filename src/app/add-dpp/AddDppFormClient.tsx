@@ -462,6 +462,8 @@ export default function AddDppFormClient({
                 if (val === "__new__") {
                   set("issuerMode", "new");
                   set("issuerId", "");
+                  set("issuerName", "");
+                  set("issuerUrl", "");
                 } else {
                   const selected = manufacturers.find((m) => m.id === val);
                   set("issuerMode", "existing");
@@ -487,14 +489,14 @@ export default function AddDppFormClient({
             <div className="grid grid-cols-2 gap-4 border-l-2 border-[var(--color-brand-blue-light)] pl-3">
               <FormField
                 label={t("Organisation Name")}
-                value={""}
+                value={form.issuerName}
                 onChange={(v) => set("issuerName", v)}
                 placeholder={t("e.g. Acme Corp")}
                 required
               />
               <FormField
                 label={t("Website URL")}
-                value={""}
+                value={form.issuerUrl}
                 onChange={(v) => set("issuerUrl", v)}
                 type="url"
                 placeholder={t("https://example.com")}

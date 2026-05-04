@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { isRecord } from "../shared";
+import { createDataPoint, isRecord, transformOrganization } from "../shared";
 import { transformSupplyChain } from "../data-groups/supply-chain-transform";
 import { transformUsageInformation } from "../data-groups/usage-transform";
 
@@ -49,6 +49,11 @@ export function transformNestedObjects(dpp: Record<string, unknown>): void {
   }
   if (isRecord(dpp.usage)) {
     dataGroup.push(transformUsageInformation(dpp.usage));
+  }
+  if (isRecord(dpp.issuer)) {
+    if (!dpp.issuer.identifier) {
+      dpp.issuer = transformOrganization(dpp.issuer);
+    }
   }
 
   if (dpp.product && typeof dpp.product === "object" && dpp.product !== null) {
