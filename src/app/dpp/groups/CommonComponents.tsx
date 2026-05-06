@@ -1,3 +1,5 @@
+"use client";
+
 import InfoCard, { InfoCardWithLink } from "@/components/InfoCard";
 import { Component, Event, Organization, Person } from "@/types/dpp-core";
 

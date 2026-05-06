@@ -1,3 +1,5 @@
+"use client";
+
 interface InfoCardProps {
   label?: string;
   value: string;
@@ -71,7 +73,7 @@ export function ImageInfoCard({ label, value }: Readonly<InfoCardProps>) {
 
 function formatLabel(key: string): string {
   return key
-    .replace(/([A-Z])/g, " $1")
+    .replaceAll(/([A-Z])/g, " $1")
     .replace(/^./, (s) => s.toUpperCase())
     .trim();
 }

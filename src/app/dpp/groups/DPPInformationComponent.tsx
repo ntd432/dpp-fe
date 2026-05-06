@@ -1,3 +1,5 @@
+"use client";
+
 import { CollapsibleSection } from "@/components/form/CollapsibleSection";
 import { ValueTree } from "./CommonComponents";
 import { DPP } from "@/types";
