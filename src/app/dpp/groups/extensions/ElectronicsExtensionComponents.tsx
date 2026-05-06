@@ -1,3 +1,5 @@
+"use client";
+
 import { ElectronicExtension } from "@/types";
 import { ExtensionFieldCard, ValueTree } from "../CommonComponents";
 import { Utils } from "@/lib/Utils";

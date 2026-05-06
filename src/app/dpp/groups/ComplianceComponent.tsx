@@ -1,3 +1,5 @@
+"use client";
+
 import { CollapsibleSection, DataLayerGroup } from "@/components/form/CollapsibleSection";
 import DataPointComponent from "@/components/DataPointComponent";
 import { KeyValuePair, ListCards, ValueTree } from "./CommonComponents";

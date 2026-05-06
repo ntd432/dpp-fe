@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { ElectronicsExtensionSection } from "./ElectronicsExtensionComponents";
 import { ExtensionSectionKey } from "@/config/product-extension-fields";

@@ -1,12 +1,14 @@
+"use client";
+
 import type { ReactNode } from "react";
 
 interface ErrorMessageProps {
-  message: string;
-  onRetry?: () => void;
-  action?: ReactNode;
+  readonly message: string;
+  readonly onRetry?: () => void;
+  readonly action?: ReactNode;
 }
 
-export default function ErrorMessage({ message, onRetry, action }: ErrorMessageProps) {
+export default function ErrorMessage({ message, onRetry, action }: Readonly<ErrorMessageProps>) {
   return (
     <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
       <div className="text-red-600 mb-2">
