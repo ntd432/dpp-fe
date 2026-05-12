@@ -15,3 +15,18 @@ export async function GET() {
     );
   }
 }
+
+function filterManufacturers(manufacturers: Organization[]): Organization[] {
+  const seen = new Set<string>();
+  
+  return manufacturers.filter((manufacturer) => {
+    const key = `${manufacturer.name}|${manufacturer.url}`;
+    
+    if (seen.has(key)) {
+      return false;
+    }
+    
+    seen.add(key);
+    return true;
+  });
+}
