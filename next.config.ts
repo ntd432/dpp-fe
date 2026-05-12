@@ -21,8 +21,7 @@ export const ARRAY_TYPES = new Set([
     "regulation", "productLabel", "certification",
     "environmentalImpact", "environmentalFootprint", "resourceConsumption", "resourceConsumptionWhenUsing", "resourceConsumptionWhenRecovering",
     "incidentsAndErrors", "maintenanceLog", "usageHistory",
-    "recyclingPartner", "customerReturnChannel", "traceabilityEvent",
-    "componentComposition"
+    "recyclingPartner", "customerReturnChannel", "traceabilityEvent", "recycledReusedContent", "componentComposition",
 ]);
 
 export const TEST_DPP = {

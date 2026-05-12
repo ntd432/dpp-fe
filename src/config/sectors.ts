@@ -17,6 +17,11 @@ export const SECTORS: SectorOption[] = [
     value: "Electronics",
     extensionType: "ElectronicExtension",
   },
+  {
+    label: "Others",
+    value: "Others",
+    extensionType: "OtherExtension",
+  }
 ];
 
 /** Lookup map: sector value → extensionType */
