@@ -210,243 +210,297 @@ export function buildElectronicExtensionPayload(
   };
 }
 
+// Translation keys for Electronic Extension fields
+const ELECTRONIC_GROUP_KEYS = {
+  ASSEMBLY_PROCESS: "extensions.electronic.groups.assemblyProcess",
+  PRODUCTION_METHOD: "extensions.electronic.groups.productionMethod",
+  PHYSICAL_MEASUREMENTS: "extensions.electronic.groups.physicalMeasurements",
+  TECHNICAL_SPECIFICATIONS: "extensions.electronic.groups.technicalSpecifications",
+  CROSS_COMPATIBILITY: "extensions.electronic.groups.crossCompatibility",
+  INSTALLED_SOFTWARE: "extensions.electronic.groups.installedSoftware",
+  EXPECTED_END_CONDITION: "extensions.electronic.groups.expectedEndCondition",
+  RENEWABLE_ENERGY_PRODUCTION: "extensions.electronic.groups.renewableEnergyProduction",
+  MATERIAL_SEPARABILITY: "extensions.electronic.groups.materialSeparability",
+  COMPONENT_MODULARITY: "extensions.electronic.groups.componentModularity",
+  PRODUCT_DESIGN: "extensions.electronic.groups.productDesign",
+  APPLIED_STANDARDS_AND_NORMS: "extensions.electronic.groups.appliedStandardsAndNorms",
+} as const;
+
+const ELECTRONIC_FIELD_KEYS = {
+  ASSEMBLY_DESC: "extensions.electronic.fields.assemblyProcessDescription",
+  ASSEMBLY_AUTOMATION_LEVEL: "extensions.electronic.fields.assemblyAutomationLevel",
+  ASSEMBLY_LOCATION_NAME: "extensions.electronic.fields.assemblyLocationName",
+  ASSEMBLY_LOCATION_ADDRESS: "extensions.electronic.fields.assemblyLocationAddress",
+  PRODUCTION_DESC: "extensions.electronic.fields.productionMethodDescription",
+  MANUFACTURING_TECHNOLOGY: "extensions.electronic.fields.manufacturingTechnology",
+  PROCESS_CERTIFICATION: "extensions.electronic.fields.processCertification",
+  HEIGHT: "extensions.electronic.fields.height",
+  WIDTH: "extensions.electronic.fields.width",
+  DEPTH: "extensions.electronic.fields.depth",
+  WEIGHT: "extensions.electronic.fields.weight",
+  BATTERY_CAPACITY: "extensions.electronic.fields.batteryCapacity",
+  VOLUME: "extensions.electronic.fields.volume",
+  INGRESS_PROTECTION: "extensions.electronic.fields.ingressProtection",
+  NETWORK_CONNECTIVITY: "extensions.electronic.fields.networkConnectivity",
+  CHARGING_INTERFACE: "extensions.electronic.fields.chargingInterface",
+  CROSS_COMPATIBILITY_DETAILS: "extensions.electronic.fields.crossCompatibilityDetails",
+  COMPATIBLE_INTERFACE_STANDARD: "extensions.electronic.fields.compatibleInterfaceStandard",
+  COMPATIBILITY_LEVEL: "extensions.electronic.fields.compatibilityLevel",
+  INSTALLED_SOFTWARE_NAME: "extensions.electronic.fields.installedSoftwareName",
+  INSTALLED_SOFTWARE_VERSION: "extensions.electronic.fields.installedSoftwareVersion",
+  SOFTWARE_SUPPORT_END_DATE: "extensions.electronic.fields.softwareSupportEndDate",
+  EXPECTED_END_CONDITION: "extensions.electronic.fields.expectedEndCondition",
+  RENEWABLE_ENERGY_PRODUCTION_VALUE: "extensions.electronic.fields.producesRenewableEnergy",
+  RENEWABLE_ENERGY_TYPE: "extensions.electronic.fields.renewableEnergyType",
+  RENEWABLE_ENERGY_OUTPUT: "extensions.electronic.fields.renewableEnergyOutput",
+  SEPARABILITY_SCORE: "extensions.electronic.fields.separabilityScore",
+  SEPARABILITY_METHOD: "extensions.electronic.fields.separabilityMethod",
+  MODULARITY_SCORE: "extensions.electronic.fields.modularityScore",
+  REPLACEABLE_COMPONENT: "extensions.electronic.fields.replaceableComponent",
+  PRODUCT_DESIGN: "extensions.electronic.fields.productDesign",
+  DESIGN_FOR_DISASSEMBLY: "extensions.electronic.fields.designedForDisassembly",
+  APPLIED_STANDARD_NAME: "extensions.electronic.fields.appliedStandardName",
+  APPLIED_STANDARD_IDENTIFIER: "extensions.electronic.fields.appliedStandardIdentifier",
+  STANDARD_REFERENCE: "extensions.electronic.fields.standardReference",
+} as const;
+
 export const ELECTRONIC_EXTENSION_FIELDS = {
   sectorRequiredInformation: {
-    "Assembly Process": [
+    [ELECTRONIC_GROUP_KEYS.ASSEMBLY_PROCESS]: [
       {
         key: "sectorRequiredAssemblyDesc",
-        label: "Assembly Process Description",
+        label: ELECTRONIC_FIELD_KEYS.ASSEMBLY_DESC,
         kind: "textarea",
       },
       {
         key: "sectorRequiredAssemblyAutomationLevel",
-        label: "Assembly Automation Level",
+        label: ELECTRONIC_FIELD_KEYS.ASSEMBLY_AUTOMATION_LEVEL,
         kind: "select",
         options: [
-          { value: "manual", label: "Manual" },
-          { value: "semi-automated", label: "Semi-automated" },
-          { value: "automated", label: "Automated" },
+          { value: "manual", label: "extensions.electronic.options.manual" },
+          { value: "semi-automated", label: "extensions.electronic.options.semiAutomated" },
+          { value: "automated", label: "extensions.electronic.options.automated" },
         ],
       },
       {
         key: "sectorRequiredAssemblyLocationName",
-        label: "Assembly Location Name",
+        label: ELECTRONIC_FIELD_KEYS.ASSEMBLY_LOCATION_NAME,
         kind: "text",
       },
       {
         key: "sectorRequiredAssemblyLocationAddress",
-        label: "Assembly Location Address",
+        label: ELECTRONIC_FIELD_KEYS.ASSEMBLY_LOCATION_ADDRESS,
         kind: "text",
       },
     ],
-    "Production Method": [
+    [ELECTRONIC_GROUP_KEYS.PRODUCTION_METHOD]: [
       {
         key: "sectorRequiredProductionDesc",
-        label: "Production Method Description",
+        label: ELECTRONIC_FIELD_KEYS.PRODUCTION_DESC,
         kind: "textarea",
       },
       {
         key: "sectorRequiredManufacturingTechnology",
-        label: "Manufacturing Technology",
+        label: ELECTRONIC_FIELD_KEYS.MANUFACTURING_TECHNOLOGY,
         kind: "text",
       },
       {
         key: "sectorRequiredProcessCertification",
-        label: "Process Certification",
+        label: ELECTRONIC_FIELD_KEYS.PROCESS_CERTIFICATION,
         kind: "text",
       },
     ],
   },
   productSpecification: {
-    "Physical Measurements": [
+    [ELECTRONIC_GROUP_KEYS.PHYSICAL_MEASUREMENTS]: [
       {
         key: "specHeight",
-        label: "Height",
+        label: ELECTRONIC_FIELD_KEYS.HEIGHT,
         kind: "measurement",
         unitOptions: LENGTH_UNITS,
       },
       {
         key: "specWidth",
-        label: "Width",
+        label: ELECTRONIC_FIELD_KEYS.WIDTH,
         kind: "measurement",
         unitOptions: LENGTH_UNITS,
       },
       {
         key: "specDepth",
-        label: "Depth",
+        label: ELECTRONIC_FIELD_KEYS.DEPTH,
         kind: "measurement",
         unitOptions: LENGTH_UNITS,
       },
       {
         key: "specWeight",
-        label: "Weight",
+        label: ELECTRONIC_FIELD_KEYS.WEIGHT,
         kind: "measurement",
         unitOptions: MASS_UNITS,
       },
       {
         key: "specBatteryCapacity",
-        label: "Battery Capacity",
+        label: ELECTRONIC_FIELD_KEYS.BATTERY_CAPACITY,
         kind: "measurement",
         unitOptions: BATTERY_UNITS,
       },
       {
         key: "specVolume",
-        label: "Volume",
+        label: ELECTRONIC_FIELD_KEYS.VOLUME,
         kind: "measurement",
         unitOptions: VOLUME_UNITS,
       },
     ],
-    "Technical Specifications": [
+    [ELECTRONIC_GROUP_KEYS.TECHNICAL_SPECIFICATIONS]: [
       {
         key: "specIngressProtection",
-        label: "Ingress Protection",
+        label: ELECTRONIC_FIELD_KEYS.INGRESS_PROTECTION,
         kind: "text",
         placeholder: "e.g., IP68",
       },
       {
         key: "specNetworkConnectivity",
-        label: "Network Connectivity",
+        label: ELECTRONIC_FIELD_KEYS.NETWORK_CONNECTIVITY,
         kind: "text",
         placeholder: "e.g., 5G",
       },
       {
         key: "specChargingInterface",
-        label: "Charging Interface",
+        label: ELECTRONIC_FIELD_KEYS.CHARGING_INTERFACE,
         kind: "text",
         placeholder: "e.g., USB-C",
       },
     ],
-    "Cross Compatibility": [
+    [ELECTRONIC_GROUP_KEYS.CROSS_COMPATIBILITY]: [
       {
         key: "specCrossCompatibilityDetails",
-        label: "Cross Compatibility Details",
+        label: ELECTRONIC_FIELD_KEYS.CROSS_COMPATIBILITY_DETAILS,
         kind: "textarea",
       },
       {
         key: "specCompatibleInterfaceStandard",
-        label: "Compatible Interface Standard",
+        label: ELECTRONIC_FIELD_KEYS.COMPATIBLE_INTERFACE_STANDARD,
         kind: "text",
       },
       {
         key: "specCompatibilityLevel",
-        label: "Compatibility Level",
+        label: ELECTRONIC_FIELD_KEYS.COMPATIBILITY_LEVEL,
         kind: "select",
         options: [
-          { value: "full", label: "Full" },
-          { value: "partial", label: "Partial" },
-          { value: "conditional", label: "Conditional" },
+          { value: "full", label: "extensions.electronic.options.full" },
+          { value: "partial", label: "extensions.electronic.options.partial" },
+          { value: "conditional", label: "extensions.electronic.options.conditional" },
         ],
       },
     ],
-    "Installed Software": [
+    [ELECTRONIC_GROUP_KEYS.INSTALLED_SOFTWARE]: [
       {
         key: "specInstalledSoftwareName",
-        label: "Installed Software Name",
+        label: ELECTRONIC_FIELD_KEYS.INSTALLED_SOFTWARE_NAME,
         kind: "text",
       },
       {
         key: "specInstalledSoftwareVersion",
-        label: "Installed Software Version",
+        label: ELECTRONIC_FIELD_KEYS.INSTALLED_SOFTWARE_VERSION,
         kind: "text",
       },
       {
         key: "specSoftwareSupportEndDate",
-        label: "Software Support End Date",
+        label: ELECTRONIC_FIELD_KEYS.SOFTWARE_SUPPORT_END_DATE,
         kind: "date",
       },
     ],
   },
   sectorNonRequiredInformation: {
-    "Expected End Condition": [
+    [ELECTRONIC_GROUP_KEYS.EXPECTED_END_CONDITION]: [
       {
         key: "sectorNonRequiredExpectedEndCondition",
-        label: "Expected End Condition",
+        label: ELECTRONIC_FIELD_KEYS.EXPECTED_END_CONDITION,
         kind: "select",
         options: [
-          { value: "reusable", label: "Reusable" },
-          { value: "refurbishable", label: "Refurbishable" },
-          { value: "remanufacturable", label: "Remanufacturable" },
-          { value: "recyclable", label: "Recyclable" },
-          { value: "disposal-only", label: "Disposal-only" },
+          { value: "reusable", label: "extensions.electronic.options.reusable" },
+          { value: "refurbishable", label: "extensions.electronic.options.refurbishable" },
+          { value: "remanufacturable", label: "extensions.electronic.options.remanufacturable" },
+          { value: "recyclable", label: "extensions.electronic.options.recyclable" },
+          { value: "disposal-only", label: "extensions.electronic.options.disposalOnly" },
         ],
       },
     ],
-    "Renewable Energy Production": [
+    [ELECTRONIC_GROUP_KEYS.RENEWABLE_ENERGY_PRODUCTION]: [
       {
         key: "sectorNonRequiredRenewableEnergyProductionValue",
-        label: "Produces Renewable Energy",
+        label: ELECTRONIC_FIELD_KEYS.RENEWABLE_ENERGY_PRODUCTION_VALUE,
         kind: "select",
         options: [
-          { value: "true", label: "Yes" },
-          { value: "false", label: "No" },
+          { value: "true", label: "extensions.common.yes" },
+          { value: "false", label: "extensions.common.no" },
         ],
       },
       {
         key: "sectorNonRequiredRenewableEnergyType",
-        label: "Renewable Energy Type",
+        label: ELECTRONIC_FIELD_KEYS.RENEWABLE_ENERGY_TYPE,
         kind: "text",
       },
       {
         key: "sectorNonRequiredRenewableEnergyOutput",
-        label: "Renewable Energy Output",
+        label: ELECTRONIC_FIELD_KEYS.RENEWABLE_ENERGY_OUTPUT,
         kind: "measurement",
         unitOptions: ENERGY_OUTPUT_UNITS,
       },
     ],
-    "Material Separability": [
+    [ELECTRONIC_GROUP_KEYS.MATERIAL_SEPARABILITY]: [
       {
         key: "sectorNonRequiredSeparabilityScore",
-        label: "Separability Score",
+        label: ELECTRONIC_FIELD_KEYS.SEPARABILITY_SCORE,
         kind: "number",
       },
       {
         key: "sectorNonRequiredSeparabilityMethod",
-        label: "Separability Method",
+        label: ELECTRONIC_FIELD_KEYS.SEPARABILITY_METHOD,
         kind: "text",
       },
     ],
-    "Component Modularity": [
+    [ELECTRONIC_GROUP_KEYS.COMPONENT_MODULARITY]: [
       {
         key: "sectorNonRequiredModularityScore",
-        label: "Modularity Score",
+        label: ELECTRONIC_FIELD_KEYS.MODULARITY_SCORE,
         kind: "number",
       },
       {
         key: "sectorNonRequiredReplaceableComponent",
-        label: "Replaceable Component",
+        label: ELECTRONIC_FIELD_KEYS.REPLACEABLE_COMPONENT,
         kind: "text",
       },
     ],
-    "Product Design": [
+    [ELECTRONIC_GROUP_KEYS.PRODUCT_DESIGN]: [
       {
         key: "sectorNonRequiredProductDesign",
-        label: "Product Design",
+        label: ELECTRONIC_FIELD_KEYS.PRODUCT_DESIGN,
         kind: "textarea",
       },
       {
         key: "sectorNonRequiredDesignForDisassembly",
-        label: "Designed for Disassembly",
+        label: ELECTRONIC_FIELD_KEYS.DESIGN_FOR_DISASSEMBLY,
         kind: "select",
         options: [
-          { value: "true", label: "Yes" },
-          { value: "false", label: "No" },
+          { value: "true", label: "extensions.common.yes" },
+          { value: "false", label: "extensions.common.no" },
         ],
       },
     ],
-    "Applied Standards and Norms": [
+    [ELECTRONIC_GROUP_KEYS.APPLIED_STANDARDS_AND_NORMS]: [
       {
         key: "sectorNonRequiredAppliedStandardName",
-        label: "Applied Standard Name",
+        label: ELECTRONIC_FIELD_KEYS.APPLIED_STANDARD_NAME,
         kind: "text",
       },
       {
         key: "sectorNonRequiredAppliedStandardIdentifier",
-        label: "Applied Standard Identifier",
+        label: ELECTRONIC_FIELD_KEYS.APPLIED_STANDARD_IDENTIFIER,
         kind: "text",
       },
       {
         key: "sectorNonRequiredStandardReference",
-        label: "Standard Reference",
+        label: ELECTRONIC_FIELD_KEYS.STANDARD_REFERENCE,
         kind: "text",
       },
     ],

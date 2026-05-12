@@ -53,6 +53,8 @@ export function ListCards<T>({
     return <ValueTree label={label} value="No data" />;
   }
 
+  console.log(`Rendering list for ${label} with ${list.length} items.`);
+
   return (
     <div className="space-y-3">
       {label && <p className="text-sm font-semibold">{label}</p>}
