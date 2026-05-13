@@ -5,6 +5,7 @@ import DataPointComponent from "@/components/DataPointComponent";
 import { ValueTree } from "./CommonComponents";
 import { Guide, GuidelinesAndManuals } from "@/types";
 import InfoCard, { InfoCardWithLink } from "@/components/InfoCard";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type GuidelinesAndManualsComponentProps = Readonly<{
   guidelines?: GuidelinesAndManuals;
@@ -19,6 +20,7 @@ function GuideCard({label, guide}: Readonly<{label: string, guide: Readonly<Guid
 }
 
 export function GuidelinesAndManualsComponent({ guidelines }: GuidelinesAndManualsComponentProps) {
+  const { t } = useLanguage();
   return (
     <CollapsibleSection
       title="Guidelines and Manuals"

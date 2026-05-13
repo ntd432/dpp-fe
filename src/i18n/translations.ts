@@ -269,6 +269,14 @@ export const messages: Record<Locale, Messages> = {
     "unsupportedDevice.message": "Diese Funktion wird auf telefongrossen Geraten nicht unterstutzt. Bitte verwenden Sie ein Tablet oder einen Desktop.",
     "unsupportedDevice.backToDashboard": "Zuruck zum Dashboard",
 
+    "datalayer.regulatory": "Regulatorisch",
+    "datalayer.sectoral": "Branchenspezifisch",
+    "datalayer.commercial": "Kommerziell",
+    "datalayer.customFields": "Benutzerdefinierte Felder",
+
+    "sectors.electronics": "Elektronik",
+    "sectors.others": "Andere",
+
     "footer.title": "Digitaler Produktpass",
     "footer.thesis": "Masterarbeitsprojekt von James Nguyen",
     "footer.programme": "Software Engineering for Green Deals (SE4GD) Erasmus Mundus Programm, Kohorte 4, 2024-2026",
@@ -384,6 +392,14 @@ export const messages: Record<Locale, Messages> = {
     "unsupportedDevice.title": "Appareil non pris en charge",
     "unsupportedDevice.message": "Cette fonction n'est pas prise en charge sur les appareils de taille telephone. Veuillez utiliser une tablette ou un ordinateur.",
     "unsupportedDevice.backToDashboard": "Retour au tableau de bord",
+
+    "datalayer.regulatory": "Réglementaire",
+    "datalayer.sectoral": "Sectoriel",
+    "datalayer.commercial": "Commercial",
+    "datalayer.customFields": "Champs personnalisés",
+
+    "sectors.electronics": "Électronique",
+    "sectors.others": "Autres",
 
     "footer.title": "Passeport Numerique Produit",
     "footer.thesis": "Projet de memoire de master par James Nguyen",
@@ -501,6 +517,14 @@ export const messages: Record<Locale, Messages> = {
     "unsupportedDevice.message": "Esta funcion no es compatible en dispositivos de tamano telefono. Utilice una tableta o un ordenador.",
     "unsupportedDevice.backToDashboard": "Volver al panel",
 
+    "datalayer.regulatory": "Regulatorio",
+    "datalayer.sectoral": "Sectorial",
+    "datalayer.commercial": "Comercial",
+    "datalayer.customFields": "Campos personalizados",
+
+    "sectors.electronics": "Electrónica",
+    "sectors.others": "Otros",
+
     "footer.title": "Pasaporte Digital de Producto",
     "footer.thesis": "Proyecto de tesis de maestria por James Nguyen",
     "footer.programme": "Programa Erasmus Mundus Software Engineering for Green Deals (SE4GD), Cohorte 4, 2024-2026",
@@ -616,6 +640,14 @@ export const messages: Record<Locale, Messages> = {
     "unsupportedDevice.title": "未対応のデバイス",
     "unsupportedDevice.message": "この機能はスマートフォンサイズの端末ではサポートされていません。タブレットまたはデスクトップをご利用ください。",
     "unsupportedDevice.backToDashboard": "ダッシュボードに戻る",
+
+    "datalayer.regulatory": "規制",
+    "datalayer.sectoral": "業界別",
+    "datalayer.commercial": "商業",
+    "datalayer.customFields": "カスタムフィールド",
+
+    "sectors.electronics": "電子機器",
+    "sectors.others": "その他",
 
     "footer.title": "デジタル製品パスポート",
     "footer.thesis": "James Nguyenによる修士論文プロジェクト",
@@ -733,6 +765,14 @@ export const messages: Record<Locale, Messages> = {
     "unsupportedDevice.message": "Tính năng này không được hỗ trợ trên thiết bị cỡ điện thoại. Vui lòng dùng máy tính bảng hoặc máy tính để bàn.",
     "unsupportedDevice.backToDashboard": "Quay lại bảng điều khiển",
     "mobile.unsupportedFeature": "Tính năng này không được hỗ trợ trên điện thoại. Vui lòng dùng máy tính bảng hoặc máy tính để bàn.",
+
+    "datalayer.regulatory": "Quy định",
+    "datalayer.sectoral": "Theo ngành",
+    "datalayer.commercial": "Thương mại",
+    "datalayer.customFields": "Trường tùy chỉnh",
+
+    "sectors.electronics": "Điện tử",
+    "sectors.others": "Khác",
 
     "footer.title": "Hộ chiếu sản phẩm số",
     "footer.thesis": "Dự án luận văn thạc sĩ bởi Nguyễn Tiến Dũng",

@@ -4,12 +4,14 @@ import { CollapsibleSection, DataLayerGroup } from "@/components/form/Collapsibl
 import DataPointComponent from "@/components/DataPointComponent";
 import { EventListCard, ParticipantListCard } from "./CommonComponents";
 import { SupplyChain } from "@/types";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type SupplyChainComponentProps = Readonly<{
   supplyChain?: SupplyChain;
 }>;
 
 export function SupplyChainComponent({ supplyChain }: SupplyChainComponentProps) {
+  const { t } = useLanguage();
   return (
     <CollapsibleSection
       title="Supply Chain"
