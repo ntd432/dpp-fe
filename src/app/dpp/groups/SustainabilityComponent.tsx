@@ -5,6 +5,7 @@ import DataPointComponent from "@/components/DataPointComponent";
 import { ComponentListCard, KeyValuePair, ListCards, ValueTree } from "./CommonComponents";
 import { EnvironmentalFootprint, EnvironmentalImpact, ResourceConsumption, SustainabilityInformation } from "@/types";
 import InfoCard, { InfoCardWithLink } from "@/components/InfoCard";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 function EnvironmentalFootprintListCard({ list }: Readonly<{
   list: Readonly<ReadonlyArray<EnvironmentalFootprint>>;
@@ -106,6 +107,7 @@ type SustainabilityComponentProps = Readonly<{
 export function SustainabilityComponent({
   sustainability,
 }: SustainabilityComponentProps) {
+  const { t } = useLanguage();
   const socialIndicator = sustainability?.socialIndicator;
   const socialIndicatorPairs = [
     { label: "Labour Conditions", value: socialIndicator?.labourConditions },

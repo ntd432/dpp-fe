@@ -5,6 +5,7 @@ import DataPointComponent from "@/components/DataPointComponent";
 import { KeyValuePair, ListCards, ValueTree } from "./CommonComponents";
 import { Certification, Compliance, Label, Legislation } from "@/types";
 import InfoCard from "@/components/InfoCard";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type ComplianceComponentProps = Readonly<{
   compliance?: Compliance;
@@ -81,6 +82,8 @@ function RegulationCard(regulation: Readonly<Legislation>) {
 }
 
 export function ComplianceComponent({ compliance }: ComplianceComponentProps) {
+  const { t } = useLanguage();
+
   return (
     <CollapsibleSection
       title="Compliance"

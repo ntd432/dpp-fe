@@ -4,12 +4,14 @@ import { CollapsibleSection, DataLayerGroup } from "@/components/form/Collapsibl
 import DataPointComponent from "@/components/DataPointComponent";
 import { EventListCard, ValueTree } from "./CommonComponents";
 import { EndOfLifeData } from "@/types";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type EndOfLifeComponentProps = Readonly<{
   endOfLife?: EndOfLifeData;
 }>;
 
 export function EndOfLifeComponent({ endOfLife }: EndOfLifeComponentProps) {
+  const { t } = useLanguage();
   return (
     <CollapsibleSection
       title="End of Life"

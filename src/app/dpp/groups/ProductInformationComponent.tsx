@@ -9,6 +9,7 @@ import { ProductInformation, Substance } from "@/types";
 import { ImageInfoCard, InfoCardWithLink } from "@/components/InfoCard";
 import DataPointComponent from "@/components/DataPointComponent";
 import { SectorExtensionComponent } from "./extensions/SectorExtensionFactory";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type ProductInformationComponentProps = Readonly<{
   productInfo: ProductInformation;
@@ -72,6 +73,7 @@ export function ProductInformationComponent({
   productInfo,
   productSector,
 }: ProductInformationComponentProps) {
+  const { t } = useLanguage();
   const pii = productInfo.identification;
   const piiPairs = [
     { label: "Product Name", value: pii?.productName },
