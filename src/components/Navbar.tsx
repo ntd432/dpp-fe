@@ -40,6 +40,7 @@ export default function Navbar() {
   const navItems = [
     { href: "/", label: t("navbar.dashboard") },
     { href: "/add-product", label: t("navbar.addProduct") },
+    { href: "/products", label: t("navbar.viewProducts") },
     { href: "/add-dpp", label: t("navbar.registerDpp") },
     { href: "/dpp", label: t("navbar.viewDpp") },
   ];
