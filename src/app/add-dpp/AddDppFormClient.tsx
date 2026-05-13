@@ -249,8 +249,8 @@ export default function AddDppFormClient({
   function validateRequiredFields(): string[] {
     const errors: string[] = [];
 
-    if (!form.productBatchNumber.trim()) errors.push(t("Batch Number is required."));
-    if (!form.productSerialNumber.trim()) errors.push(t("Serial Number is required."));
+    // if (!form.productBatchNumber.trim()) errors.push(t("Batch Number is required."));
+    // if (!form.productSerialNumber.trim()) errors.push(t("Serial Number is required."));
     if (!form.granularity) errors.push(t("DPP Granularity is required."));
     if (!form.dataCarrierFormat) errors.push(t("Data Carrier Format is required."));
 
@@ -398,14 +398,14 @@ export default function AddDppFormClient({
               value={form.productBatchNumber}
               onChange={(v) => set("productBatchNumber", v)}
               placeholder={t("e.g. BATCH-2025-001")}
-              required
+              // required
             />
             <FormField
               label={t("Serial Number")}
               value={form.productSerialNumber}
               onChange={(v) => set("productSerialNumber", v)}
               placeholder={t("e.g. SN-00123456")}
-              required
+              // required
             />
           </div>
 

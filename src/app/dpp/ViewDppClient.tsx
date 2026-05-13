@@ -243,7 +243,7 @@ export default function ViewDppClient() {
           >
             {t("viewDpp.viewButton")}
           </button>
-          <button
+          {/* <button
             type="button"
             onClick={() => {
               if (isScanning) {
@@ -256,7 +256,7 @@ export default function ViewDppClient() {
             disabled={!isScannerAvailable && !isScanning}
           >
             {isScanning ? t("viewDpp.stopScan") : t("viewDpp.scanButton")}
-          </button>
+          </button> */}
         </div>
         {!isScannerAvailable && (
           <p className="text-xs text-gray-500">
