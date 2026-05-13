@@ -1,6 +1,7 @@
 "use client";
 
 import InfoCard, { InfoCardWithLink } from "@/components/InfoCard";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { Component, Event, Organization, Person } from "@/types/dpp-core";
 
 const IGNORE_LIST = new Set(["type"]); // Keys to ignore in the display tree, can be extended as needed.
@@ -45,12 +46,13 @@ export function ListCards<T>({
   getKey: (item: T, index: number) => string;
   renderCard: (item: T) => React.ReactNode;
 }>) {
+  const { t } = useLanguage();
   if (list === undefined) {
     return null;
   }
 
   if (list.length === 0) {
-    return <ValueTree label={label} value="No data" />;
+    return <ValueTree label={label} value={t("No data")} />;
   }
   
   return (
@@ -64,11 +66,12 @@ export function ListCards<T>({
 }
 
 export function KeyValuePair({ indent=false, numberOfColumn, pairs }: Readonly<{ indent?: boolean; numberOfColumn: number; pairs: ReadonlyArray<{ label: string; value: string | undefined }> }>) {
+  const { t } = useLanguage();
   return (
     <div className={`${indent ? "ml-5" : ""} rounded-lg bg-white p-3 border border-gray-200`}>
       <div className={`grid grid-cols-1 md:grid-cols-${numberOfColumn} gap-3`}>
         {pairs.map((pair) => (
-          <ValueTree key={pair.label} label={pair.label} value={pair.value} />
+          <ValueTree key={pair.label} label={t(pair.label)} value={pair.value} />
         ))}
       </div>
     </div>
@@ -100,6 +103,7 @@ export function ExtensionFieldCard({ fieldName, numberOfColumn = 2, children }: 
 }
 
 export function ValueTree({ label, value }: Readonly<{ label: string; value: unknown }>) {
+  const { t } = useLanguage();
   if (value === undefined) return null;
 
   if (IGNORE_LIST.has(label.toLowerCase())) return null;
@@ -109,7 +113,7 @@ export function ValueTree({ label, value }: Readonly<{ label: string; value: unk
   }
 
   if (Array.isArray(value)) {
-    if (value.length === 0) return <InfoCard label={prettyLabel(label)} value="No data" />;
+    if (value.length === 0) return <InfoCard label={prettyLabel(label)} value={t("No data")} />;
 
     return (
       <div className="space-y-3">
@@ -126,7 +130,7 @@ export function ValueTree({ label, value }: Readonly<{ label: string; value: unk
   }
 
   const entries = Object.entries(value).filter(([, nestedValue]) => nestedValue !== undefined);
-  if (entries.length === 0) return <InfoCard label={label} value="No data" />;
+  if (entries.length === 0) return <InfoCard label={label} value={t("No data")} />;
 
   return (
     <details open className="rounded-lg border border-gray-200 bg-white overflow-hidden">
@@ -167,6 +171,7 @@ export function ComponentListCard({label, componentList}: Readonly<{ label: stri
 }
 
 function ComponentCard(component: Readonly<Component>) {
+  const { t } = useLanguage();
   let componentName = component.componentName || "Unnamed Component";
   if (component.componentPercentage !== undefined) {
     componentName = `${componentName} (${component.componentPercentage}%)`;
@@ -182,11 +187,11 @@ function ComponentCard(component: Readonly<Component>) {
     <div className="ml-5 rounded-lg bg-white p-3 border border-gray-200">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         {componentPairs.map((pair) => (
-          <ValueTree key={pair.label} label={pair.label} value={pair.value} />
+          <ValueTree key={pair.label} label={t(pair.label)} value={pair.value} />
         ))}
         {component.componentSupplier && (
           <InfoCardWithLink
-            label="Component Supplier"
+            label={t("Component Supplier")}
             value={component.componentSupplier?.name || "N/A"}
             link={component.componentSupplier?.url}
           />

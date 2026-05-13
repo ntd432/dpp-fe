@@ -20,7 +20,6 @@ function formatIsoDuration(isoDuration?: string): string {
   if (!isoDuration) return "N/A";
 
   const value = isoDuration.trim();
-  // Supports common date-based durations such as P5Y, P2Y6M, P3M10D, P1Y2M15D.
   const match = /^P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)D)?$/i.exec(value);
 
   if (!match) {
@@ -39,34 +38,42 @@ function formatIsoDuration(isoDuration?: string): string {
   return parts.length > 0 ? parts.join(", ") : value;
 }
 
-function SubstanceListCard({list}: Readonly<{ list: ReadonlyArray<Substance> }>) {
-  return (
-      <ListCards
-        list={list}
-        label=""
-        getKey={(substance, index) =>
-          `substance-${substance.substanceName || index}`
-        }
-        renderCard={(substance) => SubstanceCard(substance)}
-      />
-    );
+function toCamelCase(str: string): string {
+  return str
+    .split(/[\s_-]+/)
+    .map((word, index) => {
+      const lowerWord = word.toLowerCase();
+      return index === 0 ? lowerWord : lowerWord.charAt(0).toUpperCase() + lowerWord.slice(1);
+    })
+    .join('');
 }
 
-function SubstanceCard(substance: Readonly<Substance>) {
-  const pairs = [
-    { label: "Name", value: substance.substanceName },
-    { label: "Description", value: substance.substanceDescription },
-    { label: "IUPAC Name", value: substance.iupacName },
-    { label: "EC Number", value: substance.ecNumber },
-    { label: "CAS Number", value: substance.casNumber },
-    { label: "Concentration Level", value: substance.concentrationLevel },
-    { label: "Location within product", value: substance.locationWithinProduct },
-    { label: "Safe Usage Instruction", value: substance.safeUsageInstruction },
-    { label: "Disassembly Instruction", value: substance.disassemblyInstruction },
-  ];
+function SubstanceListCard({ list }: Readonly<{ list: ReadonlyArray<Substance> }>) {
+  const { t } = useLanguage();
   return (
-    <KeyValuePair numberOfColumn={2} pairs={pairs} />
+    <ListCards
+      list={list}
+      label=""
+      getKey={(substance, index) => `substance-${substance.substanceName || index}`}
+      renderCard={(substance) => SubstanceCard(t, substance)}
+    />
   );
+}
+
+function SubstanceCard(t: (key: string) => string, substance: Readonly<Substance>) {
+  const pairs = [
+    { label: t("Name"), value: substance.substanceName },
+    { label: t("Description"), value: substance.substanceDescription },
+    { label: t("IUPAC Name"), value: substance.iupacName },
+    { label: t("EC Number"), value: substance.ecNumber },
+    { label: t("CAS Number"), value: substance.casNumber },
+    { label: t("Concentration Level"), value: substance.concentrationLevel },
+    { label: t("Location within product"), value: substance.locationWithinProduct },
+    { label: t("Safe Usage Instruction"), value: substance.safeUsageInstruction },
+    { label: t("Disassembly Instruction"), value: substance.disassemblyInstruction },
+  ];
+
+  return <KeyValuePair numberOfColumn={2} pairs={pairs} />;
 }
 
 export function ProductInformationComponent({
@@ -76,13 +83,13 @@ export function ProductInformationComponent({
   const { t } = useLanguage();
   const pii = productInfo.identification;
   const piiPairs = [
-    { label: "Product Name", value: pii?.productName },
-    { label: "GTIN", value: pii?.gtin },
-    { label: "TARIC Code", value: pii?.taricCode },
-    { label: "Country of Origin", value: pii?.countryOfOrigin?.name },
-    { label: "Production Date", value: pii?.productionDate },
-    { label: "Documentation", value: pii?.documentation },
-    { label: "Description", value: pii?.description },
+    { label: t("Product Name"), value: pii?.productName },
+    { label: t("GTIN"), value: pii?.gtin },
+    { label: t("TARIC Code"), value: pii?.taricCode },
+    { label: t("Country of Origin"), value: pii?.countryOfOrigin?.name },
+    { label: t("Production Date"), value: pii?.productionDate },
+    { label: t("Documentation URL"), value: pii?.documentation },
+    { label: t("Description"), value: pii?.description },
   ];
   const manufacturer = productInfo.manufacturer;
   const componentInfo = productInfo.component;
@@ -92,115 +99,121 @@ export function ProductInformationComponent({
   const sectorRequiredInformation = productInfo.sectorRequiredInformation;
   const productSpecification = productInfo.productSpecification;
   const sectorNonRequiredInformation = productInfo.sectorNonRequiredInformation;
-  const relatedObjects = productInfo.relatedObjects;
   const testReport = productInfo.testReport;
   const commercialInfo = productInfo.commercialInformation;
   const commercialInfoPairs = [
-    {
-      label: "Lifetime Expectancy",
-      value: formatIsoDuration(commercialInfo?.lifetimeExpectancy),
-    },
-    { label: "Warranty Period", value: commercialInfo?.warrantyPeriod },
-    { label: "Takeback Option", value: commercialInfo?.takebackOption },
+    { label: t("Lifetime Expectancy (ISO 8601)"), value: formatIsoDuration(commercialInfo?.lifetimeExpectancy) },
+    { label: t("Warranty Period (ISO 8601)"), value: formatIsoDuration(commercialInfo?.warrantyPeriod) },
+    { label: t("Takeback Option"), value: commercialInfo?.takebackOption },
   ];
   const qualityAssessment = productInfo.qualityAssessment;
   const identifiedRisk = productInfo.identifiedRisk;
 
   return (
     <CollapsibleSection
-      title="Product Information"
+      title={t("Product Information")}
       showCollapseButton
       defaultOpen={false}
     >
       <div className="block font-medium mb-5">
-        Product Sector: {productSector || "N/A"}
+        {t("Product Sector")}: {t(`sectors.${toCamelCase(productSector || "")}`) || productSector || "N/A"}
       </div>
       <DataLayerGroup layer={t("datalayer.regulatory")}>
         <DataPointComponent
-          label="Product Identification Information"
+          label={t("Product Identification Information")}
           isEmpty={!pii}
         >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {piiPairs.map((pair) => (
-              <ValueTree
-                key={pair.label}
-                label={pair.label}
-                value={pair.value}
-              />
+              <ValueTree key={pair.label} label={pair.label} value={pair.value} />
             ))}
           </div>
         </DataPointComponent>
-        <DataPointComponent
-          label="Manufacturer"
-          isEmpty={!manufacturer}
-        >
-          <InfoCardWithLink
-            value={manufacturer?.name || "N/A"}
-            link={manufacturer?.url}
-          />
+        <DataPointComponent label={t("Manufacturer")} isEmpty={!manufacturer}>
+          <InfoCardWithLink value={manufacturer?.name || "N/A"} link={manufacturer?.url} />
         </DataPointComponent>
-        <DataPointComponent
-          label="Component Information"
-          isEmpty={!componentInfo}
-        >
-          <ComponentListCard label="Component Composition" componentList={componentInfo?.componentComposition || []} />
+        <DataPointComponent label={t("Component Information")} isEmpty={!componentInfo}>
+          <ComponentListCard
+            label={t("Component Composition")}
+            componentList={componentInfo?.componentComposition || []}
+          />
           <InfoCardWithLink
-            label="Component Bills"
-            value={componentInfo?.componentBills || "No data"}
+            label={t("Component Bills URL")}
+            value={componentInfo?.componentBills || t("No data")}
             link={componentInfo?.componentBills}
           />
-          <ComponentListCard label="Recycled/Reused Content" componentList={componentInfo?.recycledReusedContent || []} />
+          <ComponentListCard
+            label={t("Recycled / Reused Content")}
+            componentList={componentInfo?.recycledReusedContent || []}
+          />
         </DataPointComponent>
-        <DataPointComponent label="Spare Parts Availability" isEmpty={!spareParts}>
-          <ValueTree label="Spare Parts" value={spareParts} />
+        <DataPointComponent label={t("Spare Parts Availability")} isEmpty={!spareParts}>
+          <ValueTree label={t("Spare Parts")} value={spareParts} />
         </DataPointComponent>
-        <DataPointComponent label="Hazardous Substances" isEmpty={(hazardousSubstances?.length || 0) === 0}>
+        <DataPointComponent
+          label={t("Hazardous Substances")}
+          isEmpty={(hazardousSubstances?.length || 0) === 0}
+        >
           <SubstanceListCard list={hazardousSubstances || []} />
         </DataPointComponent>
-        <DataPointComponent label="Substances of Concern" isEmpty={(substancesOfConcern?.length || 0) === 0}>
+        <DataPointComponent
+          label={t("Substances of Concern")}
+          isEmpty={(substancesOfConcern?.length || 0) === 0}
+        >
           <SubstanceListCard list={substancesOfConcern || []} />
         </DataPointComponent>
-        <DataPointComponent label="Sector Required Information" isEmpty={!sectorRequiredInformation}>
-          <SectorExtensionComponent sector={productSector} field="sectorRequiredInformation" data={sectorRequiredInformation} />
+        <DataPointComponent
+          label={t("Sector Required Information")}
+          isEmpty={!sectorRequiredInformation}
+        >
+          <SectorExtensionComponent
+            sector={productSector}
+            field="sectorRequiredInformation"
+            data={sectorRequiredInformation}
+          />
         </DataPointComponent>
-       
       </DataLayerGroup>
       <DataLayerGroup layer={t("datalayer.sectoral")}>
-        <DataPointComponent label="Product Specification" isEmpty={!productSpecification}>
-          <SectorExtensionComponent sector={productSector} field="productSpecification" data={productSpecification} />
+        <DataPointComponent label={t("Product Specification")} isEmpty={!productSpecification}>
+          <SectorExtensionComponent
+            sector={productSector}
+            field="productSpecification"
+            data={productSpecification}
+          />
         </DataPointComponent>
-        <DataPointComponent label="Sector Non-Required Information" isEmpty={!sectorNonRequiredInformation}>
-          <SectorExtensionComponent sector={productSector} field="sectorNonRequiredInformation" data={sectorNonRequiredInformation} />
-        </DataPointComponent> 
-        {/* <DataPointComponent label="Related Objects">
-          <ValueTree label="Related Objects" value={relatedObjects} />
-        </DataPointComponent> */}
-        <DataPointComponent label="Test Report" isEmpty={!testReport}>
+        <DataPointComponent
+          label={t("Sector Non-Required Information")}
+          isEmpty={!sectorNonRequiredInformation}
+        >
+          <SectorExtensionComponent
+            sector={productSector}
+            field="sectorNonRequiredInformation"
+            data={sectorNonRequiredInformation}
+          />
+        </DataPointComponent>
+        <DataPointComponent label={t("Test Report")} isEmpty={!testReport}>
           <ValueTree label="" value={testReport} />
         </DataPointComponent>
       </DataLayerGroup>
       <DataLayerGroup layer={t("datalayer.commercial")}>
         <DataPointComponent
-          label="Commercial Information"
+          label={t("Product Commercial Information")}
           isEmpty={!commercialInfo}
         >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {commercialInfoPairs.map((pair) => (
               <ValueTree key={pair.label} label={pair.label} value={pair.value} />
             ))}
-            <ImageInfoCard label="Product Image" value={commercialInfo?.image?.url || ""} />
+            <ImageInfoCard label={t("Product Image")} value={commercialInfo?.image?.url || ""} />
           </div>
         </DataPointComponent>
-        <DataPointComponent label="Quality Assessment" isEmpty={!qualityAssessment}>
+        <DataPointComponent label={t("Quality Assessment")} isEmpty={!qualityAssessment}>
           <ValueTree label="" value={qualityAssessment} />
         </DataPointComponent>
-        <DataPointComponent label="Identified Risk" isEmpty={!identifiedRisk}>
+        <DataPointComponent label={t("Identified Risk")} isEmpty={!identifiedRisk}>
           <ValueTree label="" value={identifiedRisk} />
         </DataPointComponent>
       </DataLayerGroup>
-      {/* <DataLayerGroup layer="Other">
-        <ValueTree label="Full Product Information JSON" value={productInfo} />
-      </DataLayerGroup> */}
     </CollapsibleSection>
   );
 }
