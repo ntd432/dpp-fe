@@ -15,7 +15,7 @@ export function GuidelinesStep({ shared }: Readonly<{ shared: any }>) {
 
   return (
         <CollapsibleSection title={t("Guidelines & Manuals")} defaultOpen>
-          <DataLayerGroup layer="Regulatory">
+          <DataLayerGroup layer={t("datalayer.regulatory")}>
             <DataPointComponent label={t("Assembly Guideline")}>
               <FormField
                   label={t("Assembly Guideline URL")}
@@ -45,7 +45,7 @@ export function GuidelinesStep({ shared }: Readonly<{ shared: any }>) {
             </DataPointComponent>
           </DataLayerGroup>
 
-          <DataLayerGroup layer="Sectoral">
+          <DataLayerGroup layer={t("datalayer.sectoral")}>
             <DataPointComponent label={t("Storage & Transport Guideline")}>
                 <FormField
                 label={t("Storage & Transport Guideline URL")}
@@ -57,7 +57,7 @@ export function GuidelinesStep({ shared }: Readonly<{ shared: any }>) {
             </DataPointComponent>
           </DataLayerGroup>
 
-          <DataLayerGroup layer="Commercial">
+          <DataLayerGroup layer={t("datalayer.commercial")}>
             <DataPointComponent label={t("Commercial Instructions")}>
               <FormField
                   label={t("Safety Instruction URL")}
@@ -99,7 +99,7 @@ export function GuidelinesStep({ shared }: Readonly<{ shared: any }>) {
             </DataPointComponent>
           </DataLayerGroup>
 
-          <DataLayerGroup layer="Custom Fields">
+          <DataLayerGroup layer={t("datalayer.customFields")}>
             <CustomFieldsEditor
               title={t("Guidelines Custom Fields")}
               items={form.guidelinesCustomFields}

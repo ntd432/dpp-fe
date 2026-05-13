@@ -526,7 +526,7 @@ export default function AddDppFormClient({
         </CollapsibleSection>
 
         <CollapsibleSection title={t("Product Supply Chain Information")} defaultOpen>
-          <DataLayerGroup layer="Regulatory">
+          <DataLayerGroup layer={t("datalayer.regulatory")}>
             <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
               <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
                 <span className="flex items-center justify-between">
@@ -553,7 +553,7 @@ export default function AddDppFormClient({
             </details>
           </DataLayerGroup>
 
-          <DataLayerGroup layer="Commercial">
+          <DataLayerGroup layer={t("datalayer.commercial")}>
             <details open className="group/extension bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
               <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
                 <span className="flex items-center justify-between">

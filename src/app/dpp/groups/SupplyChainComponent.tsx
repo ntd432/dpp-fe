@@ -16,7 +16,7 @@ export function SupplyChainComponent({ supplyChain }: SupplyChainComponentProps)
       showCollapseButton
       defaultOpen={false}
     >
-      <DataLayerGroup layer="Regulatory">
+      <DataLayerGroup layer={t("datalayer.regulatory")}>
         <DataPointComponent
           label="Product Traceability"
           isEmpty={(supplyChain?.productTraceability?.traceabilityEvent?.length || 0) === 0}
@@ -25,7 +25,7 @@ export function SupplyChainComponent({ supplyChain }: SupplyChainComponentProps)
         </DataPointComponent>
       </DataLayerGroup>
 
-      <DataLayerGroup layer="Commercial">
+      <DataLayerGroup layer={t("datalayer.commercial")}>
         <DataPointComponent label="Recycling Partner" isEmpty={ !supplyChain?.recyclingPartner }>
             <ParticipantListCard list={supplyChain?.recyclingPartner || []} label="" />
         </DataPointComponent>

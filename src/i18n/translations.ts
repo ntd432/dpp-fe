@@ -18,6 +18,14 @@ export const messages: Record<Locale, Messages> = {
     "unsupportedDevice.backToDashboard": "Back to dashboard",
     "mobile.unsupportedFeature": "This feature is not supported on phones. Please use a tablet or desktop device.",
 
+    "datalayer.regulatory": "Regulatory",
+    "datalayer.sectoral": "Sectoral",
+    "datalayer.commercial": "Commercial",
+    "datalayer.customFields": "Custom Fields",
+
+    "sectors.electronics": "Electronics",
+    "sectors.others": "Others",
+
     "footer.title": "Digital Product Passport",
     "footer.thesis": "Master's thesis project by James Nguyen",
     "footer.programme": "Software Engineering for Green Deals (SE4GD) Erasmus Mundus programme, Cohort 4, 2024-2026",
@@ -131,6 +139,14 @@ export const messages: Record<Locale, Messages> = {
     "unsupportedDevice.title": "Niet-ondersteund apparaat",
     "unsupportedDevice.message": "Deze functie wordt niet ondersteund op apparaten met telefoongrootte. Gebruik een tablet of desktop.",
     "unsupportedDevice.backToDashboard": "Terug naar dashboard",
+
+    "datalayer.regulatory": "Regulering",
+    "datalayer.sectoral": "Sectoraal",
+    "datalayer.commercial": "Comercieel",
+    "datalayer.customFields": "Aangepaste Velden",
+
+    "sectors.electronics": "Elektronica",
+    "sectors.others": "Overige",
 
     "footer.title": "Digitaal Productpaspoort",
     "footer.thesis": "Masterthesisproject van James Nguyen",

@@ -87,7 +87,7 @@ export function ComplianceComponent({ compliance }: ComplianceComponentProps) {
       showCollapseButton
       defaultOpen={false}
     >
-      <DataLayerGroup layer="Regulatory">
+      <DataLayerGroup layer={t("datalayer.regulatory")}>
         <DataPointComponent label="Regulations" isEmpty={(compliance?.regulation?.length || 0) === 0}>
           <RegulationListCard list={compliance?.regulation || []} label="" />
         </DataPointComponent>
@@ -97,13 +97,13 @@ export function ComplianceComponent({ compliance }: ComplianceComponentProps) {
         </DataPointComponent>
       </DataLayerGroup>
 
-      <DataLayerGroup layer="Sectoral">
+      <DataLayerGroup layer={t("datalayer.sectoral")}>
         <DataPointComponent label="Product Status Assessment" isEmpty={!compliance?.productStatusAssessment}>
           <ValueTree label="" value={compliance?.productStatusAssessment} />
         </DataPointComponent>
       </DataLayerGroup>
 
-      <DataLayerGroup layer="Commercial">
+      <DataLayerGroup layer={t("datalayer.commercial")}>
 
         <DataPointComponent label="Certifications" isEmpty={(compliance?.certification?.length || 0) === 0}>
               <CertificationListCard list={compliance?.certification || []} label="" />

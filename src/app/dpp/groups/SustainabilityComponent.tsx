@@ -116,7 +116,7 @@ export function SustainabilityComponent({
       showCollapseButton
       defaultOpen={false}
     >
-      <DataLayerGroup layer="Regulatory">
+      <DataLayerGroup layer={t("datalayer.regulatory")}>
         <DataPointComponent
           label="Sustainability Performance"
           isEmpty={!sustainability?.sustainabilityPerformance}
@@ -140,7 +140,7 @@ export function SustainabilityComponent({
         </DataPointComponent>
       </DataLayerGroup>
 
-      <DataLayerGroup layer="Sectoral">
+      <DataLayerGroup layer={t("datalayer.sectoral")}>
         <DataPointComponent label="Decomposability" isEmpty={!sustainability?.decomposability}>
           <ValueTree label="" value={sustainability?.decomposability} />
         </DataPointComponent>
@@ -170,7 +170,7 @@ export function SustainabilityComponent({
         </DataPointComponent>
       </DataLayerGroup>
 
-      <DataLayerGroup layer="Commercial">
+      <DataLayerGroup layer={t("datalayer.commercial")}>
         <DataPointComponent label="Renewable/Non-Renewable Content" isEmpty={(sustainability?.renewableNonRenewableContent?.length || 0) === 0}>
           <ComponentListCard
             label=""

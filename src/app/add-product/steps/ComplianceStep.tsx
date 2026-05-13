@@ -18,7 +18,7 @@ export function ComplianceStep({ shared }: Readonly<{ shared: any }>) {
 
   return (
     <CollapsibleSection title={t("Compliance")} defaultOpen>
-      <DataLayerGroup layer="Regulatory">
+      <DataLayerGroup layer={t("datalayer.regulatory")}>
         <DataPointComponent label={t("Regulations")}>
           <RegulationArrayEditor
             items={form.regulations}
@@ -38,7 +38,7 @@ export function ComplianceStep({ shared }: Readonly<{ shared: any }>) {
         </DataPointComponent>
       </DataLayerGroup>
 
-      <DataLayerGroup layer="Sectoral">
+      <DataLayerGroup layer={t("datalayer.sectoral")}>
         <DataPointComponent label={t("Product Status Assessment")}>
           <FormField
             label={t("Assessment URL")}
@@ -50,7 +50,7 @@ export function ComplianceStep({ shared }: Readonly<{ shared: any }>) {
         </DataPointComponent>
       </DataLayerGroup>
 
-      <DataLayerGroup layer="Commercial">
+      <DataLayerGroup layer={t("datalayer.commercial")}>
         <DataPointComponent label={t("Certifications")}>
           <NameDescArrayEditor
             label={t("Certifications")}
@@ -75,7 +75,7 @@ export function ComplianceStep({ shared }: Readonly<{ shared: any }>) {
         </DataPointComponent>
       </DataLayerGroup>
 
-      <DataLayerGroup layer="Custom Fields">
+      <DataLayerGroup layer={t("datalayer.customFields")}>
         <CustomFieldsEditor
           title={t("Compliance Custom Fields")}
           items={form.complianceCustomFields}

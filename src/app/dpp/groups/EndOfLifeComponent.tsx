@@ -16,7 +16,7 @@ export function EndOfLifeComponent({ endOfLife }: EndOfLifeComponentProps) {
       showCollapseButton
       defaultOpen={false}
     >
-      <DataLayerGroup layer="Regulatory">
+      <DataLayerGroup layer={t("datalayer.regulatory")}>
         <DataPointComponent label="Recycling and Reuse Potential" isEmpty={!endOfLife?.recyclingReusePotential}>
           <ValueTree label="" value={endOfLife?.recyclingReusePotential} />
         </DataPointComponent>
@@ -30,13 +30,13 @@ export function EndOfLifeComponent({ endOfLife }: EndOfLifeComponentProps) {
         </DataPointComponent>
       </DataLayerGroup>
 
-      <DataLayerGroup layer="Sectoral">
+      <DataLayerGroup layer={t("datalayer.sectoral")}>
         <DataPointComponent label="Expected Waste" isEmpty={!endOfLife?.expectedWaste}>
           <ValueTree label="" value={endOfLife?.expectedWaste} />
         </DataPointComponent>
       </DataLayerGroup>
 
-      <DataLayerGroup layer="Commercial">
+      <DataLayerGroup layer={t("datalayer.commercial")}>
         <DataPointComponent label="Reusability and Repurposability" isEmpty={!endOfLife?.reusability}>
           <ValueTree label="" value={endOfLife?.reusability} />
         </DataPointComponent>

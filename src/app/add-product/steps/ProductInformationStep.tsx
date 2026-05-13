@@ -40,14 +40,14 @@ export function ProductInformationStep({ shared }: Readonly<{ shared: any }>) {
         >
           {SECTORS.map((s) => (
             <option key={s.extensionType} value={s.extensionType}>
-              {s.label}
+              {t(s.label)}
             </option>
           ))}
         </select>
         <p className="mt-1 text-xs text-gray-400">{t("Determines the extension type for sector-specific fields.")}</p>
       </div>
 
-      <DataLayerGroup layer="Regulatory">
+      <DataLayerGroup layer={t("datalayer.regulatory")}>
         <DataPointComponent label={t("Product Identification Information")}>
           <div className="grid grid-cols-2 gap-4">
             <FormField
@@ -198,7 +198,7 @@ export function ProductInformationStep({ shared }: Readonly<{ shared: any }>) {
         {renderExtensionSection("sectorRequiredInformation", form, setField, t)}
       </DataLayerGroup>
 
-      <DataLayerGroup layer="Sectoral">
+      <DataLayerGroup layer={t("datalayer.sectoral")}>
         {renderExtensionSection("productSpecification", form, setField, t)}
         {renderExtensionSection("sectorNonRequiredInformation", form, setField, t)}
 
@@ -223,7 +223,7 @@ export function ProductInformationStep({ shared }: Readonly<{ shared: any }>) {
         </DataPointComponent>
       </DataLayerGroup>
 
-      <DataLayerGroup layer="Commercial">
+      <DataLayerGroup layer={t("datalayer.commercial")}>
         <DataPointComponent label={t("Product Commercial Information")}>
           <div className="grid grid-cols-2 gap-4">
             <FormField
@@ -275,7 +275,7 @@ export function ProductInformationStep({ shared }: Readonly<{ shared: any }>) {
         </DataPointComponent>
       </DataLayerGroup>
 
-      <DataLayerGroup layer="Custom Fields">
+      <DataLayerGroup layer={t("datalayer.customFields")}>
         <CustomFieldsEditor
           title={t("Product Information Custom Fields")}
           items={form.productInfoCustomFields}

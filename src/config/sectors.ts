@@ -13,12 +13,12 @@ export interface SectorOption {
 
 export const SECTORS: SectorOption[] = [
   {
-    label: "Electronics",
+    label: "sectors.electronics",
     value: "Electronics",
     extensionType: "ElectronicExtension",
   },
   {
-    label: "Others",
+    label: "sectors.others",
     value: "Others",
     extensionType: "OtherExtension",
   }

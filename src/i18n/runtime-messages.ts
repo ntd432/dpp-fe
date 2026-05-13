@@ -366,7 +366,7 @@ export const runtimeMessages: Partial<Record<Locale, Record<string, string>>> = 
     "addProduct.clearCurrent": "Huidige stap wissen",
     "addProduct.previous": "Vorige sectie",
     "addProduct.next": "Volgende sectie",
-    "addProduct.submit": "Product toevoegen",
+    "addProduct.submit": "Opslaan",
     "addProduct.submitting": "Verzenden...",
 
     "Product Information": "Productinformatie",
