@@ -64,9 +64,11 @@ export default function Footer() {
           <section>
             <h2 className="text-base font-semibold text-gray-900">{t("footer.quickLinks")}</h2>
             <ul className="mt-2 space-y-2 text-sm text-gray-600">
+              <li><Link href="/" className="hover:text-[var(--color-brand-pink-dark)]">{t("footer.dashboard")}</Link></li>
               {!isPhoneDevice && (
                 <li><Link href="/add-product" className="hover:text-[var(--color-brand-pink-dark)]">{t("footer.addProduct")}</Link></li>
               )}
+              <li><Link href="/products" className="hover:text-[var(--color-brand-pink-dark)]">{t("footer.viewProducts")}</Link></li>
               {!isPhoneDevice && (
                 <li><Link href="/add-dpp" className="hover:text-[var(--color-brand-pink-dark)]">{t("footer.registerDpp")}</Link></li>
               )}
