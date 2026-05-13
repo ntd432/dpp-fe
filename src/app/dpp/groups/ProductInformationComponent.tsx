@@ -113,7 +113,7 @@ export function ProductInformationComponent({
       <div className="block font-medium mb-5">
         Product Sector: {productSector || "N/A"}
       </div>
-      <DataLayerGroup layer="Regulatory">
+      <DataLayerGroup layer={t("datalayer.regulatory")}>
         <DataPointComponent
           label="Product Identification Information"
           isEmpty={!pii}
@@ -163,7 +163,7 @@ export function ProductInformationComponent({
         </DataPointComponent>
        
       </DataLayerGroup>
-      <DataLayerGroup layer="Sectoral">
+      <DataLayerGroup layer={t("datalayer.sectoral")}>
         <DataPointComponent label="Product Specification" isEmpty={!productSpecification}>
           <SectorExtensionComponent sector={productSector} field="productSpecification" data={productSpecification} />
         </DataPointComponent>
@@ -177,7 +177,7 @@ export function ProductInformationComponent({
           <ValueTree label="" value={testReport} />
         </DataPointComponent>
       </DataLayerGroup>
-      <DataLayerGroup layer="Commercial">
+      <DataLayerGroup layer={t("datalayer.commercial")}>
         <DataPointComponent
           label="Commercial Information"
           isEmpty={!commercialInfo}

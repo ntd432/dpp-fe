@@ -25,7 +25,7 @@ export function GuidelinesAndManualsComponent({ guidelines }: GuidelinesAndManua
       showCollapseButton
       defaultOpen={false}
     >
-      <DataLayerGroup layer="Regulatory">
+      <DataLayerGroup layer={t("datalayer.regulatory")}>
         <DataPointComponent
           label="Assembly Guideline"
           isEmpty={!guidelines?.assemblyGuideline}
@@ -46,7 +46,7 @@ export function GuidelinesAndManualsComponent({ guidelines }: GuidelinesAndManua
         </DataPointComponent>
       </DataLayerGroup>
 
-      <DataLayerGroup layer="Sectoral">
+      <DataLayerGroup layer={t("datalayer.sectoral")}>
         <DataPointComponent
           label="Storage & Transport Guideline"
           isEmpty={!guidelines?.storageAndTransportGuideline}
@@ -55,7 +55,7 @@ export function GuidelinesAndManualsComponent({ guidelines }: GuidelinesAndManua
         </DataPointComponent>
       </DataLayerGroup>
 
-      <DataLayerGroup layer="Commercial">
+      <DataLayerGroup layer={t("datalayer.commercial")}>
         <DataPointComponent
           label="Commercial Instructions"
           isEmpty={!guidelines?.commercialInstruction}

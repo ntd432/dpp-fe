@@ -267,7 +267,7 @@ export default function ViewDppClient() {
 
       {isScanning && (
         <CollapsibleSection title={t("viewDpp.cameraSection")} defaultOpen>
-          <DataLayerGroup layer="Commercial">
+          <DataLayerGroup layer={t("datalayer.commercial")}>
             <div className="rounded-lg border border-gray-200 bg-black p-2">
               <video
                 ref={videoRef}

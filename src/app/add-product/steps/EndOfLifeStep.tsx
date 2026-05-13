@@ -16,7 +16,7 @@ export function EndOfLifeStep({ shared }: Readonly<{ shared: any }>) {
 
   return (
         <CollapsibleSection title={t("End of Life")} defaultOpen>
-          <DataLayerGroup layer="Regulatory">
+          <DataLayerGroup layer={t("datalayer.regulatory")}>
             <DataPointComponent label={t("Recycling and Reuse Potential")}>
               <TextAreaField
                 label={t("Recycling and Reuse Potential")}
@@ -43,7 +43,7 @@ export function EndOfLifeStep({ shared }: Readonly<{ shared: any }>) {
             </DataPointComponent>
           </DataLayerGroup>
 
-          <DataLayerGroup layer="Sectoral">
+          <DataLayerGroup layer={t("datalayer.sectoral")}>
               <DataPointComponent label={t("Expected Waste")}>
                 <TextAreaField
                 label={t("Expected Waste")}
@@ -54,7 +54,7 @@ export function EndOfLifeStep({ shared }: Readonly<{ shared: any }>) {
               </DataPointComponent>
           </DataLayerGroup>
 
-          <DataLayerGroup layer="Commercial">
+          <DataLayerGroup layer={t("datalayer.commercial")}>
             <DataPointComponent label={t("Reusability and Repurposability")}>
               <TextAreaField
                   label={t("Reusability and Repurposability")}
@@ -137,7 +137,7 @@ export function EndOfLifeStep({ shared }: Readonly<{ shared: any }>) {
               </DataPointComponent>
           </DataLayerGroup>
 
-          <DataLayerGroup layer="Custom Fields">
+          <DataLayerGroup layer={t("datalayer.customFields")}>
             <CustomFieldsEditor
               title={t("End of Life Custom Fields")}
               items={form.endOfLifeCustomFields}

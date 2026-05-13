@@ -19,7 +19,7 @@ export function SustainabilityStep({ shared }: Readonly<{ shared: any }>) {
 
   return (
     <CollapsibleSection title={t("Sustainability")} defaultOpen>
-      <DataLayerGroup layer="Regulatory">
+      <DataLayerGroup layer={t("datalayer.regulatory")}>
         <DataPointComponent label={t("Sustainability Performance")}>
           <EnvironmentalFootprintArrayEditor
             items={form.environmentalFootprints}
@@ -43,7 +43,7 @@ export function SustainabilityStep({ shared }: Readonly<{ shared: any }>) {
         </DataPointComponent>
       </DataLayerGroup>
 
-      <DataLayerGroup layer="Sectoral">
+      <DataLayerGroup layer={t("datalayer.sectoral")}>
         <DataPointComponent label={t("Decomposability")}>
           <TextAreaField
             label={t("Decomposability")}
@@ -89,7 +89,7 @@ export function SustainabilityStep({ shared }: Readonly<{ shared: any }>) {
         </DataPointComponent>
       </DataLayerGroup>
 
-      <DataLayerGroup layer="Commercial">
+      <DataLayerGroup layer={t("datalayer.commercial")}>
         <DataPointComponent label={t("Renewable / Non-Renewable Content")}>
           <ComponentArrayEditor
             label={t("Components")}
@@ -148,7 +148,7 @@ export function SustainabilityStep({ shared }: Readonly<{ shared: any }>) {
         </DataPointComponent>
       </DataLayerGroup>
 
-      <DataLayerGroup layer="Custom Fields">
+      <DataLayerGroup layer={t("datalayer.customFields")}>
         <CustomFieldsEditor
           title={t("Sustainability Custom Fields")}
           items={form.sustainabilityCustomFields}
