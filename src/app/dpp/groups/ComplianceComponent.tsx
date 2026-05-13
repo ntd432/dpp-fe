@@ -28,11 +28,12 @@ export function ProductLabelListCard({ list, label }: Readonly<{
 }
 
 function LabelCard(label: Readonly<Label>) {
+  const { t } = useLanguage();
     const pairs = [
-        { label: "Name", value: label.labelName },
-        { label: "Description", value: label.labelDescription },
-        { label: "Value", value: label.labelValue },
-        { label: "Documentation", value: label.labelDocumentation },
+    { label: t("Name"), value: label.labelName },
+    { label: t("Description"), value: label.labelDescription },
+    { label: t("Value"), value: label.labelValue },
+    { label: t("Documentation"), value: label.labelDocumentation },
     ];
     return <KeyValuePair numberOfColumn={2} pairs={pairs} />;
 }
@@ -54,9 +55,10 @@ export function CertificationListCard({ list, label }: Readonly<{
 }
 
 function CertificationCard(certification: Readonly<Certification>) {
+  const { t } = useLanguage();
     const pairs = [
-        { label: "Name", value: certification.name },
-        { label: "Description", value: certification.description },
+    { label: t("Name"), value: certification.name },
+    { label: t("Description"), value: certification.description },
     ];
     return <KeyValuePair numberOfColumn={2} pairs={pairs} />;
 }
@@ -86,34 +88,34 @@ export function ComplianceComponent({ compliance }: ComplianceComponentProps) {
 
   return (
     <CollapsibleSection
-      title="Compliance"
+      title={t("Compliance")}
       showCollapseButton
       defaultOpen={false}
     >
       <DataLayerGroup layer={t("datalayer.regulatory")}>
-        <DataPointComponent label="Regulations" isEmpty={(compliance?.regulation?.length || 0) === 0}>
+        <DataPointComponent label={t("Regulations")} isEmpty={(compliance?.regulation?.length || 0) === 0}>
           <RegulationListCard list={compliance?.regulation || []} label="" />
         </DataPointComponent>
 
-        <DataPointComponent label="Product Labels" isEmpty={(compliance?.productLabel?.length || 0) === 0}>
+        <DataPointComponent label={t("Product Labels")} isEmpty={(compliance?.productLabel?.length || 0) === 0}>
           <ProductLabelListCard list={compliance?.productLabel || []} label="" />
         </DataPointComponent>
       </DataLayerGroup>
 
       <DataLayerGroup layer={t("datalayer.sectoral")}>
-        <DataPointComponent label="Product Status Assessment" isEmpty={!compliance?.productStatusAssessment}>
+        <DataPointComponent label={t("Product Status Assessment")} isEmpty={!compliance?.productStatusAssessment}>
           <ValueTree label="" value={compliance?.productStatusAssessment} />
         </DataPointComponent>
       </DataLayerGroup>
 
       <DataLayerGroup layer={t("datalayer.commercial")}>
 
-        <DataPointComponent label="Certifications" isEmpty={(compliance?.certification?.length || 0) === 0}>
+        <DataPointComponent label={t("Certifications")} isEmpty={(compliance?.certification?.length || 0) === 0}>
               <CertificationListCard list={compliance?.certification || []} label="" />
         </DataPointComponent>
 
         <DataPointComponent
-          label="Data Management Method"
+          label={t("Data Management Method")}
           isEmpty={!compliance?.dataManagementMethod}
         >
           <ValueTree label="" value={compliance?.dataManagementMethod?.name} />

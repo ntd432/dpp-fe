@@ -23,25 +23,25 @@ export function GuidelinesAndManualsComponent({ guidelines }: GuidelinesAndManua
   const { t } = useLanguage();
   return (
     <CollapsibleSection
-      title="Guidelines and Manuals"
+      title={t("Guidelines & Manuals")}
       showCollapseButton
       defaultOpen={false}
     >
       <DataLayerGroup layer={t("datalayer.regulatory")}>
         <DataPointComponent
-          label="Assembly Guideline"
+          label={t("Assembly Guideline")}
           isEmpty={!guidelines?.assemblyGuideline}
         >
             <GuideCard label="" guide={guidelines?.assemblyGuideline || {}} />
         </DataPointComponent>
         <DataPointComponent
-          label="Non-Destructive Disassembly Guideline"
+          label={t("Non-Destructive Disassembly Guideline")}
           isEmpty={!guidelines?.nonDestructiveDisassemblyGuideline}
         >
             <GuideCard label="" guide={guidelines?.nonDestructiveDisassemblyGuideline || {}} />
         </DataPointComponent>
         <DataPointComponent
-          label="Product Manual"
+          label={t("Product Manual")}
           isEmpty={!guidelines?.productManual}
         >
           <GuideCard label="" guide={guidelines?.productManual || {}} />
@@ -50,7 +50,7 @@ export function GuidelinesAndManualsComponent({ guidelines }: GuidelinesAndManua
 
       <DataLayerGroup layer={t("datalayer.sectoral")}>
         <DataPointComponent
-          label="Storage & Transport Guideline"
+          label={t("Storage & Transport Guideline")}
           isEmpty={!guidelines?.storageAndTransportGuideline}
         >
           <InfoCardWithLink value={guidelines?.storageAndTransportGuideline?.name || guidelines?.storageAndTransportGuideline?.url || "N/A"} link={guidelines?.storageAndTransportGuideline?.url} />
@@ -59,21 +59,21 @@ export function GuidelinesAndManualsComponent({ guidelines }: GuidelinesAndManua
 
       <DataLayerGroup layer={t("datalayer.commercial")}>
         <DataPointComponent
-          label="Commercial Instructions"
+          label={t("Commercial Instructions")}
           isEmpty={!guidelines?.commercialInstruction}
         >
-            <GuideCard label="Safety Instruction" guide={guidelines?.commercialInstruction?.safetyInstruction || {}} />
-            <GuideCard label="Maintenance Instruction" guide={guidelines?.commercialInstruction?.maintenanceInstruction || {}} />
-            <GuideCard label="Waste Sorting Instruction" guide={guidelines?.commercialInstruction?.wasteSortingInstruction || {}} />
+            <GuideCard label={t("Safety Instruction")} guide={guidelines?.commercialInstruction?.safetyInstruction || {}} />
+            <GuideCard label={t("Maintenance Instruction")} guide={guidelines?.commercialInstruction?.maintenanceInstruction || {}} />
+            <GuideCard label={t("Waste Sorting Instruction")} guide={guidelines?.commercialInstruction?.wasteSortingInstruction || {}} />
         </DataPointComponent>
         <DataPointComponent
-          label="Accessibility"
+          label={t("Accessibility")}
           isEmpty={!guidelines?.accessibility}
         >
           <ValueTree label="" value={guidelines?.accessibility} />
         </DataPointComponent>
         <DataPointComponent
-          label="Utilization Characteristic"
+          label={t("Utilization Characteristic")}
           isEmpty={!guidelines?.utilizationCharacteristic}
         >
           <ValueTree label="" value={guidelines?.utilizationCharacteristic} />

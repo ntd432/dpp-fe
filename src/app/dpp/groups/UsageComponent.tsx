@@ -4,28 +4,30 @@ import { CollapsibleSection, DataLayerGroup } from "@/components/form/Collapsibl
 import DataPointComponent from "@/components/DataPointComponent";
 import { EventListCard } from "./CommonComponents";
 import { UsageInformation } from "@/types";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type UsageComponentProps = Readonly<{
   usage?: UsageInformation;
 }>;
 
 export function UsageComponent({ usage }: UsageComponentProps) {
+  const { t } = useLanguage();
   return (
     <CollapsibleSection
-      title="Usage"
+      title={t("Usage & Maintenance")}
       showCollapseButton
       defaultOpen={false}
     >
-      <DataLayerGroup layer="Downstream Data">
-        <DataPointComponent label="Maintenance Log" isEmpty={(usage?.maintenanceLog?.length || 0) === 0}>
+      <DataLayerGroup layer={t("Downstream Data")}>
+        <DataPointComponent label={t("Maintenance Log")} isEmpty={(usage?.maintenanceLog?.length || 0) === 0}>
             <EventListCard list={usage?.maintenanceLog || []} label=""/>
         </DataPointComponent>
 
-        <DataPointComponent label="Usage History" isEmpty={(usage?.usageHistory?.length || 0) === 0}>
+        <DataPointComponent label={t("Usage History")} isEmpty={(usage?.usageHistory?.length || 0) === 0}>
             <EventListCard list={usage?.usageHistory || []} label=""/>
         </DataPointComponent>
 
-        <DataPointComponent label="Incidents and Errors" isEmpty={(usage?.incidentsAndErrors?.length || 0) === 0}>
+        <DataPointComponent label={t("Incidents & Errors")} isEmpty={(usage?.incidentsAndErrors?.length || 0) === 0}>
             <EventListCard list={usage?.incidentsAndErrors || []} label=""/>
         </DataPointComponent>
       </DataLayerGroup>

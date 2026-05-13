@@ -10,29 +10,31 @@ import { useLanguage } from "@/contexts/LanguageContext";
 function EnvironmentalFootprintListCard({ list }: Readonly<{
   list: Readonly<ReadonlyArray<EnvironmentalFootprint>>;
 }>) {
+  const { t } = useLanguage();
   return (
     <ListCards
       list={list}
-      label="Environmental Footprint"
+      label={t("Environmental Footprint")}
       getKey={(footprint, index) =>
         `footprint-${footprint.environmentalFootprintType || index}`
       }
-      renderCard={(footprint) => EnvironmentalFootprintCard(footprint)}
+      renderCard={(footprint) => EnvironmentalFootprintCard(t, footprint)}
     />
   );
 }
 
 function EnvironmentalFootprintCard(
+  t: (key: string) => string,
   footprint: Readonly<EnvironmentalFootprint>,
 ) {
   const pairs = [
-    { label: "Footprint type", value: footprint.environmentalFootprintType },
+    { label: t("Footprint type"), value: footprint.environmentalFootprintType },
     {
-      label: "Value",
+      label: t("Value"),
       value: `${footprint.environmentalFootprintValue} ${footprint.environmentalFootprintUnit}`,
     },
     {
-      label: "Measuring method",
+      label: t("Measuring method"),
       value: footprint.environmentalFootprintMeasuringMethod,
     },
   ];
@@ -46,23 +48,27 @@ function ResourceConsumptionListCard({
   label?: string;
   list: Readonly<ReadonlyArray<ResourceConsumption>>;
 }>) {
+  const { t } = useLanguage();
   return (
     <ListCards
       list={list}
-      label={label || "Resource Consumption"}
+      label={label || t("Resource Consumption")}
       getKey={(consumption, index) =>
         `consumption-${consumption.resource || index}`
       }
-      renderCard={(consumption) => ResourceConsumptionCard(consumption)}
+      renderCard={(consumption) => ResourceConsumptionCard(t, consumption)}
     />
   );
 }
 
-function ResourceConsumptionCard(consumption: Readonly<ResourceConsumption>) {
+function ResourceConsumptionCard(
+  t: (key: string) => string,
+  consumption: Readonly<ResourceConsumption>,
+) {
   const pairs = [
-    { label: "Resource", value: consumption.resource },
+    { label: t("Resource"), value: consumption.resource },
     {
-      label: "Value",
+      label: t("Value"),
       value: `${consumption.resourceConsumptionValue} ${consumption.resourceConsumptionUnit}`,
     },
   ];
@@ -74,26 +80,30 @@ function EnvironmentalImpactListCard({
 }: Readonly<{
   list: Readonly<ReadonlyArray<EnvironmentalImpact>>;
 }>) {
+  const { t } = useLanguage();
   return (
     <ListCards
       list={list}
-      label="Environmental Impact"
+      label={t("Environmental Impact")}
       getKey={(impact, index) =>
         `impact-${impact.impactCategory || index}-${impact.method || ""}`
       }
-      renderCard={(impact) => EnvironmentalImpactCard(impact)}
+      renderCard={(impact) => EnvironmentalImpactCard(t, impact)}
     />
   );
 }
 
-function EnvironmentalImpactCard(impact: Readonly<EnvironmentalImpact>) {
+function EnvironmentalImpactCard(
+  t: (key: string) => string,
+  impact: Readonly<EnvironmentalImpact>,
+) {
   const pairs = [
-    { label: "Impact category", value: impact.impactCategory },
-    { label: "Method", value: impact.method },
-    { label: "Characterization Factor", value: impact.characterizationFactor },
-    { label: "Characterization Model", value: impact.characterizationModel },
+    { label: t("Impact category"), value: impact.impactCategory },
+    { label: t("Method"), value: impact.method },
+    { label: t("Characterization Factor"), value: impact.characterizationFactor },
+    { label: t("Characterization Model"), value: impact.characterizationModel },
     {
-      label: "Impact indicator",
+      label: t("Impact indicator"),
       value: `${impact.impactIndicator.measurementValue} ${impact.impactIndicator.measurementUnit}`,
     },
   ];
@@ -110,17 +120,17 @@ export function SustainabilityComponent({
   const { t } = useLanguage();
   const socialIndicator = sustainability?.socialIndicator;
   const socialIndicatorPairs = [
-    { label: "Labour Conditions", value: socialIndicator?.labourConditions },
+    { label: t("Labour Conditions"), value: socialIndicator?.labourConditions },
   ];
   return (
     <CollapsibleSection
-      title="Sustainability"
+      title={t("Sustainability")}
       showCollapseButton
       defaultOpen={false}
     >
       <DataLayerGroup layer={t("datalayer.regulatory")}>
         <DataPointComponent
-          label="Sustainability Performance"
+          label={t("Sustainability Performance")}
           isEmpty={!sustainability?.sustainabilityPerformance}
         >
           <EnvironmentalFootprintListCard
@@ -136,23 +146,18 @@ export function SustainabilityComponent({
             }
           />
           <ValueTree
-            label="Plastics Release"
+            label={t("Plastics Release")}
             value={sustainability?.sustainabilityPerformance?.plasticsRelease}
           />
         </DataPointComponent>
       </DataLayerGroup>
 
       <DataLayerGroup layer={t("datalayer.sectoral")}>
-        <DataPointComponent label="Decomposability" isEmpty={!sustainability?.decomposability}>
+        <DataPointComponent label={t("Decomposability")} isEmpty={!sustainability?.decomposability}>
           <ValueTree label="" value={sustainability?.decomposability} />
         </DataPointComponent>
 
-        {/* TODO: CHANGE THE EXTENSION
-        <DataPointComponent label="Sector Sustainability Indicator">
-            <ValueTree label="" value={sustainability?.decomposability}/>
-        </DataPointComponent> */}
-
-        <DataPointComponent label="Critical Raw Material" isEmpty={(sustainability?.criticalRawMaterial?.length || 0) === 0}>
+        <DataPointComponent label={t("Critical Raw Materials")} isEmpty={(sustainability?.criticalRawMaterial?.length || 0) === 0}>
           <ComponentListCard
             label=""
             componentList={sustainability?.criticalRawMaterial || []}
@@ -160,10 +165,10 @@ export function SustainabilityComponent({
         </DataPointComponent>
 
         <DataPointComponent
-          label="Life Cycle Assessment"
+          label={t("Life Cycle Assessment")}
           isEmpty={!sustainability?.lifeCycleAssessment}
         >
-            <InfoCard label="Life Cycle Assessment Report" value={sustainability?.lifeCycleAssessment?.lifeCycleAssessmentReport || "N/A"} />
+            <InfoCard label={t("LCA Report URL")} value={sustainability?.lifeCycleAssessment?.lifeCycleAssessmentReport || "N/A"} />
           <EnvironmentalImpactListCard
             list={
               sustainability?.lifeCycleAssessment?.environmentalImpact || []
@@ -173,35 +178,30 @@ export function SustainabilityComponent({
       </DataLayerGroup>
 
       <DataLayerGroup layer={t("datalayer.commercial")}>
-        <DataPointComponent label="Renewable/Non-Renewable Content" isEmpty={(sustainability?.renewableNonRenewableContent?.length || 0) === 0}>
+        <DataPointComponent label={t("Renewable / Non-Renewable Content")} isEmpty={(sustainability?.renewableNonRenewableContent?.length || 0) === 0}>
           <ComponentListCard
             label=""
             componentList={sustainability?.renewableNonRenewableContent || []}
           />
         </DataPointComponent>
 
-        {/* TODO: CHANGE THE EXTENSION
-        <DataPointComponent label="Circular Economy Indicator">
-            <ValueTree label="" value={sustainability?.decomposability}/>
-        </DataPointComponent> */}
-
-        <DataPointComponent label="Social Indicator" isEmpty={!socialIndicator}>
+        <DataPointComponent label={t("Social Indicator")} isEmpty={!socialIndicator}>
           <KeyValuePair numberOfColumn={1} pairs={socialIndicatorPairs} />
         </DataPointComponent>
 
         <DataPointComponent
-          label="Sustainability Attributes"
+          label={t("Sustainability Attributes")}
           isEmpty={!sustainability?.sustainabilityAttributes}
         >
           <ResourceConsumptionListCard
-            label="Resource Consumption When Using"
+            label={t("Resource Consumption When Using")}
             list={
               sustainability?.sustainabilityAttributes
                 ?.resourceConsumptionWhenUsing || []
             }
           />
           <ResourceConsumptionListCard
-            label="Resource Consumption When Recovering"
+            label={t("Resource Consumption When Recovering")}
             list={
               sustainability?.sustainabilityAttributes
                 ?.resourceConsumptionWhenRecovering || []
@@ -209,10 +209,10 @@ export function SustainabilityComponent({
           />
         </DataPointComponent>
 
-        <DataPointComponent label="Environmental Declaration" isEmpty={!sustainability?.environmentDeclaration}>
+        <DataPointComponent label={t("Environment Declaration")} isEmpty={!sustainability?.environmentDeclaration}>
           <InfoCardWithLink
             label=""
-            value="Environmental Declaration"
+            value={t("Environment Declaration")}
             link={sustainability?.environmentDeclaration}
           />
         </DataPointComponent>

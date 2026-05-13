@@ -14,13 +14,13 @@ export function SupplyChainComponent({ supplyChain }: SupplyChainComponentProps)
   const { t } = useLanguage();
   return (
     <CollapsibleSection
-      title="Supply Chain"
+      title={t("Product Supply Chain Information")}
       showCollapseButton
       defaultOpen={false}
     >
       <DataLayerGroup layer={t("datalayer.regulatory")}>
         <DataPointComponent
-          label="Product Traceability"
+          label={t("Product Traceability")}
           isEmpty={(supplyChain?.productTraceability?.traceabilityEvent?.length || 0) === 0}
         >
           <EventListCard list={supplyChain?.productTraceability?.traceabilityEvent || []} label="" />
@@ -28,11 +28,11 @@ export function SupplyChainComponent({ supplyChain }: SupplyChainComponentProps)
       </DataLayerGroup>
 
       <DataLayerGroup layer={t("datalayer.commercial")}>
-        <DataPointComponent label="Recycling Partner" isEmpty={ !supplyChain?.recyclingPartner }>
+        <DataPointComponent label={t("Recycling Partner")} isEmpty={ !supplyChain?.recyclingPartner }>
             <ParticipantListCard list={supplyChain?.recyclingPartner || []} label="" />
         </DataPointComponent>
 
-        <DataPointComponent label="Customer Return Channel" isEmpty={ !supplyChain?.customerReturnChannel }>
+        <DataPointComponent label={t("Customer Return Channel")} isEmpty={ !supplyChain?.customerReturnChannel }>
             <ParticipantListCard list={supplyChain?.customerReturnChannel || []} label="" />
         </DataPointComponent>
       </DataLayerGroup>
