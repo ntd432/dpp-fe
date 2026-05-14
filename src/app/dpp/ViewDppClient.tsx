@@ -312,7 +312,7 @@ export default function ViewDppClient() {
                   <tr key={dpp.id} className="hover:bg-gray-50">
                     <td className="border border-gray-300 px-4 py-2 text-sm font-mono">{dpp.id}</td>
                     <td className="border border-gray-300 px-4 py-2 text-sm">{dpp.name}</td>
-                    <td className="border border-gray-300 px-4 py-2 text-sm">{dpp.granularity}</td>
+                    <td className="border border-gray-300 px-4 py-2 text-sm">{dpp.granularity.toUpperCase()}</td>
                     <td className="border border-gray-300 px-4 py-2 text-sm">{dpp.serial}</td>
                     <td className="border border-gray-300 px-4 py-2 text-sm">{dpp.batch}</td>
                     <td className="border border-gray-300 px-4 py-2 text-center">

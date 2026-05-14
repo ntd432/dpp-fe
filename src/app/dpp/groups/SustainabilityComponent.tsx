@@ -100,10 +100,10 @@ function EnvironmentalImpactCard(
   const pairs = [
     { label: t("Impact category"), value: impact.impactCategory },
     { label: t("Method"), value: impact.method },
-    { label: t("Characterization Factor"), value: impact.characterizationFactor },
-    { label: t("Characterization Model"), value: impact.characterizationModel },
+    { label: t("Characterization factor"), value: impact.characterizationFactor },
+    { label: t("Characterization model"), value: impact.characterizationModel },
     {
-      label: t("Impact indicator"),
+      label: t("Impact Indicator"),
       value: `${impact.impactIndicator.measurementValue} ${impact.impactIndicator.measurementUnit}`,
     },
   ];
