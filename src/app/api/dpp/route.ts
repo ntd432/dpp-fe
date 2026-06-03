@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
   
   if (getAllDpps === "true") {
     try {
-      const dpps = await TriplyDBClient.fetchFromAPI<any>("get-dpp");
+      const dpps = await TriplyDBClient.fetchFromAPI<any>("dpp");
       return NextResponse.json(dpps);
     } catch (error) {
       console.error("Failed to fetch all DPPs:", error);

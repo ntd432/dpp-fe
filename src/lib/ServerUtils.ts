@@ -26,7 +26,7 @@ function filterManufacturers(manufacturers: ManufacturerOption[]): ManufacturerO
 export class ServerUtils {
   static async loadManufacturers(): Promise<ManufacturerOption[]> {
     try {
-      const data = await TriplyDBClient.fetchFromAPI<ManufacturerOption>("manufacturers", "3");
+      const data = await TriplyDBClient.fetchFromAPI<ManufacturerOption>("manufacturers", "1");
       return filterManufacturers(data)
         .filter((m) => m.id || m.name)
         .map((m) => ({

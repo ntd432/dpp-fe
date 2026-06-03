@@ -4,7 +4,7 @@ import { Organization } from "@/types/dpp-core";
 
 export async function GET() {
   try {
-    const data = await TriplyDBClient.fetchFromAPI<Organization>("manufacturers", "3");
+    const data = await TriplyDBClient.fetchFromAPI<Organization>("manufacturers", "1");
     const filteredData = filterManufacturers(data);
     return NextResponse.json(filteredData);
   } catch (error) {
